@@ -287,6 +287,7 @@ export default function ProjectDetailsPage() {
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
                     <tr style={{ borderBottom: '1px solid var(--color-neutral-200)', backgroundColor: 'var(--color-neutral-50)' }}>
+                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)', cursor: 'pointer' }} onClick={() => handleSort('id')}>ID {sortColumn === 'id' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
                       <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)', cursor: 'pointer' }} onClick={() => handleSort('title')}>Título {sortColumn === 'title' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
                       <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)', cursor: 'pointer' }} onClick={() => handleSort('status')}>Estado {sortColumn === 'status' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
                       <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)', cursor: 'pointer' }} onClick={() => handleSort('priority')}>Prioridad {sortColumn === 'priority' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
@@ -321,6 +322,7 @@ export default function ProjectDetailsPage() {
                         })
                         .map(task => (
                       <tr key={task.id} style={{ borderBottom: '1px solid var(--color-neutral-200)', cursor: 'pointer' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-neutral-50)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>
+                        <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-900)' }}>{task.id}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-900)' }}>{task.title}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)' }}>
                           <span style={{

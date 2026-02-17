@@ -98,7 +98,7 @@ export default function SprintCard({
           <span className={styles.statValue}>{taskCount}</span>
         </div>
         <div className={styles.statItem}>
-          <span className={styles.statLabel}>Pts Negocio</span>
+          <span className={styles.statLabel}>Pts Neg</span>
           <span className={styles.statValue}>{totalBizPoints}</span>
         </div>
         <div className={styles.statItem}>
