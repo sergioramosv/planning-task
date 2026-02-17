@@ -191,19 +191,8 @@ export default function LoginForm() {
                   : '¿Ya tienes cuenta? Inicia sesión'}
               </button>
             </form>
-
-            <div className={styles.footer}>
-              <p className={styles.footerText}>
-                <span className={styles.footerHighlight}>Demo: </span>
-                Usa cualquier email y contraseña
-              </p>
-            </div>
           </div>
         </div>
-
-        <p className={styles.info}>
-          Tu seguridad es nuestra prioridad
-        </p>
       </div>
     </div>
   )
