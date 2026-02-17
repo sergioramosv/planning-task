@@ -32,7 +32,7 @@ export default function SprintChart({
     const devMap = new Map<string, string>()
     tasks.forEach(t => {
       if (t.developer && !devMap.has(t.developer)) {
-        const user = users.find(u => u.id === t.developer)
+        const user = users.find(u => u.uid === t.developer)
         devMap.set(t.developer, user?.displayName || t.developer)
       }
     })
