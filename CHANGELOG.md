@@ -5,6 +5,13 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.8] - 2026-02-18
+
+### Added
+- Detailed task information in Kanban cards (task ID, developer name, sprint, dates, business and dev points)
+- Enhanced task card styling with organized sections for better readability
+- Developer name and sprint name resolution in Kanban view
+
 ## [1.5.7] - 2026-02-18
 
 ### Added
