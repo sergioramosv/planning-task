@@ -1,3 +1,10 @@
+# Changelog
+
+Todos los cambios importantes de este proyecto están documentados en este archivo.
+
+El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
 ## [1.1.0] - 2026-02-17
 
 ### Added
@@ -7,21 +14,9 @@
 ### Fixed
 - improve changelog parser to infer change types from section headers
 
-### Changed
-
-
-
-# Changelog
-
-Todos los cambios importantes de este proyecto están documentados en este archivo.
-
-El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
 ## [1.0.0] - 2025-02-17
 
 ### Added
-
 - Sistema de versionado automático con Semantic Release
 - Visualización de versión en el header de la aplicación
 - Modal de changelog para ver historial de cambios
