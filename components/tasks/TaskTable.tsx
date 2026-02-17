@@ -53,6 +53,7 @@ export default function TaskTable({
         <table className={styles.table}>
           <thead className={styles.tableHead}>
             <tr>
+              <th className={styles.tableHeader}>ID</th>
               <th className={styles.tableHeader}>Título</th>
               <th className={styles.tableHeader}>Épica</th>
               <th className={styles.tableHeader}>Developer</th>
@@ -67,6 +68,9 @@ export default function TaskTable({
           <tbody className={styles.tableBody}>
             {tasks.map(task => (
               <tr key={task.id} className={styles.tableRow}>
+                <td className={cn(styles.tableCell, styles.tableCellMono)}>
+                  {task.id}
+                </td>
                 <td className={cn(styles.tableCell, styles.tableCellMono)}>
                   {task.title}
                 </td>
