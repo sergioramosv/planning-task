@@ -100,8 +100,10 @@ export function parseChangelog(content: string): ChangelogEntry[] {
           description: typeMatch[3] || cleanedText,
         }
       } else {
+        // Si no hay tipo explícito, inferir del tipo de sección
+        const typeFromSection = mapSectionTypeToChangeType(currentSection.type)
         changeItem = {
-          type: 'unknown',
+          type: typeFromSection,
           description: cleanedText,
         }
       }
@@ -143,6 +145,28 @@ function mapSectionType(title: string): ChangelogSection['type'] {
   if (normalized.includes('security')) return 'security'
 
   return 'unknown'
+}
+
+/**
+ * Mapea tipo de sección a tipo de cambio convencional
+ */
+function mapSectionTypeToChangeType(sectionType: ChangelogSection['type']): string {
+  switch (sectionType) {
+    case 'added':
+      return 'feat'
+    case 'fixed':
+      return 'fix'
+    case 'changed':
+      return 'refactor'
+    case 'deprecated':
+      return 'chore'
+    case 'removed':
+      return 'chore'
+    case 'security':
+      return 'fix'
+    default:
+      return 'chore'
+  }
 }
 
 /**
