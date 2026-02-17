@@ -4,7 +4,7 @@
 
 .filters {
   display: flex;
-  gap: var(--spacing-4);
+  gap: var(--spacing-6);
   flex-wrap: wrap;
   padding: var(--spacing-4);
   background-color: var(--color-neutral-50);
@@ -14,7 +14,7 @@
 .filterGroup {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2);
+  gap: var(--spacing-3);
   flex: 1;
   min-width: 200px;
 }
@@ -25,64 +25,29 @@
   color: var(--color-neutral-700);
 }
 
-.dropdownContainer {
-  position: relative;
-}
-
-.dropdownBtn {
-  width: 100%;
+.projectsCheckboxes {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-2) var(--spacing-3);
-  background: white;
-  border: 1px solid var(--color-neutral-300);
-  border-radius: var(--radius-md);
-  font-size: var(--text-sm);
-  cursor: pointer;
-  transition: all var(--transition-fast);
+  flex-direction: column;
+  gap: var(--spacing-2);
 }
 
-.dropdownBtn:hover {
-  border-color: var(--color-primary-400);
-  background-color: var(--color-neutral-50);
-}
-
-.dropdownText {
-  flex: 1;
-  text-align: left;
-}
-
-.dropdownMenu {
-  position: absolute;
-  top: calc(100% + var(--spacing-1));
-  left: 0;
-  right: 0;
-  background: white;
-  border: 1px solid var(--color-neutral-300);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  z-index: 10;
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-.checkboxLabel {
+.checkboxItem {
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
-  padding: var(--spacing-2) var(--spacing-3);
+  padding: var(--spacing-2) var(--spacing-2);
   cursor: pointer;
+  border-radius: var(--radius-md);
   transition: background-color var(--transition-fast);
-  border-bottom: 1px solid var(--color-neutral-100);
 }
 
-.checkboxLabel:hover {
-  background-color: var(--color-neutral-50);
+.checkboxItem:hover {
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
-.checkboxLabel:last-child {
-  border-bottom: none;
+.checkboxItem span {
+  font-size: var(--text-sm);
+  color: var(--color-neutral-700);
 }
 
 .checkbox {

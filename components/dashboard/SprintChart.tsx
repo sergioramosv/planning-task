@@ -1,29 +1,39 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Project, Sprint, Task } from '@/types'
+import { Project, Sprint, Task, User } from '@/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import styles from './SprintChart.module.css'
-import { ChevronDown } from 'lucide-react'
+
+interface DeveloperInfo {
+  id: string
+  name: string
+}
 
 interface SprintChartProps {
   projects: Project[]
   sprints: Sprint[]
   tasks: Task[]
+  users: User[]
   currentUserId?: string
 }
 
-export default function SprintChart({ projects, sprints, tasks, currentUserId }: SprintChartProps) {
+export default function SprintChart({ projects, sprints, tasks, users, currentUserId }: SprintChartProps) {
   const [selectedProjects, setSelectedProjects] = useState<string[]>(projects.length > 0 ? [projects[0].id] : [])
   const [selectedDeveloper, setSelectedDeveloper] = useState<string>('all')
-  const [projectsDropdownOpen, setProjectsDropdownOpen] = useState(false)
 
-  // Get unique developers
+  // Get unique developers with their names
   const developers = useMemo(() => {
-    const devSet = new Set(tasks.map(t => t.developer).filter(Boolean))
-    return Array.from(devSet).sort()
-  }, [tasks])
+    const devMap = new Map<string, string>()
+    tasks.forEach(t => {
+      if (t.developer && !devMap.has(t.developer)) {
+        const user = users.find(u => u.id === t.developer)
+        devMap.set(t.developer, user?.displayName || t.developer)
+      }
+    })
+    return Array.from(devMap.entries()).sort((a, b) => a[1].localeCompare(b[1]))
+  }, [tasks, users])
 
   // Calculate filtered tasks
   const filteredTasks = useMemo(() => {
@@ -88,33 +98,18 @@ export default function SprintChart({ projects, sprints, tasks, currentUserId }:
         <div className={styles.filters}>
           <div className={styles.filterGroup}>
             <label className={styles.label}>Proyectos:</label>
-            <div className={styles.dropdownContainer}>
-              <button
-                className={styles.dropdownBtn}
-                onClick={() => setProjectsDropdownOpen(!projectsDropdownOpen)}
-              >
-                <span className={styles.dropdownText}>
-                  {selectedProjects.length === 1
-                    ? projects.find(p => p.id === selectedProjects[0])?.name
-                    : `${selectedProjects.length} proyectos`}
-                </span>
-                <ChevronDown size={18} />
-              </button>
-              {projectsDropdownOpen && (
-                <div className={styles.dropdownMenu}>
-                  {projects.map(project => (
-                    <label key={project.id} className={styles.checkboxLabel}>
-                      <input
-                        type="checkbox"
-                        checked={selectedProjects.includes(project.id)}
-                        onChange={() => toggleProjectSelection(project.id)}
-                        className={styles.checkbox}
-                      />
-                      {project.name}
-                    </label>
-                  ))}
-                </div>
-              )}
+            <div className={styles.projectsCheckboxes}>
+              {projects.map(project => (
+                <label key={project.id} className={styles.checkboxItem}>
+                  <input
+                    type="checkbox"
+                    checked={selectedProjects.includes(project.id)}
+                    onChange={() => toggleProjectSelection(project.id)}
+                    className={styles.checkbox}
+                  />
+                  <span>{project.name}</span>
+                </label>
+              ))}
             </div>
           </div>
 
@@ -126,9 +121,9 @@ export default function SprintChart({ projects, sprints, tasks, currentUserId }:
               className={styles.select}
             >
               <option value="all">Todos</option>
-              {developers.map(dev => (
-                <option key={dev} value={dev}>
-                  {dev}
+              {developers.map(([devId, devName]) => (
+                <option key={devId} value={devId}>
+                  {devName}
                 </option>
               ))}
             </select>
