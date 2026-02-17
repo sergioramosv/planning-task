@@ -14,6 +14,7 @@ interface TaskKanbanProps {
   onDelete?: (taskId: string) => void
   onStatusChange?: (taskId: string, status: TaskStatus) => void
   onAddTask?: (status: TaskStatus) => void
+  filteredTasks?: Task[]
 }
 
 const KANBAN_COLUMNS: TaskStatus[] = ['to-do', 'in-progress', 'to-validate', 'validated', 'done']
@@ -24,8 +25,12 @@ export default function TaskKanban({
   onDelete,
   onStatusChange,
   onAddTask,
+  filteredTasks,
 }: TaskKanbanProps) {
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null)
+
+  // Use filteredTasks if provided, otherwise use all tasks
+  const displayTasks = filteredTasks || tasks
 
   const tasksByStatus: Record<TaskStatus, Task[]> = {
     'to-do': [],
@@ -35,7 +40,7 @@ export default function TaskKanban({
     'done': [],
   }
 
-  tasks.forEach(task => {
+  displayTasks.forEach(task => {
     tasksByStatus[task.status].push(task)
   })
 

@@ -33,11 +33,41 @@ export default function ProjectDetailsPage() {
   const [sortColumn, setSortColumn] = useState<'title' | 'status' | 'priority' | 'developer' | 'startDate'>('priority')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([])
+  const [filters, setFilters] = useState({
+    searchText: '',
+    selectedDeveloper: '',
+    selectedStatus: '',
+    selectedSprint: '',
+  })
 
-  // Initialize filtered tasks on load
+  // Initialize filtered tasks on load and apply filters
   useEffect(() => {
-    setFilteredTasks(tasks)
-  }, [tasks])
+    let filtered = [...tasks]
+
+    // Apply search filter
+    if (filters.searchText) {
+      filtered = filtered.filter(t =>
+        t.title.toLowerCase().includes(filters.searchText.toLowerCase())
+      )
+    }
+
+    // Apply developer filter
+    if (filters.selectedDeveloper) {
+      filtered = filtered.filter(t => t.developer === filters.selectedDeveloper)
+    }
+
+    // Apply status filter
+    if (filters.selectedStatus) {
+      filtered = filtered.filter(t => t.status === filters.selectedStatus)
+    }
+
+    // Apply sprint filter
+    if (filters.selectedSprint) {
+      filtered = filtered.filter(t => t.sprintId === filters.selectedSprint)
+    }
+
+    setFilteredTasks(filtered)
+  }, [tasks, filters])
 
   if (authLoading || tasksLoading || sprintsLoading) {
     return (
@@ -172,6 +202,31 @@ export default function ProjectDetailsPage() {
     }
   }
 
+  const handleSearchChange = (value: string) => {
+    setFilters({ ...filters, searchText: value })
+  }
+
+  const handleDeveloperChange = (value: string) => {
+    setFilters({ ...filters, selectedDeveloper: value })
+  }
+
+  const handleStatusFilterChange = (value: string) => {
+    setFilters({ ...filters, selectedStatus: value })
+  }
+
+  const handleSprintChange = (value: string) => {
+    setFilters({ ...filters, selectedSprint: value })
+  }
+
+  const handleClearFilters = () => {
+    setFilters({
+      searchText: '',
+      selectedDeveloper: '',
+      selectedStatus: '',
+      selectedSprint: '',
+    })
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -210,11 +265,17 @@ export default function ProjectDetailsPage() {
           </div>
         ) : (
           <>
-            {/*<TaskTableFilters
+            <TaskTableFilters
               tasks={tasks}
               sprints={sprints}
               developers={developers}
-            />*/}
+              filters={filters}
+              onSearchChange={handleSearchChange}
+              onDeveloperChange={handleDeveloperChange}
+              onStatusChange={handleStatusFilterChange}
+              onSprintChange={handleSprintChange}
+              onClearFilters={handleClearFilters}
+            />
 
             {viewMode === 'table' ? (
               <div style={{ overflowX: 'auto' }}>
@@ -300,6 +361,7 @@ export default function ProjectDetailsPage() {
             ) : (
               <TaskKanban
                 tasks={tasks}
+                filteredTasks={filteredTasks}
                 onEdit={handleEditTask}
                 onStatusChange={handleStatusChange}
               />
