@@ -5,6 +5,13 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.6] - 2026-02-18
+
+### Fixed
+- Redirect authenticated users from /login to /projects instead of /dashboard
+- Show loading spinner while validating session on login page
+- Prevent redirect flashing on login when user is already authenticated
+
 ## [1.5.5] - 2026-02-18
 
 ### Fixed
