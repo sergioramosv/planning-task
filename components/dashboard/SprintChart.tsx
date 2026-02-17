@@ -38,14 +38,14 @@ export default function SprintChart({ projects, sprints, tasks, currentUserId }:
   const globalStats = useMemo(() => {
     const selectedProjectsList = projects.filter(p => selectedProjects.includes(p.id))
     const totalTasks = filteredTasks.length
-    const myPendingTasks = currentUserId
-      ? filteredTasks.filter(t => t.developer === currentUserId && t.status !== 'done').length
+    const myCompletedTasks = currentUserId
+      ? filteredTasks.filter(t => t.developer === currentUserId && t.status === 'done').length
       : 0
 
     return {
       totalProjects: selectedProjectsList.length,
       totalTasks,
-      myPendingTasks
+      myCompletedTasks
     }
   }, [selectedProjects, filteredTasks, currentUserId, projects])
 
@@ -158,10 +158,10 @@ export default function SprintChart({ projects, sprints, tasks, currentUserId }:
 
           <Card>
             <CardContent className={styles.statCard}>
-              <div className={styles.statValue} style={{ color: '#F59E0B' }}>
-                {globalStats.myPendingTasks}
+              <div className={styles.statValue} style={{ color: '#10B981' }}>
+                {globalStats.myCompletedTasks}
               </div>
-              <p className={styles.statLabel}>Mis Tareas Pendientes</p>
+              <p className={styles.statLabel}>Mis Tareas Completadas</p>
             </CardContent>
           </Card>
         </div>
