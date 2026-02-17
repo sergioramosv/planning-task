@@ -5,6 +5,17 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.5] - 2026-02-18
+
+### Fixed
+- Resolve build errors and type issues in project components
+- Add missing onCancel prop to SprintForm component
+- Replace Input component with native textarea for project description field
+- Fix HTMLTextAreaElement type compatibility in ProjectEditModal
+- Remove reference to non-existent task.epic property from TaskTable
+- Handle optional endDate field in task table display
+- Fix type errors in ProjectEditModal change event handler
+
 ## [1.5.4] - 2026-02-18
 
 ### Added
