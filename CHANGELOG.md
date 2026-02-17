@@ -5,6 +5,28 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.4] - 2026-02-18
+
+### Added
+- Sprint chart component with line graph for business and development points by sprint
+- Developer performance charts (bar chart and pie chart) synchronized with project filters
+- Project selector as mini white cards with checkboxes in dashboard
+- Developer filter with proper name display in sprint chart
+- DeveloperPerformance component that filters data by selected projects
+- useLocalStorage hook for state persistence
+- Services for project, sprint, task, and user data access
+
+### Fixed
+- Show only completed tasks (status === 'done') in sprint points calculation
+- Restore developer filter dropdown with proper name display
+- Use correct user.uid instead of user.id when finding developers
+- Dashboard state management with synchronized project filters
+
+### Changed
+- Reorganized sprint chart filters with developer filter above chart
+- Updated chart data to only count tasks with 'done' status
+- Improved global statistics display (projects, tasks, completed tasks)
+
 ## [1.1.0] - 2026-02-17
 
 ### Added
