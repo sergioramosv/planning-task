@@ -12,10 +12,11 @@ import styles from './SprintForm.module.css'
 interface SprintFormProps {
   sprint?: Sprint
   onSubmit: (data: SprintFormData) => Promise<void>
+  onCancel?: () => void
   isLoading?: boolean
 }
 
-export default function SprintForm({ sprint, onSubmit, isLoading = false }: SprintFormProps) {
+export default function SprintForm({ sprint, onSubmit, onCancel, isLoading = false }: SprintFormProps) {
   const {
     register,
     handleSubmit,
@@ -76,9 +77,16 @@ export default function SprintForm({ sprint, onSubmit, isLoading = false }: Spri
         ]}
       />
 
-      <Button type="submit" fullWidth loading={isLoading} disabled={isLoading}>
-        {sprint ? 'Actualizar Sprint' : 'Crear Sprint'}
-      </Button>
+      <div className={styles.actions}>
+        <Button type="submit" fullWidth loading={isLoading} disabled={isLoading}>
+          {sprint ? 'Actualizar Sprint' : 'Crear Sprint'}
+        </Button>
+        {onCancel && (
+          <Button type="button" variant="secondary" fullWidth onClick={onCancel} disabled={isLoading}>
+            Cancelar
+          </Button>
+        )}
+      </div>
     </form>
   )
 }

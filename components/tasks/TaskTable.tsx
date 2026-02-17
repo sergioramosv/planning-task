@@ -55,7 +55,6 @@ export default function TaskTable({
             <tr>
               <th className={styles.tableHeader}>ID</th>
               <th className={styles.tableHeader}>Título</th>
-              <th className={styles.tableHeader}>Épica</th>
               <th className={styles.tableHeader}>Developer</th>
               <th className={styles.tableHeader}>Inicio</th>
               <th className={styles.tableHeader}>Fin</th>
@@ -74,10 +73,9 @@ export default function TaskTable({
                 <td className={cn(styles.tableCell, styles.tableCellMono)}>
                   {task.title}
                 </td>
-                <td className={cn(styles.tableCell, styles.tableCellGray)}>{task.epic}</td>
                 <td className={cn(styles.tableCell, styles.tableCellGray)}>{task.developer}</td>
                 <td className={cn(styles.tableCell, styles.tableCellGray)}>{formatDate(task.startDate)}</td>
-                <td className={cn(styles.tableCell, styles.tableCellGray)}>{formatDate(task.endDate)}</td>
+                <td className={cn(styles.tableCell, styles.tableCellGray)}>{task.endDate ? formatDate(task.endDate) : '-'}</td>
                 <td className={cn(styles.tableCell, styles.tableCellGray, styles.tableCellCenter)}>
                   {task.bizPoints}/{task.devPoints}
                 </td>

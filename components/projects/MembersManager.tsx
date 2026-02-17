@@ -5,6 +5,7 @@ import { X, Plus, Search } from 'lucide-react'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import { useAuth } from '@/hooks/useAuth'
+import { UserService } from '@/lib/services/user.service'
 import styles from './MembersManager.module.css'
 
 interface Member {
@@ -33,15 +34,16 @@ export default function MembersManager({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Simulado - En producción, esto vendría de Firebase
+
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        // TODO: Implementar llamada a Firebase para obtener todos los usuarios
-        // Por ahora, está vacío
-        setAllUsers([])
+        const users = await UserService.getAllUsers()
+        setAllUsers(users)
       } catch (err) {
         setError('Error al cargar usuarios')
+        console.error(err)
       }
     }
     fetchUsers()
@@ -82,7 +84,7 @@ export default function MembersManager({
   return (
     <div className={styles.container}>
       <div className={styles.section}>
-        <h3 className={styles.title}>Miembros del Proyecto</h3>
+      <h3 className={styles.title}>Miembros del Proyecto</h3>
 
         {error && <div className={styles.error}>{error}</div>}
 
@@ -91,27 +93,41 @@ export default function MembersManager({
           {membersList.length === 0 ? (
             <p className={styles.emptyState}>No hay miembros agregados</p>
           ) : (
-            membersList.map((memberId) => (
-              <div key={memberId} className={styles.memberItem}>
-                <div className={styles.memberInfo}>
-                  <span className={styles.memberName}>
-                    {memberId === projectCreatorId && (
-                      <span className={styles.creatorBadge}>Creador</span>
+            membersList.map((memberId) => {
+              const member = allUsers.find(u => u.uid === memberId)
+              return (
+                <div key={memberId} className={styles.memberItem}>
+                  <div className={styles.memberInfo}>
+                    {member?.photoURL && (
+                      <img
+                        src={member.photoURL}
+                        alt={member.displayName}
+                        className={styles.avatarSmall}
+                      />
                     )}
-                  </span>
+                    <div>
+                      <div className={styles.memberName}>
+                        {member?.displayName || 'Usuario'}
+                        {memberId === projectCreatorId && (
+                          <span className={styles.creatorBadge}>Creador</span>
+                        )}
+                      </div>
+                      <div className={styles.memberEmail}>{member?.email}</div>
+                    </div>
+                  </div>
+                  {memberId !== projectCreatorId && currentUser?.uid === projectCreatorId && (
+                    <button
+                      onClick={() => handleRemoveMember(memberId)}
+                      className={styles.removeButton}
+                      title="Remover miembro"
+                      disabled={loading}
+                    >
+                      <X size={18} />
+                    </button>
+                  )}
                 </div>
-                {memberId !== projectCreatorId && currentUser?.uid === projectCreatorId && (
-                  <button
-                    onClick={() => handleRemoveMember(memberId)}
-                    className={styles.removeButton}
-                    title="Remover miembro"
-                    disabled={loading}
-                  >
-                    <X size={18} />
-                  </button>
-                )}
-              </div>
-            ))
+              )
+            })
           )}
         </div>
 
@@ -126,6 +142,7 @@ export default function MembersManager({
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 disabled={loading}
+                style={{ paddingLeft: '2.5rem' }}
               />
             </div>
 

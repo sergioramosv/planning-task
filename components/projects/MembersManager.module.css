@@ -75,6 +75,11 @@
   font-weight: var(--font-medium);
 }
 
+.memberEmail {
+  font-size: var(--text-xs);
+  color: var(--color-neutral-500);
+}
+
 .creatorBadge {
   display: inline-block;
   background-color: var(--color-primary-100);

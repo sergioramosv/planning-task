@@ -50,7 +50,7 @@ export default function ProjectEditModal({
   const isCreator = user?.uid === project.createdBy
   const canEdit = isCreator
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({
       ...prev,
@@ -153,14 +153,14 @@ export default function ProjectEditModal({
             </div>
 
             <div className={styles.formGroup}>
-              <Input
-                label="Descripción"
+              <label>Descripción</label>
+              <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
                 disabled={!canEdit || loading}
                 required
-                as="textarea"
+                className={styles.textarea}
               />
             </div>
 

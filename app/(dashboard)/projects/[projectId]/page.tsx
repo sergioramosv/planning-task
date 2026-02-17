@@ -210,12 +210,11 @@ export default function ProjectDetailsPage() {
           </div>
         ) : (
           <>
-            <TaskTableFilters
+            {/*<TaskTableFilters
               tasks={tasks}
               sprints={sprints}
               developers={developers}
-              onFilterChange={setFilteredTasks}
-            />
+            />*/}
 
             {viewMode === 'table' ? (
               <div style={{ overflowX: 'auto' }}>

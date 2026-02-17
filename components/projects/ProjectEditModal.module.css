@@ -68,6 +68,22 @@
   font-size: var(--text-sm);
 }
 
+.textarea {
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-family: inherit;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.textarea:disabled {
+  background-color: var(--color-neutral-100);
+  color: var(--color-neutral-500);
+  cursor: not-allowed;
+}
+
 .actions {
   display: flex;
   gap: var(--spacing-3);
