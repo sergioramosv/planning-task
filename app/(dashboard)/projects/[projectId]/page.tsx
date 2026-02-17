@@ -362,6 +362,8 @@ export default function ProjectDetailsPage() {
               <TaskKanban
                 tasks={tasks}
                 filteredTasks={filteredTasks}
+                sprints={sprints}
+                developers={developers}
                 onEdit={handleEditTask}
                 onStatusChange={handleStatusChange}
               />

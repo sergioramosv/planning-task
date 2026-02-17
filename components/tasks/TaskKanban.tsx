@@ -15,6 +15,8 @@ interface TaskKanbanProps {
   onStatusChange?: (taskId: string, status: TaskStatus) => void
   onAddTask?: (status: TaskStatus) => void
   filteredTasks?: Task[]
+  sprints?: any[]
+  developers?: Array<{ id: string; name: string }>
 }
 
 const KANBAN_COLUMNS: TaskStatus[] = ['to-do', 'in-progress', 'to-validate', 'validated', 'done']
@@ -26,8 +28,21 @@ export default function TaskKanban({
   onStatusChange,
   onAddTask,
   filteredTasks,
+  sprints = [],
+  developers = [],
 }: TaskKanbanProps) {
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null)
+
+  const getSprintName = (sprintId?: string) => {
+    if (!sprintId) return undefined
+    const sprint = sprints.find(s => s.id === sprintId)
+    return sprint ? sprint.name : undefined
+  }
+
+  const getDeveloperName = (devId: string) => {
+    const dev = developers.find(d => d.id === devId)
+    return dev ? dev.name : undefined
+  }
 
   // Use filteredTasks if provided, otherwise use all tasks
   const displayTasks = filteredTasks || tasks
@@ -96,7 +111,11 @@ export default function TaskKanban({
                 onClick={() => onEdit?.(task)}
                 className={`${styles.taskItem} ${draggedTaskId === task.id ? styles.dragging : ''}`}
               >
-                <TaskCard task={task} />
+                <TaskCard
+                  task={task}
+                  developerName={getDeveloperName(task.developer)}
+                  sprintName={getSprintName(task.sprintId)}
+                />
               </div>
             ))}
           </div>
