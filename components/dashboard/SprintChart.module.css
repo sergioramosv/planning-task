@@ -149,3 +149,39 @@
   font-size: var(--text-lg);
   font-weight: var(--font-bold);
 }
+
+.projectCards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
+}
+
+.projectCard {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  background: white;
+  border: 2px solid var(--color-neutral-200);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: var(--text-sm);
+  color: var(--color-neutral-700);
+  font-weight: var(--font-medium);
+}
+
+.projectCard:hover {
+  border-color: var(--color-primary-300);
+  background-color: var(--color-neutral-50);
+}
+
+.projectCardActive {
+  border-color: var(--color-primary-500);
+  background-color: var(--color-primary-50);
+  color: var(--color-primary-700);
+}
+
+.projectCard .checkbox {
+  margin: 0;
+}

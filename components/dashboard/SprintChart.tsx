@@ -68,7 +68,7 @@ export default function SprintChart({ projects, sprints, tasks, users, currentUs
     )
 
     return sortedSprints.map(sprint => {
-      let sprintTasks = filteredTasks.filter(t => t.sprintId === sprint.id)
+      let sprintTasks = filteredTasks.filter(t => t.sprintId === sprint.id && t.status === 'done')
 
       const bizPoints = sprintTasks.reduce((sum, t) => sum + (t.bizPoints || 0), 0)
       const devPoints = sprintTasks.reduce((sum, t) => sum + (t.devPoints || 0), 0)
@@ -95,39 +95,24 @@ export default function SprintChart({ projects, sprints, tasks, users, currentUs
   return (
     <>
       <div className={styles.filtersContainer}>
-        <div className={styles.filters}>
-          <div className={styles.filterGroup}>
-            <label className={styles.label}>Proyectos:</label>
-            <div className={styles.projectsCheckboxes}>
-              {projects.map(project => (
-                <label key={project.id} className={styles.checkboxItem}>
-                  <input
-                    type="checkbox"
-                    checked={selectedProjects.includes(project.id)}
-                    onChange={() => toggleProjectSelection(project.id)}
-                    className={styles.checkbox}
-                  />
-                  <span>{project.name}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div className={styles.filterGroup}>
-            <label className={styles.label}>Developer:</label>
-            <select
-              value={selectedDeveloper}
-              onChange={(e) => setSelectedDeveloper(e.target.value)}
-              className={styles.select}
+        <div className={styles.label}>Proyectos:</div>
+        <div className={styles.projectCards}>
+          {projects.map(project => (
+            <button
+              key={project.id}
+              className={`${styles.projectCard} ${selectedProjects.includes(project.id) ? styles.projectCardActive : ''}`}
+              onClick={() => toggleProjectSelection(project.id)}
             >
-              <option value="all">Todos</option>
-              {developers.map(([devId, devName]) => (
-                <option key={devId} value={devId}>
-                  {devName}
-                </option>
-              ))}
-            </select>
-          </div>
+              <input
+                type="checkbox"
+                checked={selectedProjects.includes(project.id)}
+                onChange={() => {}}
+                className={styles.checkbox}
+                style={{ pointerEvents: 'none' }}
+              />
+              <span>{project.name}</span>
+            </button>
+          ))}
         </div>
       </div>
 
@@ -159,6 +144,24 @@ export default function SprintChart({ projects, sprints, tasks, users, currentUs
               <p className={styles.statLabel}>Mis Tareas Completadas</p>
             </CardContent>
           </Card>
+        </div>
+      )}
+
+      {hasData && (
+        <div className={styles.filterGroup}>
+          <label className={styles.label}>Developer:</label>
+          <select
+            value={selectedDeveloper}
+            onChange={(e) => setSelectedDeveloper(e.target.value)}
+            className={styles.select}
+          >
+            <option value="all">Todos los Developers</option>
+            {developers.map(([id, name]) => (
+              <option key={id} value={id}>
+                {name}
+              </option>
+            ))}
+          </select>
         </div>
       )}
 
