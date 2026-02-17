@@ -34,6 +34,7 @@ export default function DashboardPage() {
   const [allUsers, setAllUsers] = useState<User[]>([])
   const [allProjects, setAllProjects] = useState<Project[]>([])
   const [allSprints, setAllSprints] = useState<Sprint[]>([])
+  const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -86,6 +87,10 @@ export default function DashboardPage() {
         setAllUsers(users)
         setAllProjects(projects)
         setAllSprints(sprints)
+        // Initialize selected projects with the first project if available
+        if (projects.length > 0) {
+          setSelectedProjectIds([projects[0].id])
+        }
 
       } catch (error) {
         console.error('Error fetching dashboard data:', error)
@@ -123,9 +128,17 @@ export default function DashboardPage() {
         <p className={styles.subtitle}>Gestiona tus proyectos y tareas de forma eficiente</p>
       </div>
 
-      <SprintChart projects={allProjects} sprints={allSprints} tasks={allTasks} users={allUsers} currentUserId={user?.uid} />
+      <SprintChart
+        projects={allProjects}
+        sprints={allSprints}
+        tasks={allTasks}
+        users={allUsers}
+        currentUserId={user?.uid}
+        selectedProjectIds={selectedProjectIds}
+        onSelectedProjectsChange={setSelectedProjectIds}
+      />
 
-      <DeveloperPerformance tasks={allTasks} users={allUsers} />
+      <DeveloperPerformance tasks={allTasks} users={allUsers} selectedProjectIds={selectedProjectIds} />
     </div>
   )
 }

@@ -1,15 +1,10 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Project, Sprint, Task, User } from '@/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import styles from './SprintChart.module.css'
-
-interface DeveloperInfo {
-  id: string
-  name: string
-}
 
 interface SprintChartProps {
   projects: Project[]
@@ -17,12 +12,19 @@ interface SprintChartProps {
   tasks: Task[]
   users: User[]
   currentUserId?: string
+  selectedProjectIds: string[]
+  onSelectedProjectsChange: (projectIds: string[]) => void
 }
 
-export default function SprintChart({ projects, sprints, tasks, users, currentUserId }: SprintChartProps) {
-  const [selectedProjects, setSelectedProjects] = useState<string[]>(projects.length > 0 ? [projects[0].id] : [])
-  const [selectedDeveloper, setSelectedDeveloper] = useState<string>('all')
-
+export default function SprintChart({
+  projects,
+  sprints,
+  tasks,
+  users,
+  currentUserId,
+  selectedProjectIds,
+  onSelectedProjectsChange
+}: SprintChartProps) {
   // Get unique developers with their names
   const developers = useMemo(() => {
     const devMap = new Map<string, string>()
@@ -35,18 +37,21 @@ export default function SprintChart({ projects, sprints, tasks, users, currentUs
     return Array.from(devMap.entries()).sort((a, b) => a[1].localeCompare(b[1]))
   }, [tasks, users])
 
+  // Filter by selected developer (default 'all')
+  const selectedDeveloper = 'all'
+
   // Calculate filtered tasks
   const filteredTasks = useMemo(() => {
-    let filtered = tasks.filter(t => selectedProjects.includes(t.projectId))
+    let filtered = tasks.filter(t => selectedProjectIds.includes(t.projectId))
     if (selectedDeveloper !== 'all') {
       filtered = filtered.filter(t => t.developer === selectedDeveloper)
     }
     return filtered
-  }, [selectedProjects, selectedDeveloper, tasks])
+  }, [selectedProjectIds, selectedDeveloper, tasks])
 
   // Calculate global stats
   const globalStats = useMemo(() => {
-    const selectedProjectsList = projects.filter(p => selectedProjects.includes(p.id))
+    const selectedProjectsList = projects.filter(p => selectedProjectIds.includes(p.id))
     const totalTasks = filteredTasks.length
     const myCompletedTasks = currentUserId
       ? filteredTasks.filter(t => t.developer === currentUserId && t.status === 'done').length
@@ -57,11 +62,11 @@ export default function SprintChart({ projects, sprints, tasks, users, currentUs
       totalTasks,
       myCompletedTasks
     }
-  }, [selectedProjects, filteredTasks, currentUserId, projects])
+  }, [selectedProjectIds, filteredTasks, currentUserId, projects])
 
   // Calculate chart data
   const chartData = useMemo(() => {
-    const filteredSprints = sprints.filter(s => selectedProjects.includes(s.projectId))
+    const filteredSprints = sprints.filter(s => selectedProjectIds.includes(s.projectId))
 
     const sortedSprints = [...filteredSprints].sort((a, b) =>
       new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
@@ -79,18 +84,19 @@ export default function SprintChart({ projects, sprints, tasks, users, currentUs
         'Pts Desarrollo': devPoints
       }
     })
-  }, [selectedProjects, filteredTasks, sprints])
+  }, [selectedProjectIds, filteredTasks, sprints])
 
   const toggleProjectSelection = (projectId: string) => {
-    setSelectedProjects(prev => {
-      if (prev.includes(projectId)) {
-        return prev.length > 1 ? prev.filter(id => id !== projectId) : prev
+    if (selectedProjectIds.includes(projectId)) {
+      if (selectedProjectIds.length > 1) {
+        onSelectedProjectsChange(selectedProjectIds.filter(id => id !== projectId))
       }
-      return [...prev, projectId]
-    })
+    } else {
+      onSelectedProjectsChange([...selectedProjectIds, projectId])
+    }
   }
 
-  const hasData = selectedProjects.length > 0
+  const hasData = selectedProjectIds.length > 0
 
   return (
     <>
@@ -100,12 +106,12 @@ export default function SprintChart({ projects, sprints, tasks, users, currentUs
           {projects.map(project => (
             <button
               key={project.id}
-              className={`${styles.projectCard} ${selectedProjects.includes(project.id) ? styles.projectCardActive : ''}`}
+              className={`${styles.projectCard} ${selectedProjectIds.includes(project.id) ? styles.projectCardActive : ''}`}
               onClick={() => toggleProjectSelection(project.id)}
             >
               <input
                 type="checkbox"
-                checked={selectedProjects.includes(project.id)}
+                checked={selectedProjectIds.includes(project.id)}
                 onChange={() => {}}
                 className={styles.checkbox}
                 style={{ pointerEvents: 'none' }}
@@ -150,11 +156,7 @@ export default function SprintChart({ projects, sprints, tasks, users, currentUs
       {hasData && (
         <div className={styles.filterGroup}>
           <label className={styles.label}>Developer:</label>
-          <select
-            value={selectedDeveloper}
-            onChange={(e) => setSelectedDeveloper(e.target.value)}
-            className={styles.select}
-          >
+          <select className={styles.select} disabled>
             <option value="all">Todos los Developers</option>
             {developers.map(([id, name]) => (
               <option key={id} value={id}>
