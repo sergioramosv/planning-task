@@ -12,7 +12,7 @@ import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
 import SprintCard from '@/components/sprints/SprintCard'
 import SprintForm from '@/components/sprints/SprintForm'
-import { ArrowLeft, Plus } from 'lucide-react'
+import { ArrowLeft, Plus, AlertTriangle } from 'lucide-react'
 import styles from './page.module.css'
 
 export default function SprintsPage() {
@@ -189,9 +189,12 @@ export default function SprintsPage() {
         title="Eliminar Sprint"
       >
         <div className={styles.deleteConfirm}>
-          <p className={styles.deleteWarning}>
-            ⚠️ Esta acción eliminará el sprint "{sprintToDelete?.name}" y todas sus tareas.
-          </p>
+          <div className={styles.deleteWarningContainer}>
+            <AlertTriangle size={20} style={{ color: '#EF4444' }} />
+            <p className={styles.deleteWarning}>
+              Esta acción eliminará el sprint "{sprintToDelete?.name}" y todas sus tareas.
+            </p>
+          </div>
           <p className={styles.deleteInstruction}>
             Escribe <strong>ELIMINAR</strong> para confirmar:
           </p>
