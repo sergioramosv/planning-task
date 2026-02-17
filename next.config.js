@@ -1,10 +1,12 @@
 /** @type {import('next').NextConfig} */
+const packageJson = require('./package.json');
+
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: false,
 
   env: {
-    NEXT_PUBLIC_APP_VERSION: process.env.npm_package_version || '1.0.0',
+    NEXT_PUBLIC_APP_VERSION: process.env.npm_package_version || packageJson.version || '1.0.0',
     NEXT_PUBLIC_BUILD_TIME: new Date().toISOString(),
   },
 

@@ -37,7 +37,7 @@ export default function LoginForm() {
         const displayName = `${firstName} ${lastName}`
         await register(email, password, displayName)
       }
-      router.push('/dashboard')
+      router.push('/projects')
     } catch (err) {
       setFormError(error || 'Error al procesar la solicitud')
     }

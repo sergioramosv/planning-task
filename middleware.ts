@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
 
   // Redirect logged-in users away from login page
   if (isAuthPage && session) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+    return NextResponse.redirect(new URL('/projects', request.url))
   }
 
   // Redirect unauthenticated users to login
