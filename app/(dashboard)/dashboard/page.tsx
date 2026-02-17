@@ -215,7 +215,7 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <SprintChart projects={allProjects} sprints={allSprints} tasks={allTasks} />
+      <SprintChart projects={allProjects} sprints={allSprints} tasks={allTasks} currentUserId={user?.uid} />
 
       <DeveloperPerformance tasks={allTasks} users={allUsers} />
     </div>
