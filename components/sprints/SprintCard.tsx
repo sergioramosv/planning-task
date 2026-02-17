@@ -47,11 +47,11 @@ export default function SprintCard({
   }
 
   return (
-    <div className={styles.card} style={{ backgroundColor: theme.bg, borderLeftColor: theme.border }}>
+    <div className={styles.card} style={{ borderLeftColor: theme.border }}>
       <div className={styles.header}>
         <div className={styles.titleSection}>
-          <h3 className={styles.title} style={{ color: theme.text }}>{sprint.name}</h3>
-          <span className={styles.status} style={{ backgroundColor: theme.bg, borderColor: theme.border, color: theme.text }}>
+          <h3 className={styles.title}>{sprint.name}</h3>
+          <span className={styles.status} style={{ borderColor: theme.border, color: theme.icon }}>
             {getStatusIcon()}
             {getStatusLabel()}
           </span>
@@ -80,14 +80,14 @@ export default function SprintCard({
           <Calendar size={16} style={{ color: theme.icon }} />
           <div>
             <span className={styles.label}>Inicio:</span>
-            <span style={{ color: theme.text }}>{sprint.startDate}</span>
+            <span>{sprint.startDate}</span>
           </div>
         </div>
         <div className={styles.dateItem}>
           <Calendar size={16} style={{ color: theme.icon }} />
           <div>
             <span className={styles.label}>Fin:</span>
-            <span style={{ color: theme.text }}>{sprint.endDate}</span>
+            <span>{sprint.endDate}</span>
           </div>
         </div>
       </div>
@@ -95,15 +95,15 @@ export default function SprintCard({
       <div className={styles.stats}>
         <div className={styles.statItem}>
           <span className={styles.statLabel}>Tareas</span>
-          <span className={styles.statValue} style={{ color: theme.text }}>{taskCount}</span>
+          <span className={styles.statValue}>{taskCount}</span>
         </div>
         <div className={styles.statItem}>
           <span className={styles.statLabel}>Pts Negocio</span>
-          <span className={styles.statValue} style={{ color: theme.text }}>{totalBizPoints}</span>
+          <span className={styles.statValue}>{totalBizPoints}</span>
         </div>
         <div className={styles.statItem}>
           <span className={styles.statLabel}>Pts Dev</span>
-          <span className={styles.statValue} style={{ color: theme.text }}>{totalDevPoints}</span>
+          <span className={styles.statValue}>{totalDevPoints}</span>
         </div>
       </div>
     </div>
