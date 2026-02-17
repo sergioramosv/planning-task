@@ -1,80 +1,144 @@
-.link {
-  text-decoration: none;
-}
-
 .card {
-  transition: box-shadow var(--transition-normal);
-  cursor: pointer;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-left: 4px solid;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  height: 100%;
 }
 
 .card:hover {
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-color: #d1d5db;
 }
 
 .header {
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 16px;
 }
 
-.headerContent {
+.titleSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   flex: 1;
 }
 
 .title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  border: 1px solid;
+  font-size: 12px;
+  font-weight: 500;
+  width: fit-content;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.actionBtn {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.2s ease;
+  border-radius: 4px;
   display: flex;
   align-items: center;
-  gap: var(--spacing-2);
+  justify-content: center;
 }
 
-.titleIcon {
-  color: var(--color-primary-500);
+.actionBtn:hover {
+  background: #f3f4f6;
+  color: #374151;
 }
 
-.content {
+.actionBtn.delete {
+  color: #ef4444;
+}
+
+.actionBtn.delete:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.dateItem {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.dateItem > div {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-4);
+  gap: 4px;
 }
 
-.dateInfo {
+.label {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.dates > div > span:last-child {
+  font-size: 14px;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.statItem {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: var(--spacing-2);
-  font-size: var(--text-sm);
-  color: var(--color-neutral-600);
+  gap: 4px;
+  padding: 8px;
+  background: #f9fafb;
+  border-radius: 6px;
 }
 
-.statusRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.statLabel {
+  font-size: 11px;
+  color: #6b7280;
+  font-weight: 500;
+  text-transform: uppercase;
 }
 
-.statusBadge {
-  padding: var(--spacing-1) var(--spacing-3);
-  border-radius: var(--radius-full);
-  font-size: var(--text-xs);
-  font-weight: var(--font-medium);
-}
-
-.statusActive {
-  background-color: var(--color-green-100);
-  color: var(--color-green-700);
-}
-
-.statusPlanned {
-  background-color: var(--color-blue-100);
-  color: var(--color-blue-700);
-}
-
-.statusCompleted {
-  background-color: var(--color-primary-100);
-  color: var(--color-primary-700);
-}
-
-.taskCount {
-  font-size: var(--text-sm);
-  font-weight: var(--font-medium);
-  color: var(--color-neutral-600);
+.statValue {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
 }

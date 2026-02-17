@@ -1,76 +1,111 @@
 'use client'
 
 import { Sprint } from '@/types'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Calendar, TrendingUp } from 'lucide-react'
-import { formatDate } from '@/lib/utils/formatters'
-import Link from 'next/link'
-import { cn } from '@/lib/utils/cn'
+import { Trash2, Edit2, Calendar, CheckCircle, Clock } from 'lucide-react'
 import styles from './SprintCard.module.css'
+import { getProjectColor } from '@/lib/utils/colors'
 
 interface SprintCardProps {
   sprint: Sprint
-  projectId: string
-  taskCount?: number
-  onEdit?: (sprint: Sprint) => void
-  onDelete?: (sprintId: string) => void
+  totalBizPoints: number
+  totalDevPoints: number
+  taskCount: number
+  onEdit: (sprint: Sprint) => void
+  onDelete: (sprint: Sprint) => void
 }
 
 export default function SprintCard({
   sprint,
-  projectId,
-  taskCount = 0,
+  totalBizPoints,
+  totalDevPoints,
+  taskCount,
   onEdit,
   onDelete,
 }: SprintCardProps) {
-  const getStatusClass = (status: string) => {
-    switch (status) {
+  const theme = getProjectColor(sprint.id)
+
+  const getStatusIcon = () => {
+    switch (sprint.status) {
       case 'active':
-        return styles.statusActive
-      case 'planned':
-        return styles.statusPlanned
+        return <Clock size={16} style={{ color: theme.icon }} />
+      case 'completed':
+        return <CheckCircle size={16} style={{ color: theme.icon }} />
       default:
-        return styles.statusCompleted
+        return <Calendar size={16} style={{ color: theme.icon }} />
     }
   }
 
-  const getStatusLabel = (status: string) => {
-    switch (status) {
+  const getStatusLabel = () => {
+    switch (sprint.status) {
       case 'active':
         return 'Activo'
-      case 'planned':
-        return 'Planeado'
-      default:
+      case 'completed':
         return 'Completado'
+      default:
+        return 'Planificado'
     }
   }
 
   return (
-    <Link href={`/projects/${projectId}/tasks?sprint=${sprint.id}`} className={styles.link}>
-      <Card className={styles.card}>
-        <CardHeader>
-          <div className={styles.header}>
-            <div className={styles.headerContent}>
-              <CardTitle className={styles.title}>
-                <TrendingUp size={20} className={styles.titleIcon} />
-                {sprint.name}
-              </CardTitle>
-            </div>
+    <div className={styles.card} style={{ backgroundColor: theme.bg, borderLeftColor: theme.border }}>
+      <div className={styles.header}>
+        <div className={styles.titleSection}>
+          <h3 className={styles.title} style={{ color: theme.text }}>{sprint.name}</h3>
+          <span className={styles.status} style={{ backgroundColor: theme.bg, borderColor: theme.border, color: theme.text }}>
+            {getStatusIcon()}
+            {getStatusLabel()}
+          </span>
+        </div>
+        <div className={styles.actions}>
+          <button
+            onClick={() => onEdit(sprint)}
+            className={styles.actionBtn}
+            style={{ color: theme.icon }}
+            title="Editar sprint"
+          >
+            <Edit2 size={18} />
+          </button>
+          <button
+            onClick={() => onDelete(sprint)}
+            className={`${styles.actionBtn} ${styles.delete}`}
+            title="Eliminar sprint"
+          >
+            <Trash2 size={18} />
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.dates}>
+        <div className={styles.dateItem}>
+          <Calendar size={16} style={{ color: theme.icon }} />
+          <div>
+            <span className={styles.label}>Inicio:</span>
+            <span style={{ color: theme.text }}>{sprint.startDate}</span>
           </div>
-        </CardHeader>
-        <CardContent className={styles.content}>
-          <div className={styles.dateInfo}>
-            <Calendar size={16} />
-            <span>{formatDate(sprint.startDate)} - {formatDate(sprint.endDate)}</span>
+        </div>
+        <div className={styles.dateItem}>
+          <Calendar size={16} style={{ color: theme.icon }} />
+          <div>
+            <span className={styles.label}>Fin:</span>
+            <span style={{ color: theme.text }}>{sprint.endDate}</span>
           </div>
-          <div className={styles.statusRow}>
-            <span className={cn(styles.statusBadge, getStatusClass(sprint.status))}>
-              {getStatusLabel(sprint.status)}
-            </span>
-            <span className={styles.taskCount}>{taskCount} tareas</span>
-          </div>
-        </CardContent>
-      </Card>
-    </Link>
+        </div>
+      </div>
+
+      <div className={styles.stats}>
+        <div className={styles.statItem}>
+          <span className={styles.statLabel}>Tareas</span>
+          <span className={styles.statValue} style={{ color: theme.text }}>{taskCount}</span>
+        </div>
+        <div className={styles.statItem}>
+          <span className={styles.statLabel}>Pts Negocio</span>
+          <span className={styles.statValue} style={{ color: theme.text }}>{totalBizPoints}</span>
+        </div>
+        <div className={styles.statItem}>
+          <span className={styles.statLabel}>Pts Dev</span>
+          <span className={styles.statValue} style={{ color: theme.text }}>{totalDevPoints}</span>
+        </div>
+      </div>
+    </div>
   )
 }
