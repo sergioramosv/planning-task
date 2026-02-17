@@ -6,7 +6,9 @@ import { useProjects } from '@/hooks/useProjects'
 import Button from '@/components/ui/Button'
 import ProjectList from '@/components/projects/ProjectList'
 import ProjectModal from '@/components/projects/ProjectModal'
+import ProjectEditModal from '@/components/projects/ProjectEditModal'
 import Spinner from '@/components/ui/Spinner'
+import { Project } from '@/types/project'
 import { ProjectFormData } from '@/lib/utils/validators'
 import toast, { Toaster } from 'react-hot-toast'
 import ConfirmationModal from '@/components/ui/ConfirmationModal'
@@ -16,6 +18,8 @@ export default function ProjectsPage() {
   const { user, loading: authLoading } = useAuth()
   const { projects, loading, error, createProject, updateProject, deleteProject } = useProjects(user?.uid || null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [projectToEdit, setProjectToEdit] = useState<Project | null>(null)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [projectToDelete, setProjectToDelete] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -48,6 +52,60 @@ export default function ProjectsPage() {
   const confirmDeleteProject = (projectId: string) => {
     setProjectToDelete(projectId)
     setIsDeleteModalOpen(true)
+  }
+
+  const handleEditProject = (project: Project) => {
+    setProjectToEdit(project)
+    setIsEditModalOpen(true)
+  }
+
+  const handleSaveProjectEdit = async (updates: Partial<Project>) => {
+    if (!projectToEdit) return
+
+    setIsLoading(true)
+    try {
+      await updateProject(projectToEdit.id, updates)
+      toast.success('Proyecto actualizado exitosamente')
+      setIsEditModalOpen(false)
+      setProjectToEdit(null)
+    } catch (err) {
+      toast.error('Error al actualizar el proyecto')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleAddMember = async (projectId: string, uid: string) => {
+    try {
+      const project = projects.find(p => p.id === projectId)
+      if (project) {
+        await updateProject(projectId, {
+          members: {
+            ...project.members,
+            [uid]: true,
+          },
+        })
+        toast.success('Miembro agregado exitosamente')
+      }
+    } catch (err) {
+      toast.error('Error al agregar miembro')
+    }
+  }
+
+  const handleRemoveMember = async (projectId: string, uid: string) => {
+    try {
+      const project = projects.find(p => p.id === projectId)
+      if (project) {
+        const newMembers = { ...project.members }
+        delete newMembers[uid]
+        await updateProject(projectId, {
+          members: newMembers,
+        })
+        toast.success('Miembro removido exitosamente')
+      }
+    } catch (err) {
+      toast.error('Error al remover miembro')
+    }
   }
 
   const handleDeleteProject = async () => {
@@ -94,6 +152,7 @@ export default function ProjectsPage() {
         <ProjectList
           projects={projects}
           loading={loading}
+          onEdit={handleEditProject}
           onDelete={confirmDeleteProject}
         />
       </div>
@@ -103,6 +162,20 @@ export default function ProjectsPage() {
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleCreateProject}
       />
+
+      {projectToEdit && (
+        <ProjectEditModal
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false)
+            setProjectToEdit(null)
+          }}
+          project={projectToEdit}
+          onSave={handleSaveProjectEdit}
+          onAddMember={handleAddMember}
+          onRemoveMember={handleRemoveMember}
+        />
+      )}
 
       <ConfirmationModal
         isOpen={isDeleteModalOpen}

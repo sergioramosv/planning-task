@@ -124,22 +124,50 @@
   color: var(--color-neutral-600);
 }
 
-.deleteButton {
+.buttonGroup {
   position: absolute;
   top: var(--spacing-4);
   right: var(--spacing-4);
-  color: var(--color-neutral-400);
-  padding: var(--spacing-1);
-  border-radius: var(--radius-md);
-  border-color: var(--color-neutral-400);
-  transition: color var(--transition-fast), background-color var(--transition-fast);
+  display: flex;
+  gap: var(--spacing-2);
   opacity: 0;
   z-index: 10;
-  cursor: pointer;
+  transition: opacity var(--transition-fast);
 }
 
-.card:hover .deleteButton {
+.card:hover .buttonGroup {
   opacity: 1;
+}
+
+.editButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary-500);
+  padding: var(--spacing-2);
+  border: none;
+  background: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.editButton:hover {
+  color: var(--color-primary-700);
+  background-color: var(--color-primary-50);
+}
+
+.deleteButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-neutral-400);
+  padding: var(--spacing-2);
+  border: none;
+  background: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
 }
 
 .deleteButton:hover {

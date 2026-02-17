@@ -2,7 +2,7 @@
 
 import { Project } from '@/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Calendar, User, Folder, Trash2, Copy } from 'lucide-react'
+import { Calendar, User, Folder, Trash2, Copy, Edit2 } from 'lucide-react'
 import { formatDate } from '@/lib/utils/formatters'
 import Link from 'next/link'
 import { cn } from '@/lib/utils/cn'
@@ -55,19 +55,34 @@ export default function ProjectCard({ project, onEdit, onDelete }: ProjectCardPr
   return (
     <Link href={`/projects/${project.id}`} className={styles.link}>
       <Card className={styles.card}>
-        {onDelete && (
-          <button
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              onDelete(project.id)
-            }}
-            className={styles.deleteButton}
-            title="Eliminar proyecto"
-          >
-            <Trash2 size={18} />
-          </button>
-        )}
+        <div className={styles.buttonGroup}>
+          {onEdit && (
+            <button
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                onEdit(project)
+              }}
+              className={styles.editButton}
+              title="Editar proyecto"
+            >
+              <Edit2 size={18} />
+            </button>
+          )}
+          {onDelete && (
+            <button
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                onDelete(project.id)
+              }}
+              className={styles.deleteButton}
+              title="Eliminar proyecto"
+            >
+              <Trash2 size={18} />
+            </button>
+          )}
+        </div>
         <CardHeader style={{ backgroundColor: theme.bg, borderBottom: `1px solid ${theme.border}` }}>
           <div className={styles.header}>
             <div className={styles.headerContent}>
