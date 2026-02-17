@@ -1,3 +1,16 @@
+## [1.1.0] - 2026-02-17
+
+### Added
+- add project editing and members management
+- add automatic versioning system with changelog modal
+
+### Fixed
+- improve changelog parser to infer change types from section headers
+
+### Changed
+
+
+
 # Changelog
 
 Todos los cambios importantes de este proyecto están documentados en este archivo.
