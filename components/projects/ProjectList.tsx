@@ -7,6 +7,7 @@ import styles from './ProjectList.module.css'
 import { useState, useEffect } from 'react'
 import { SprintService } from '@/lib/services/sprint.service'
 import { TaskService } from '@/lib/services/task.service'
+import { Folder } from 'lucide-react'
 
 interface ProjectListProps {
   projects: Project[]
@@ -55,7 +56,7 @@ export default function ProjectList({
   if (projects.length === 0) {
     return (
       <div className={styles.emptyState}>
-        <div className={styles.emptyEmoji}>📁</div>
+        <Folder className={styles.emptyIcon} size={48} />
         <h3 className={styles.emptyTitle}>No hay proyectos</h3>
         <p className={styles.emptyMessage}>Crea tu primer proyecto para comenzar</p>
       </div>

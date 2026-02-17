@@ -13,8 +13,8 @@
   text-align: center;
 }
 
-.emptyEmoji {
-  font-size: 2.25rem;
+.emptyIcon {
+  color: var(--color-neutral-300);
   margin-bottom: var(--spacing-4);
 }
 
