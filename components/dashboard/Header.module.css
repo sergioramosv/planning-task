@@ -41,6 +41,33 @@
   font-size: var(--text-xl);
   font-weight: var(--font-bold);
   color: var(--color-neutral-900);
+  display: block;
+}
+
+.versionButton {
+  font-size: 0.65rem;
+  color: var(--color-neutral-500);
+  font-weight: var(--font-normal);
+  display: block;
+  margin-top: -2px;
+  opacity: 0.7;
+  letter-spacing: 0.5px;
+  background: none;
+  border: none;
+  padding: 2px 4px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.versionButton:hover {
+  opacity: 1;
+  color: var(--color-primary-600);
+  background-color: var(--color-primary-50);
+}
+
+.versionButton:active {
+  transform: scale(0.98);
 }
 
 .actions {

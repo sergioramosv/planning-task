@@ -6,13 +6,16 @@ import { useNotifications } from '@/hooks/useNotifications'
 import { LogOut, Bell, User as UserIcon } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import NotificationModal from './NotificationModal'
+import ChangelogModal from './ChangelogModal'
 import Link from 'next/link'
+import { APP_VERSION } from '@/lib/constants/appVersion'
 import styles from './Header.module.css'
 
 export default function Header() {
   const { user, logout } = useAuth()
   const { unreadCount, notifications } = useNotifications(user?.uid || null)
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
+  const [isChangelogOpen, setIsChangelogOpen] = useState(false)
 
   const handleLogout = async () => {
     try {
@@ -30,7 +33,16 @@ export default function Header() {
             <div className={styles.branding}>
               <Link href="/projects" className={styles.brandLink}>
                 <img src="/remoduler-logo.svg" alt="Planning Task Logo" className={styles.logoImage} />
-                <span className={styles.brandText}>Planning Task</span>
+                <div>
+                  <span className={styles.brandText}>Planning Task</span>
+                  <button
+                    onClick={() => setIsChangelogOpen(true)}
+                    className={styles.versionButton}
+                    title="Ver historial de cambios"
+                  >
+                    v{APP_VERSION}
+                  </button>
+                </div>
               </Link>
             </div>
 
@@ -87,6 +99,11 @@ export default function Header() {
       <NotificationModal
         isOpen={isNotificationsOpen}
         onClose={() => setIsNotificationsOpen(false)}
+      />
+
+      <ChangelogModal
+        isOpen={isChangelogOpen}
+        onClose={() => setIsChangelogOpen(false)}
       />
     </>
   )

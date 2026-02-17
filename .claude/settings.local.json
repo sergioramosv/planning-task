@@ -37,7 +37,12 @@
       "Bash(git commit:*)",
       "Bash(timeout 5:*)",
       "Bash(\"C:\\\\Users\\\\Ramos\\\\Documents\\\\GitHub\\\\planning-task-mcp\\\\INTEGRATE_WITH_CLAUDE_CODE.md\":*)",
-      "Bash(__NEW_LINE_41ef6efe47a68d76__ cat \"C:\\\\Users\\\\Ramos\\\\Documents\\\\GitHub\\\\planning-task-mcp\\\\INTEGRATE_WITH_CLAUDE_CODE.md\")"
+      "Bash(__NEW_LINE_41ef6efe47a68d76__ cat \"C:\\\\Users\\\\Ramos\\\\Documents\\\\GitHub\\\\planning-task-mcp\\\\INTEGRATE_WITH_CLAUDE_CODE.md\")",
+      "Bash(test:*)",
+      "Bash(git log:*)",
+      "Bash(npx husky install)",
+      "Bash(npx semantic-release --dry-run)",
+      "Bash(npx tsc:*)"
     ]
   }
 }

@@ -1,0 +1,223 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  width: 100%;
+}
+
+.versionsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: var(--spacing-2);
+}
+
+/* Scrollbar styling */
+.versionsContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.versionsContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.versionsContainer::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-300);
+  border-radius: 3px;
+}
+
+.versionsContainer::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral-400);
+}
+
+.versionSection {
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-4);
+  background-color: var(--color-neutral-50);
+  transition: all var(--transition-fast);
+}
+
+.versionSection:hover {
+  border-color: var(--color-primary-200);
+  background-color: var(--color-primary-50);
+  box-shadow: var(--shadow-soft);
+}
+
+.versionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-3);
+  padding-bottom: var(--spacing-3);
+  border-bottom: 2px solid var(--color-neutral-200);
+}
+
+.versionInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.versionNumber {
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--color-primary-700);
+  font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.versionDate {
+  font-size: var(--text-sm);
+  color: var(--color-neutral-500);
+  font-weight: var(--font-normal);
+}
+
+.changesList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.changeItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  background-color: white;
+  border-left: 3px solid var(--color-primary-200);
+  border-radius: 4px;
+}
+
+.changeItem:hover {
+  background-color: var(--color-neutral-50);
+  border-left-color: var(--color-primary-500);
+}
+
+.changeContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  flex: 1;
+}
+
+.changeBadge {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.changeDescription {
+  font-size: var(--text-sm);
+  color: var(--color-neutral-700);
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.changeScope {
+  font-size: 0.75rem;
+  color: var(--color-neutral-500);
+  font-weight: var(--font-medium);
+  font-family: 'Monaco', 'Courier New', monospace;
+  opacity: 0.8;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-4);
+  padding: var(--spacing-8);
+  text-align: center;
+  color: var(--color-neutral-500);
+}
+
+.emptyIcon {
+  width: 48px;
+  height: 48px;
+  opacity: 0.4;
+}
+
+.emptyTitle {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--color-neutral-700);
+  margin: 0;
+}
+
+.emptyText {
+  font-size: var(--text-sm);
+  color: var(--color-neutral-500);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-8);
+}
+
+.loadingText {
+  font-size: var(--text-sm);
+  color: var(--color-neutral-600);
+}
+
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-6);
+  background-color: var(--color-red-50);
+  border: 1px solid var(--color-red-200);
+  border-radius: var(--radius-lg);
+  color: var(--color-red-700);
+}
+
+.errorIcon {
+  width: 32px;
+  height: 32px;
+}
+
+.errorTitle {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  margin: 0;
+}
+
+.errorMessage {
+  font-size: var(--text-sm);
+  text-align: center;
+  margin: 0;
+  opacity: 0.8;
+}
+
+@media (max-width: 640px) {
+  .versionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+  }
+
+  .versionInfo {
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+
+  .versionNumber {
+    font-size: var(--text-base);
+  }
+
+  .versionDate {
+    font-size: 0.75rem;
+  }
+
+  .versionsContainer {
+    max-height: 70vh;
+  }
+}
