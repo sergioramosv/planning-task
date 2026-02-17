@@ -40,8 +40,6 @@ export default function TaskCard({ task, onClick, isDragging = false }: TaskCard
           {task.title}
         </h4>
 
-        <p className={styles.epic}>{task.epic}</p>
-
         <div className={styles.metaInfo}>
           <Badge variant="info" className={styles.priorityBadge}>
             P: {priority}
