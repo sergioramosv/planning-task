@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { Project, Sprint, Task, User } from '@/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
@@ -25,6 +25,8 @@ export default function SprintChart({
   selectedProjectIds,
   onSelectedProjectsChange
 }: SprintChartProps) {
+  const [selectedDeveloper, setSelectedDeveloper] = useState<string>('all')
+
   // Get unique developers with their names
   const developers = useMemo(() => {
     const devMap = new Map<string, string>()
@@ -36,9 +38,6 @@ export default function SprintChart({
     })
     return Array.from(devMap.entries()).sort((a, b) => a[1].localeCompare(b[1]))
   }, [tasks, users])
-
-  // Filter by selected developer (default 'all')
-  const selectedDeveloper = 'all'
 
   // Calculate filtered tasks
   const filteredTasks = useMemo(() => {
@@ -156,7 +155,11 @@ export default function SprintChart({
       {hasData && (
         <div className={styles.filterGroup}>
           <label className={styles.label}>Developer:</label>
-          <select className={styles.select} disabled>
+          <select
+            value={selectedDeveloper}
+            onChange={(e) => setSelectedDeveloper(e.target.value)}
+            className={styles.select}
+          >
             <option value="all">Todos los Developers</option>
             {developers.map(([id, name]) => (
               <option key={id} value={id}>
