@@ -1,8 +1,8 @@
 'use client'
 
-import { Project } from '@/types'
+import { Project, Sprint, Task } from '@/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Calendar, User, Folder, Trash2, Copy, Edit2 } from 'lucide-react'
+import { Calendar, User, Folder, Trash2, Copy, Edit2, CheckSquare, Clock } from 'lucide-react'
 import { formatDate } from '@/lib/utils/formatters'
 import Link from 'next/link'
 import { cn } from '@/lib/utils/cn'
@@ -12,11 +12,13 @@ import { toast } from 'react-hot-toast'
 
 interface ProjectCardProps {
   project: Project
+  sprints?: Sprint[]
+  tasks?: Task[]
   onEdit?: (project: Project) => void
   onDelete?: (projectId: string) => void
 }
 
-export default function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
+export default function ProjectCard({ project, sprints = [], tasks = [], onEdit, onDelete }: ProjectCardProps) {
   const theme = getProjectColor(project.id)
 
   const handleCopyId = (e: React.MouseEvent) => {
@@ -51,6 +53,18 @@ export default function ProjectCard({ project, onEdit, onDelete }: ProjectCardPr
         return 'Archivado'
     }
   }
+
+  // Calculate project statistics
+  const totalSprints = sprints.length
+  const currentSprint = sprints.find(s => {
+    const today = new Date()
+    const startDate = new Date(s.startDate)
+    const endDate = new Date(s.endDate)
+    return today >= startDate && today <= endDate
+  })
+
+  const totalTasks = tasks.length
+  const incompleteTasks = tasks.filter(t => t.status !== 'done' && t.status !== 'validated').length
 
   return (
     <Link href={`/projects/${project.id}`} className={styles.link}>
@@ -118,6 +132,42 @@ export default function ProjectCard({ project, onEdit, onDelete }: ProjectCardPr
           <div className={styles.memberInfo}>
             <User size={16} />
             <span>{project.members ? Object.keys(project.members).length : 0} miembro(s)</span>
+          </div>
+
+          <div className={styles.statsContainer}>
+            <div className={styles.statItem}>
+              <Clock size={16} style={{ color: theme.icon }} />
+              <div className={styles.statContent}>
+                <span className={styles.statLabel}>Sprints</span>
+                <span className={styles.statValue}>{totalSprints}</span>
+              </div>
+            </div>
+
+            {currentSprint && (
+              <div className={styles.statItem}>
+                <CheckSquare size={16} style={{ color: theme.icon }} />
+                <div className={styles.statContent}>
+                  <span className={styles.statLabel}>Sprint Actual</span>
+                  <span className={styles.statValue}>{currentSprint.name}</span>
+                </div>
+              </div>
+            )}
+
+            <div className={styles.statItem}>
+              <CheckSquare size={16} style={{ color: theme.icon }} />
+              <div className={styles.statContent}>
+                <span className={styles.statLabel}>Tareas</span>
+                <span className={styles.statValue}>{totalTasks}</span>
+              </div>
+            </div>
+
+            <div className={styles.statItem}>
+              <Clock size={16} style={{ color: '#EF4444' }} />
+              <div className={styles.statContent}>
+                <span className={styles.statLabel}>Pendientes</span>
+                <span className={styles.statValue} style={{ color: '#EF4444' }}>{incompleteTasks}</span>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>

@@ -1,9 +1,12 @@
 'use client'
 
-import { Project } from '@/types'
+import { Project, Sprint, Task } from '@/types'
 import ProjectCard from './ProjectCard'
 import Spinner from '@/components/ui/Spinner'
 import styles from './ProjectList.module.css'
+import { useState, useEffect } from 'react'
+import { SprintService } from '@/lib/services/sprint.service'
+import { TaskService } from '@/lib/services/task.service'
 
 interface ProjectListProps {
   projects: Project[]
@@ -18,7 +21,30 @@ export default function ProjectList({
   onEdit,
   onDelete,
 }: ProjectListProps) {
-  if (loading) {
+  const [allSprints, setAllSprints] = useState<Sprint[]>([])
+  const [allTasks, setAllTasks] = useState<Task[]>([])
+  const [dataLoading, setDataLoading] = useState(true)
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [sprints, tasks] = await Promise.all([
+          SprintService.getAllSprints(),
+          TaskService.getAllTasks(),
+        ])
+        setAllSprints(sprints)
+        setAllTasks(tasks)
+      } catch (error) {
+        console.error('Error loading project data:', error)
+      } finally {
+        setDataLoading(false)
+      }
+    }
+
+    loadData()
+  }, [])
+
+  if (loading || dataLoading) {
     return (
       <div className={styles.loadingContainer}>
         <Spinner />
@@ -38,14 +64,21 @@ export default function ProjectList({
 
   return (
     <div className={styles.grid}>
-      {projects.map(project => (
-        <ProjectCard
-          key={project.id}
-          project={project}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
-      ))}
+      {projects.map(project => {
+        const projectSprints = allSprints.filter(s => s.projectId === project.id)
+        const projectTasks = allTasks.filter(t => t.projectId === project.id)
+
+        return (
+          <ProjectCard
+            key={project.id}
+            project={project}
+            sprints={projectSprints}
+            tasks={projectTasks}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
+        )
+      })}
     </div>
   )
 }
