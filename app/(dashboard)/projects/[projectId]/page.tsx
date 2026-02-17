@@ -8,7 +8,7 @@ import { useTasks } from '@/hooks/useTasks'
 import { useSprints } from '@/hooks/useSprints'
 import Spinner from '@/components/ui/Spinner'
 import Button from '@/components/ui/Button'
-import { ArrowLeft, Plus } from 'lucide-react'
+import { ArrowLeft, Plus, Calendar } from 'lucide-react'
 import TaskForm from '@/components/tasks/TaskForm'
 import TaskModal from '@/components/tasks/TaskModal'
 import TaskKanban from '@/components/tasks/TaskKanban'
@@ -254,9 +254,14 @@ export default function ProjectDetailsPage() {
               Kanban
             </Button>
           </div>
-          <Button size="sm" onClick={() => { setSelectedTask(undefined); setIsModalOpen(true); }}>
-            <Plus size={16} style={{ marginRight: '0.25rem' }} /> Agregar Tarea
-          </Button>
+          <div style={{ display: 'flex', gap: 'var(--spacing-2)' }}>
+            <Button size="sm" onClick={() => router.push(`/projects/${projectId}/sprints`)}>
+              <Calendar size={16} style={{ marginRight: '0.25rem' }} /> Ver Sprints
+            </Button>
+            <Button size="sm" onClick={() => { setSelectedTask(undefined); setIsModalOpen(true); }}>
+              <Plus size={16} style={{ marginRight: '0.25rem' }} /> Agregar Tarea
+            </Button>
+          </div>
         </div>
 
         {tasks.length === 0 ? (
