@@ -1,0 +1,111 @@
+.emptyCard {
+  /* Uses Card styles */
+}
+
+.emptyMessage {
+  padding: var(--spacing-12) 0;
+  text-align: center;
+  color: var(--color-neutral-600);
+}
+
+.tableCard {
+  /* Uses Card styles */
+  overflow: hidden;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+}
+
+.tableHead {
+  border-bottom: 1px solid var(--color-neutral-200);
+  background-color: var(--color-neutral-50);
+}
+
+.tableHeadRow {
+  display: contents;
+}
+
+.tableHeader {
+  padding: var(--spacing-3) var(--spacing-6);
+  text-align: left;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-neutral-900);
+}
+
+.tableHeaderCenter {
+  text-align: center;
+}
+
+.tableBody {
+  display: contents;
+}
+
+.tableRow {
+  border-bottom: 1px solid var(--color-neutral-200);
+  transition: background-color var(--transition-fast);
+  display: contents;
+}
+
+.tableRow:hover {
+  background-color: var(--color-neutral-50);
+}
+
+.tableCell {
+  padding: var(--spacing-4) var(--spacing-6);
+  font-size: var(--text-sm);
+  color: var(--color-neutral-900);
+}
+
+.tableCellGray {
+  color: var(--color-neutral-600);
+}
+
+.tableCellMono {
+  max-width: 12rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: var(--font-medium);
+}
+
+.tableCellCenter {
+  text-align: center;
+}
+
+.tablePriority {
+  color: var(--color-primary-600);
+  font-weight: var(--font-semibold);
+}
+
+.tableActions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+}
+
+.actionButton {
+  padding: var(--spacing-2);
+  color: var(--color-neutral-600);
+  background: none;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.actionButtonEdit:hover {
+  color: var(--color-primary-600);
+  background-color: var(--color-primary-50);
+}
+
+.actionButtonDelete:hover {
+  color: var(--color-red-600);
+  background-color: var(--color-red-50);
+}

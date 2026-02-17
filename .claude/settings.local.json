@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(lsof:*)",
+      "Bash(npm test:*)",
+      "Bash(/tmp/test_summary.txt:*)",
+      "Bash(docker-compose build:*)",
+      "Bash(ls:*)",
+      "Bash(docker compose up:*)",
+      "Bash(curl:*)",
+      "Bash(docker compose build:*)",
+      "Bash(npm run dev:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(grep:*)",
+      "Bash(xargs:*)",
+      "Bash(\"c:/Users/Ramos/Documents/GitHub/PlanningTask/app/\\(dashboard\\)/projects/[projectId]/page.module.css\":*)",
+      "Bash(\"c:/Users/Ramos/Documents/GitHub/PlanningTask/mcp/.env\":*)",
+      "Bash(/tmp/summary.md:*)",
+      "Bash(wc:*)",
+      "Bash(bash /tmp/test_mcp.sh)",
+      "Bash(cat:*)",
+      "Bash(npm start)",
+      "Bash(node -e:*)",
+      "Bash(/tmp/bulk_create_tasks.js:*)",
+      "Bash(node:*)",
+      "Bash(\"c:/Users/Ramos/Documents/GitHub/PlanningTask/run_create_tasks.sh\":*)",
+      "Bash(__NEW_LINE_f0de7fed63aaece3__ chmod +x \"c:/Users/Ramos/Documents/GitHub/PlanningTask/run_create_tasks.sh\")",
+      "Bash(pkill:*)",
+      "Bash(/tmp/check_firebase.js:*)",
+      "Bash(__NEW_LINE_b480dcd6bf2e27a9__ cd \"C:\\\\Users\\\\Ramos\\\\Documents\\\\GitHub\\\\PlanningTask\")",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(timeout 5:*)",
+      "Bash(\"C:\\\\Users\\\\Ramos\\\\Documents\\\\GitHub\\\\planning-task-mcp\\\\INTEGRATE_WITH_CLAUDE_CODE.md\":*)",
+      "Bash(__NEW_LINE_41ef6efe47a68d76__ cat \"C:\\\\Users\\\\Ramos\\\\Documents\\\\GitHub\\\\planning-task-mcp\\\\INTEGRATE_WITH_CLAUDE_CODE.md\")"
+    ]
+  }
+}

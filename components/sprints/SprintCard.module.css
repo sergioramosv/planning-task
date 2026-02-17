@@ -1,0 +1,80 @@
+.link {
+  text-decoration: none;
+}
+
+.card {
+  transition: box-shadow var(--transition-normal);
+  cursor: pointer;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.headerContent {
+  flex: 1;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.titleIcon {
+  color: var(--color-primary-500);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.dateInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: var(--text-sm);
+  color: var(--color-neutral-600);
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.statusBadge {
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+}
+
+.statusActive {
+  background-color: var(--color-green-100);
+  color: var(--color-green-700);
+}
+
+.statusPlanned {
+  background-color: var(--color-blue-100);
+  color: var(--color-blue-700);
+}
+
+.statusCompleted {
+  background-color: var(--color-primary-100);
+  color: var(--color-primary-700);
+}
+
+.taskCount {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-neutral-600);
+}

@@ -1,0 +1,88 @@
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.warningBox {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4);
+  background-color: var(--color-red-50);
+  border: 1px solid var(--color-red-100);
+  border-radius: var(--radius-lg);
+}
+
+.warningIcon {
+  color: var(--color-red-600);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.warningMessage {
+  color: var(--color-red-800);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.inputLabel {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-neutral-700);
+}
+
+.input {
+  width: 100%;
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  color: var(--color-neutral-900);
+  transition: all var(--transition-fast);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-red-500);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.input.error {
+  border-color: var(--color-red-500);
+  background-color: #FEF2F2; /* red-50 */
+}
+
+.input.error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-4);
+}
+
+/* Custom styles for the danger input specifically requested */
+.dangerInput {
+  border-color: var(--color-red-300);
+  color: var(--color-red-900);
+}
+
+.dangerInput:focus {
+  border-color: var(--color-red-600);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+}
+
+.dangerInput::placeholder {
+  color: var(--color-red-300);
+}
