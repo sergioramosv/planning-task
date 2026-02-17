@@ -5,6 +5,14 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.10] - 2026-02-18
+
+### Changed
+- Add task ID column to task table for better task identification
+- Improve sprint card grid layout (increased from 280px to 380px minimum width)
+- Remove border from summary cards for cleaner appearance
+- Abbreviate "Pts Negocio" to "Pts Neg" in sprint cards for space efficiency
+
 ## [1.5.9] - 2026-02-18
 
 ### Added

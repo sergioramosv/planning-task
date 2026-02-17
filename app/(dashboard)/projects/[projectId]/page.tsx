@@ -30,7 +30,7 @@ export default function ProjectDetailsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined)
   const [viewMode, setViewMode] = useState<'table' | 'kanban'>('table')
-  const [sortColumn, setSortColumn] = useState<'title' | 'status' | 'priority' | 'developer' | 'startDate'>('priority')
+  const [sortColumn, setSortColumn] = useState<'id' | 'title' | 'status' | 'priority' | 'developer' | 'startDate'>('priority')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([])
   const [filters, setFilters] = useState({
@@ -104,7 +104,7 @@ export default function ProjectDetailsPage() {
     return 0
   })
 
-  const handleSort = (column: 'title' | 'status' | 'priority' | 'developer' | 'startDate') => {
+  const handleSort = (column: 'id' | 'title' | 'status' | 'priority' | 'developer' | 'startDate') => {
     if (sortColumn === column) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
     } else {
