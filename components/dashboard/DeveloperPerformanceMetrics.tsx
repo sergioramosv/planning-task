@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { Project, Sprint, Task, User } from '@/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import Badge from '@/components/ui/Badge'
+// Component for displaying metrics
 import styles from './DeveloperPerformanceMetrics.module.css'
 
 interface DeveloperPerformanceMetricsProps {
