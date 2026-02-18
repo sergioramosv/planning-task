@@ -10,6 +10,40 @@
   gap: var(--spacing-4);
 }
 
+.criteriaRow {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: flex-start;
+}
+
+.criteriaInput {
+  flex: 1;
+}
+
+.removeButton {
+  padding: var(--spacing-2) var(--spacing-3);
+  color: var(--color-red-600);
+  background: none;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.removeButton:hover {
+  background-color: var(--color-red-50);
+}
+
+.removeButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.errorMessage {
+  color: var(--color-red-500);
+  font-size: var(--text-sm);
+}
+
 .field {
   display: flex;
   flex-direction: column;
@@ -19,51 +53,4 @@
 .fieldError {
   color: var(--color-red-500);
   font-size: var(--text-sm);
-}
-
-.textarea {
-  padding: var(--spacing-3) var(--spacing-4);
-  border: 1px solid var(--color-neutral-200);
-  border-radius: var(--radius-md);
-  font-family: inherit;
-  font-size: var(--text-sm);
-  color: var(--color-neutral-900);
-  min-height: 120px;
-  resize: vertical;
-  transition: border-color var(--transition-fast);
-  white-space: pre-wrap;
-}
-
-.textarea:focus {
-  outline: none;
-  border-color: var(--color-primary-500);
-  box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.1);
-}
-
-.textarea:disabled {
-  background-color: var(--color-neutral-100);
-  color: var(--color-neutral-400);
-}
-
-.select {
-  padding: var(--spacing-2) var(--spacing-4);
-  border: 1px solid var(--color-neutral-200);
-  border-radius: var(--radius-md);
-  font-size: var(--text-sm);
-  color: var(--color-neutral-900);
-  background-color: white;
-  cursor: pointer;
-  transition: border-color var(--transition-fast);
-}
-
-.select:focus {
-  outline: none;
-  border-color: var(--color-primary-500);
-  box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.1);
-}
-
-.select:disabled {
-  background-color: var(--color-neutral-100);
-  color: var(--color-neutral-400);
-  cursor: not-allowed;
 }

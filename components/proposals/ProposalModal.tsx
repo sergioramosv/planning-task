@@ -23,7 +23,7 @@ export default function ProposalModal({
     const proposalData: Omit<Proposal, 'id' | 'createdAt' | 'updatedAt'> = {
       title: data.title,
       projectId: '',
-      acceptanceCriteria: data.acceptanceCriteria.split('\n').filter((c: string) => c.trim()),
+      acceptanceCriteria: data.acceptanceCriteria.filter((c: string) => c.trim()),
       userStory: {
         who: data.userStoryWho,
         what: data.userStoryWhat,

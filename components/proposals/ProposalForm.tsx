@@ -1,14 +1,16 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
+import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import Input from '@/components/ui/Input'
+import Select from '@/components/ui/Select'
 import Button from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import cardStyles from '@/components/ui/Card.module.css'
 import { Proposal } from '@/types/proposal'
 import { FIBONACCI_LABELS } from '@/lib/constants/fibonacciPoints'
+import { Plus, X } from 'lucide-react'
 import styles from './ProposalForm.module.css'
 
 const proposalValidationSchema = z.object({
@@ -16,7 +18,7 @@ const proposalValidationSchema = z.object({
   userStoryWho: z.string().min(2, 'Completa "Como"'),
   userStoryWhat: z.string().min(5, 'Completa "Quiero"'),
   userStoryWhy: z.string().min(5, 'Completa "Para"'),
-  acceptanceCriteria: z.string().min(5, 'Añade criterios de aceptación'),
+  acceptanceCriteria: z.array(z.string().min(1, 'El criterio no puede estar vacío')).min(1, 'Añade al menos un criterio'),
   startDate: z.string().refine(
     (date) => {
       const selectedDate = new Date(date)
@@ -46,6 +48,7 @@ export default function ProposalForm({ onSubmit, isLoading = false, initialData 
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<ProposalFormData>({
     resolver: zodResolver(proposalValidationSchema) as any,
@@ -54,11 +57,16 @@ export default function ProposalForm({ onSubmit, isLoading = false, initialData 
       userStoryWho: initialData?.userStory?.who || '',
       userStoryWhat: initialData?.userStory?.what || '',
       userStoryWhy: initialData?.userStory?.why || '',
-      acceptanceCriteria: initialData?.acceptanceCriteria?.join('\n') || '',
+      acceptanceCriteria: initialData?.acceptanceCriteria || [''],
       startDate: initialData?.startDate || new Date().toISOString().split('T')[0],
       bizPoints: initialData?.bizPoints || 5,
       devPoints: String(initialData?.devPoints || 3) as any,
     } as any,
+  })
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'acceptanceCriteria',
   })
 
   const handleFormSubmit = async (data: ProposalFormData) => {
@@ -111,16 +119,21 @@ export default function ProposalForm({ onSubmit, isLoading = false, initialData 
               disabled={isLoading}
             />
 
-            <select {...register('devPoints')} className={styles.select} disabled={isLoading}>
-              <option value="">Puntos de Desarrollo</option>
-              <option value="1">{FIBONACCI_LABELS[1]}</option>
-              <option value="2">{FIBONACCI_LABELS[2]}</option>
-              <option value="3">{FIBONACCI_LABELS[3]}</option>
-              <option value="5">{FIBONACCI_LABELS[5]}</option>
-              <option value="8">{FIBONACCI_LABELS[8]}</option>
-              <option value="13">{FIBONACCI_LABELS[13]}</option>
-            </select>
-            {errors.devPoints && <span className={styles.fieldError}>{errors.devPoints.message}</span>}
+            <Select
+              label="Puntos de Desarrollo"
+              required
+              {...register('devPoints')}
+              error={errors.devPoints?.message as string}
+              disabled={isLoading}
+              options={[
+                { value: '1', label: FIBONACCI_LABELS[1] },
+                { value: '2', label: FIBONACCI_LABELS[2] },
+                { value: '3', label: FIBONACCI_LABELS[3] },
+                { value: '5', label: FIBONACCI_LABELS[5] },
+                { value: '8', label: FIBONACCI_LABELS[8] },
+                { value: '13', label: FIBONACCI_LABELS[13] },
+              ]}
+            />
           </div>
         </CardContent>
       </Card>
@@ -161,18 +174,45 @@ export default function ProposalForm({ onSubmit, isLoading = false, initialData 
 
       <Card>
         <CardHeader>
-          <CardTitle>Criterios de Aceptación</CardTitle>
-        </CardHeader>
-        <CardContent className={cardStyles.contentSpaced4}>
-          <div className={styles.field}>
-            <textarea
-              placeholder="Ej:&#10;- El login con Google debe funcionar&#10;- Debe guardar el token&#10;- Debe redirigir al dashboard"
+          <CardTitle className={cardStyles.titleWithAction}>
+            <span>Criterios de Aceptación</span>
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              onClick={() => append('')}
               disabled={isLoading}
-              {...register('acceptanceCriteria')}
-              className={styles.textarea}
-            />
-            {errors.acceptanceCriteria && <span className={styles.fieldError}>{errors.acceptanceCriteria.message}</span>}
-          </div>
+            >
+              <Plus size={16} />
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className={cardStyles.contentSpaced3}>
+          {fields.map((field, index) => (
+            <div key={field.id} className={styles.criteriaRow}>
+              <div className={styles.criteriaInput}>
+                <Input
+                  placeholder={`Criterio ${index + 1}`}
+                  {...register(`acceptanceCriteria.${index}`)}
+                  error={(errors.acceptanceCriteria as any)?.[index]?.message as string}
+                  disabled={isLoading}
+                />
+              </div>
+              {fields.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => remove(index)}
+                  disabled={isLoading}
+                  className={styles.removeButton}
+                >
+                  <X size={18} />
+                </button>
+              )}
+            </div>
+          ))}
+          {errors.acceptanceCriteria && (
+            <p className={styles.errorMessage}>{(errors.acceptanceCriteria as any)?.message}</p>
+          )}
         </CardContent>
       </Card>
 
