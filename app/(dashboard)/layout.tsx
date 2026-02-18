@@ -1,10 +1,12 @@
 'use client'
 
 import { useAuth } from '@/hooks/useAuth'
+import { useVersionCheck } from '@/hooks/useVersionCheck'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import Spinner from '@/components/ui/Spinner'
 import Header from '@/components/dashboard/Header'
+import UpdateNotification from '@/components/common/UpdateNotification'
 import styles from './layout.module.css'
 
 export default function DashboardLayout({
@@ -14,6 +16,7 @@ export default function DashboardLayout({
 }) {
   const { user, loading } = useAuth()
   const router = useRouter()
+  const { isUpdateAvailable, currentVersion, latestVersion, forceUpdate } = useVersionCheck(60)
 
   useEffect(() => {
     if (!loading && !user) {
@@ -39,6 +42,12 @@ export default function DashboardLayout({
       <main className={styles.main}>
         {children}
       </main>
+      <UpdateNotification
+        isOpen={isUpdateAvailable}
+        currentVersion={currentVersion}
+        latestVersion={latestVersion}
+        onUpdate={forceUpdate}
+      />
     </div>
   )
 }
