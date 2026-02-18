@@ -23,6 +23,7 @@ export default function SprintTimeline({
     const selectedSprints = sprints
       .filter(s => selectedProjectIds.includes(s.projectId))
       .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+      .slice(0, 8) // Limit to 8 sprints for scrollable view
 
     return selectedSprints.map(sprint => {
       const sprintTasks = tasks.filter(t => t.sprintId === sprint.id && selectedProjectIds.includes(t.projectId))

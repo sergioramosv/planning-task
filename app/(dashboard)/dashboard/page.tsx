@@ -208,21 +208,23 @@ export default function DashboardPage() {
         />
       </div>
 
+      <div className={styles.gridTwo}>
+        <BugsSeverity
+          projects={allProjects}
+          bugs={allBugs}
+          selectedProjectIds={selectedProjectIds}
+        />
+
+        <ActivityHeatmap
+          projects={allProjects}
+          tasks={allTasks}
+          selectedProjectIds={selectedProjectIds}
+        />
+      </div>
+
       <SprintTimeline
         projects={allProjects}
         sprints={allSprints}
-        tasks={allTasks}
-        selectedProjectIds={selectedProjectIds}
-      />
-
-      <BugsSeverity
-        projects={allProjects}
-        bugs={allBugs}
-        selectedProjectIds={selectedProjectIds}
-      />
-
-      <ActivityHeatmap
-        projects={allProjects}
         tasks={allTasks}
         selectedProjectIds={selectedProjectIds}
       />
