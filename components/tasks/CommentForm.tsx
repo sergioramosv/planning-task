@@ -139,7 +139,7 @@ export default function CommentForm({
             variant="primary"
             size="sm"
             disabled={!text.trim() || isLoading}
-            isLoading={isLoading}
+            loading={isLoading}
           >
             Comentar
           </Button>

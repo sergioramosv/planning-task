@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { useNotifications } from '@/hooks/useNotifications'
 import { useInvitations } from '@/hooks/useInvitations'
-import { LogOut, Bell, User as UserIcon, Mail, BarChart3 } from 'lucide-react'
+import { LogOut, Bell, User as UserIcon, Mail, BarChart3, Users, Calendar } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import NotificationModal from './NotificationModal'
 import ChangelogModal from './ChangelogModal'
@@ -61,6 +61,28 @@ export default function Header() {
                 >
                   <BarChart3 size={16} style={{ marginRight: '0.25rem' }} />
                   Dashboard
+                </Button>
+              </div>
+
+              <div title="Ver Calendario">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => router.push('/calendar')}
+                >
+                  <Calendar size={16} style={{ marginRight: '0.25rem' }} />
+                  Calendario
+                </Button>
+              </div>
+
+              <div title="Gestión del Equipo">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => router.push('/team')}
+                >
+                  <Users size={16} style={{ marginRight: '0.25rem' }} />
+                  Equipo
                 </Button>
               </div>
 
