@@ -30,17 +30,19 @@ export default function SprintChart({
 }: SprintChartProps) {
   const [selectedDeveloper, setSelectedDeveloper] = useState<string>('all')
 
-  // Get unique developers with their names
+  // Get unique developers with their names from selected projects only
   const developers = useMemo(() => {
     const devMap = new Map<string, string>()
-    tasks.forEach(t => {
-      if (t.developer && !devMap.has(t.developer)) {
-        const user = users.find(u => u.uid === t.developer)
-        devMap.set(t.developer, user?.displayName || t.developer)
-      }
-    })
+    tasks
+      .filter(t => selectedProjectIds.includes(t.projectId))
+      .forEach(t => {
+        if (t.developer && !devMap.has(t.developer)) {
+          const user = users.find(u => u.uid === t.developer)
+          devMap.set(t.developer, user?.displayName || t.developer)
+        }
+      })
     return Array.from(devMap.entries()).sort((a, b) => a[1].localeCompare(b[1]))
-  }, [tasks, users])
+  }, [tasks, users, selectedProjectIds])
 
   // Calculate filtered tasks
   const filteredTasks = useMemo(() => {
