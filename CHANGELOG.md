@@ -5,6 +5,14 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0] - 2026-02-18
+
+### Added
+- BugService for fetching bug data from Firebase
+- Dashboard now filters projects to show only those where user is a member
+- Bugs Done metric added to Sprint Chart (orange line)
+- Bugs are associated to sprints by creation date (within sprint date range)
+
 ## [1.9.1] - 2026-02-18
 
 ### Added
