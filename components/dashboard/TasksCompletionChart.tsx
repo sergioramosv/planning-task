@@ -3,7 +3,7 @@
 import { useMemo } from 'react'
 import { Project, Sprint, Task } from '@/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts'
 import styles from './TasksCompletionChart.module.css'
 
 interface TasksCompletionChartProps {
@@ -65,21 +65,24 @@ export default function TasksCompletionChart({
         ) : (
           <div className={styles.chartContainer}>
             <ResponsiveContainer width="100%" height={400}>
-              <BarChart data={chartData}>
+              <BarChart data={chartData} margin={{ bottom: 80 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
+                <XAxis
+                  dataKey="name"
+                  angle={-45}
+                  textAnchor="end"
+                  height={80}
+                />
                 <YAxis />
                 <Tooltip />
                 <Legend />
                 <Bar
                   dataKey="Tareas Totales"
                   fill="#06B6D4"
-                  stackId="tasks"
                 />
                 <Bar
                   dataKey="Tareas Completadas"
                   fill="#10B981"
-                  stackId="tasks"
                 />
               </BarChart>
             </ResponsiveContainer>
