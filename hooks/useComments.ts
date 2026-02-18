@@ -65,16 +65,20 @@ export function useComments(taskId: string | null) {
         const newCommentRef = push(ref(database, `comments/${taskId}`))
         const commentId = newCommentRef.key
 
-        const comment: Omit<Comment, 'id'> = {
+        const comment: any = {
           taskId,
           userId,
           userName,
-          userPhotoURL,
           text,
           mentions,
           createdAt: Date.now(),
           updatedAt: Date.now(),
           edited: false,
+        }
+
+        // Only add userPhotoURL if it's defined (Firebase doesn't allow undefined values)
+        if (userPhotoURL && typeof userPhotoURL === 'string') {
+          comment.userPhotoURL = userPhotoURL
         }
 
         await update(newCommentRef, comment)

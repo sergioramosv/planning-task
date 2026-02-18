@@ -1,14 +1,45 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { useProjects } from '@/hooks/useProjects'
 import Spinner from '@/components/ui/Spinner'
-import { Calendar, AlertCircle, CheckSquare } from 'lucide-react'
 import { Task, Sprint } from '@/types'
 import { database } from '@/lib/firebase/config'
-import { ref, onValue } from 'firebase/database'
+import { ref, onValue, update } from 'firebase/database'
+import { Calendar, dateFnsLocalizer, Event, Views } from 'react-big-calendar'
+import withDragAndDrop, { withDragAndDropProps } from 'react-big-calendar/lib/addons/dragAndDrop'
+import { format, parse, startOfWeek, getDay } from 'date-fns'
+import { enUS, es } from 'date-fns/locale'
+import 'react-big-calendar/lib/css/react-big-calendar.css'
+import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
 import styles from './page.module.css'
+import { AlertCircle } from 'lucide-react'
+import { TASK_STATUS_COLORS } from '@/lib/constants/taskStates'
+import toast, { Toaster } from 'react-hot-toast'
+
+// Setup the localizer for react-big-calendar
+const locales = {
+  'es': es,
+}
+
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales,
+})
+
+const DnDCalendar = withDragAndDrop(Calendar)
+
+interface CalendarEvent extends Event {
+  id: string
+  resourceId: string
+  type: 'task' | 'sprint'
+  status: string
+  projectId: string
+}
 
 export default function CalendarPage() {
   const { user, loading: authLoading } = useAuth()
@@ -16,7 +47,13 @@ export default function CalendarPage() {
   const [selectedProjects, setSelectedProjects] = useState<string[]>([])
   const [allTasks, setAllTasks] = useState<Task[]>([])
   const [allSprints, setAllSprints] = useState<Sprint[]>([])
-  const [dataLoading, setDataLoading] = useState(false)
+  const [events, setEvents] = useState<CalendarEvent[]>([])
+
+  const [view, setView] = useState<Views>(Views.MONTH)
+  const [date, setDate] = useState(new Date())
+
+  const handleNavigate = useCallback((newDate: Date) => setDate(newDate), [])
+  const handleViewChange = useCallback((newView: Views) => setView(newView), [])
 
   const userProjects = projects.filter(
     (p) => p.members && user?.uid && p.members[user.uid]
@@ -26,7 +63,14 @@ export default function CalendarPage() {
     ? userProjects.filter((p) => selectedProjects.includes(p.id))
     : userProjects
 
-  // Fetch data for selected projects
+  // Default to selecting all projects initially if none selected
+  useEffect(() => {
+    if (userProjects.length > 0 && selectedProjects.length === 0) {
+      // Optional: Select all by default or leave as "show all if none selected" logic
+    }
+  }, [userProjects, selectedProjects])
+
+  // Fetch data
   useEffect(() => {
     if (projectsToShow.length === 0) {
       setAllTasks([])
@@ -34,50 +78,143 @@ export default function CalendarPage() {
       return
     }
 
-    setDataLoading(true)
     const unsubscribers: (() => void)[] = []
 
     projectsToShow.forEach((project) => {
-      // Subscribe to tasks
+      // Tasks
       const tasksRef = ref(database, `tasks/${project.id}`)
-      const tasksUnsub = onValue(
-        tasksRef,
-        (snapshot) => {
-          const data = snapshot.val() || {}
-          const projectTasks = Object.entries(data).map(([id, value]: [string, any]) => ({
-            ...value,
-            id,
-          })) as Task[]
-          setAllTasks((prev) => [...prev.filter((t) => t.projectId !== project.id), ...projectTasks])
-        }
-      )
+      const tasksUnsub = onValue(tasksRef, (snapshot) => {
+        const data = snapshot.val() || {}
+        const projectTasks = Object.entries(data).map(([id, value]: [string, any]) => ({
+          ...value,
+          id,
+        })) as Task[]
+        setAllTasks((prev) => {
+           // Remove existing tasks for this project to avoid duplicates on updates
+           const filtered = prev.filter((t) => t.projectId !== project.id)
+           return [...filtered, ...projectTasks]
+        })
+      })
       unsubscribers.push(tasksUnsub)
 
-      // Subscribe to sprints
+      // Sprints
       const sprintsRef = ref(database, `sprints/${project.id}`)
-      const sprintsUnsub = onValue(
-        sprintsRef,
-        (snapshot) => {
-          const data = snapshot.val() || {}
-          const projectSprints = Object.entries(data).map(([id, value]: [string, any]) => ({
-            ...value,
-            id,
-          })) as Sprint[]
-          setAllSprints((prev) => [...prev.filter((s) => s.projectId !== project.id), ...projectSprints])
-        }
-      )
+      const sprintsUnsub = onValue(sprintsRef, (snapshot) => {
+        const data = snapshot.val() || {}
+        const projectSprints = Object.entries(data).map(([id, value]: [string, any]) => ({
+          ...value,
+          id,
+        })) as Sprint[]
+        setAllSprints((prev) => {
+           const filtered = prev.filter((s) => s.projectId !== project.id)
+           return [...filtered, ...projectSprints]
+        })
+      })
       unsubscribers.push(sprintsUnsub)
     })
-
-    setDataLoading(false)
 
     return () => {
       unsubscribers.forEach((unsub) => unsub())
     }
-  }, [projectsToShow])
+  }, [JSON.stringify(projectsToShow.map(p => p.id))]) // Stable dependency
 
-  const tasksToShow = allTasks
-  const sprintsToShow = allSprints
+  // Map to events
+  useEffect(() => {
+    const taskEvents: CalendarEvent[] = allTasks.map((task) => ({
+      id: task.id,
+      title: `[Tarea] ${task.title}`,
+      start: new Date(task.startDate),
+      end: task.endDate ? new Date(task.endDate) : new Date(task.startDate),
+      allDay: true, // Tasks sort of span the whole day usually
+      resourceId: task.id,
+      type: 'task',
+      status: task.status,
+      projectId: task.projectId
+    }))
+
+    const sprintEvents: CalendarEvent[] = allSprints.map((sprint) => ({
+      id: sprint.id,
+      title: `[Sprint] ${sprint.name}`,
+      start: new Date(sprint.startDate),
+      end: new Date(sprint.endDate),
+      allDay: true,
+      resourceId: sprint.id,
+      type: 'sprint',
+      status: sprint.status,
+      projectId: sprint.projectId
+    }))
+
+    setEvents([...taskEvents, ...sprintEvents])
+  }, [allTasks, allSprints])
+
+  const onEventDrop = useCallback(
+    async ({ event, start, end, isAllDay }: any) => {
+      if (event.type !== 'task') {
+        toast.error('Solo puedes mover tareas, no sprints')
+        return
+      }
+
+      const taskEvent = event as CalendarEvent
+      try {
+        // Update in Firebase
+        await update(ref(database, `tasks/${taskEvent.projectId}/${taskEvent.id}`), {
+          startDate: format(start, 'yyyy-MM-dd'),
+          endDate: format(end, 'yyyy-MM-dd'),
+        })
+        toast.success('Fecha de tarea actualizada')
+      } catch (error) {
+        console.error('Error updating task date:', error)
+        toast.error('Error al actualizar la fecha')
+      }
+    },
+    []
+  )
+
+  const onEventResize = useCallback(
+    async ({ event, start, end }: any) => {
+      if (event.type !== 'task') {
+         toast.error('Solo puedes redimensionar tareas')
+         return
+      }
+      const taskEvent = event as CalendarEvent
+      try {
+        await update(ref(database, `tasks/${taskEvent.projectId}/${taskEvent.id}`), {
+          startDate: format(start, 'yyyy-MM-dd'),
+          endDate: format(end, 'yyyy-MM-dd'),
+        })
+         toast.success('Duración de tarea actualizada')
+      } catch (error) {
+        console.error(error)
+        toast.error('Error al actualizar duración')
+      }
+    },
+    []
+  )
+
+  const eventStyleGetter = (event: CalendarEvent) => {
+    let backgroundColor = '#3174ad'
+    if (event.type === 'task') {
+      // Use color based on status
+       // Simplified mapping or reuse constant
+       if (event.status === 'done') backgroundColor = '#10B981' // Green
+       else if (event.status === 'in-progress') backgroundColor = '#3B82F6' // Blue
+       else if (event.status === 'to-validate') backgroundColor = '#F59E0B' // Yellow
+       else backgroundColor = '#6B7280' // Gray for to-do
+    } else {
+      backgroundColor = '#8B5CF6' // Purple for Sprints
+    }
+
+    return {
+      style: {
+        backgroundColor,
+        borderRadius: '4px',
+        opacity: 0.8,
+        color: 'white',
+        border: '0px',
+        display: 'block'
+      }
+    }
+  }
 
   if (authLoading) {
     return (
@@ -97,10 +234,7 @@ export default function CalendarPage() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Calendario de Proyectos</h1>
-        <p className={styles.subtitle}>Visualiza tus sprints y tareas en una vista calendario</p>
-      </div>
+      <Toaster position="top-right" />
 
       <div className={styles.controls}>
         <div className={styles.filterSection}>
@@ -135,65 +269,43 @@ export default function CalendarPage() {
         </div>
       </div>
 
-      <div className={styles.content}>
-        <div className={styles.card}>
-          <div className={styles.cardTitle}>
-            <Calendar size={18} style={{ marginRight: '8px' }} />
-            Sprints
-          </div>
-          <div className={styles.cardBody}>
-            {sprintsToShow.length === 0 ? (
-              <p className={styles.emptyText}>No hay sprints en los proyectos seleccionados</p>
-            ) : (
-              <div className={styles.sprintsList}>
-                {sprintsToShow.slice(0, 10).map((sprint) => (
-                  <div key={sprint.id} className={styles.sprintItem}>
-                    <div className={styles.sprintName}>{sprint.name}</div>
-                    <div className={styles.sprintDates}>
-                      <Calendar size={14} style={{ marginRight: '4px' }} />
-                      {new Date(sprint.startDate).toLocaleDateString('es-ES')} -{' '}
-                      {new Date(sprint.endDate).toLocaleDateString('es-ES')}
-                    </div>
-                    <div className={styles.sprintStatus}>
-                      Status: <span className={styles.badge}>{sprint.status}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className={styles.card}>
-          <div className={styles.cardTitle}>
-            <CheckSquare size={18} style={{ marginRight: '8px' }} />
-            Tareas
-          </div>
-          <div className={styles.cardBody}>
-            {tasksToShow.length === 0 ? (
-              <p className={styles.emptyText}>No hay tareas en los proyectos seleccionados</p>
-            ) : (
-              <div className={styles.tasksList}>
-                {tasksToShow.slice(0, 10).map((task) => (
-                  <div key={task.id} className={styles.taskItem}>
-                    <div className={styles.taskTitle}>{task.title}</div>
-                    <div className={styles.taskMeta}>
-                      <span className={styles.status}>{task.status}</span>
-                      <span className={styles.points}>{task.devPoints} pts</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+      <div className={styles.calendarWrapper}>
+        <DnDCalendar
+          localizer={localizer}
+          events={events}
+          startAccessor="start"
+          endAccessor="end"
+          style={{ height: 600 }} // Fixed height for now
+          onEventDrop={onEventDrop}
+          onEventResize={onEventResize}
+          resizable
+          draggableAccessor={(event: any) => event.type === 'task'}
+          eventPropGetter={eventStyleGetter}
+          views={[Views.MONTH, Views.WEEK, Views.DAY, Views.AGENDA]}
+          view={view}
+          date={date}
+          onNavigate={handleNavigate}
+          onView={handleViewChange}
+          messages={{
+            next: "Siguiente",
+            previous: "Anterior",
+            today: "Hoy",
+            month: "Mes",
+            week: "Semana",
+            day: "Día",
+            agenda: "Agenda",
+            date: "Fecha",
+            time: "Hora",
+            event: "Evento"
+          }}
+          culture='es'
+        />
       </div>
 
       <div className={styles.note}>
         <AlertCircle size={16} style={{ marginRight: '8px' }} />
         <div>
-          <strong>Próximamente:</strong> Vista calendario completa con react-big-calendar, drag-drop
-          para reasignar tareas, y exportación a ICS/Google Calendar/Outlook
+           <strong>Próximamente:</strong> Exportación a ICS/Google Calendar/Outlook.
         </div>
       </div>
     </div>

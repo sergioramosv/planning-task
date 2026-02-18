@@ -3,10 +3,12 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { useProjects } from '@/hooks/useProjects'
+import { UserService } from '@/lib/services/user.service'
 import { User } from '@/types'
 import Spinner from '@/components/ui/Spinner'
-import { Users, AlertCircle } from 'lucide-react'
+import { Users, Mail, User as UserIcon } from 'lucide-react'
 import styles from './page.module.css'
+import Badge from '@/components/ui/Badge'
 
 export default function TeamPage() {
   const { user, loading: authLoading } = useAuth()
@@ -29,9 +31,18 @@ export default function TeamPage() {
         }
       })
 
-      // TODO: Fetch user details from database
-      // For now, show member count
-      setLoading(false)
+      try {
+         if (memberIds.size > 0) {
+            const members = await UserService.getUsersByIds(Array.from(memberIds))
+            setTeamMembers(members)
+         } else {
+             setTeamMembers([])
+         }
+      } catch (error) {
+          console.error("Failed to fetch team members", error)
+      } finally {
+        setLoading(false)
+      }
     }
 
     if (!authLoading) {
@@ -66,13 +77,8 @@ export default function TeamPage() {
 
       <div className={styles.content}>
         <div className={styles.card}>
-          <div className={styles.cardTitle}>Proyectos</div>
+          <div className={styles.cardTitle}>Proyectos ({projects.length})</div>
           <div className={styles.cardContent}>
-            <p className={styles.stat}>
-              <span className={styles.statValue}>{projects.length}</span>
-              <span className={styles.statLabel}>proyectos activos</span>
-            </p>
-
             <div className={styles.projectsList}>
               {projects.length === 0 ? (
                 <p className={styles.emptyText}>No tienes proyectos aún</p>
@@ -91,14 +97,38 @@ export default function TeamPage() {
         </div>
 
         <div className={styles.card}>
-          <div className={styles.cardTitle}>Miembros del Equipo</div>
+          <div className={styles.cardTitle}>Miembros del Equipo ({teamMembers.length})</div>
           <div className={styles.cardContent}>
-            <div className={styles.noteContainer}>
-              <AlertCircle size={16} />
-              <p className={styles.note}>
-                Próximamente: Vista detallada de miembros, gestión de roles y permisos
-              </p>
-            </div>
+             {teamMembers.length === 0 ? (
+                 <p className={styles.emptyText}>No hay miembros en tus proyectos (además de ti mismo si no estás en ellos)</p>
+             ) : (
+                 <div className={styles.membersGrid}>
+                    {teamMembers.map(member => (
+                        <div key={member.uid} className={styles.memberCard}>
+                            <div className={styles.memberHeader}>
+                                {member.photoURL ? (
+                                    <img src={member.photoURL} alt={member.displayName} className={styles.avatar} />
+                                ) : (
+                                    <div className={styles.avatarPlaceholder}>
+                                        <UserIcon size={24} />
+                                    </div>
+                                )}
+                                <div className={styles.memberInfo}>
+                                    <div className={styles.memberName}>{member.displayName || 'Usuario'}</div>
+                                    <div className={styles.memberEmail}>
+                                        <Mail size={12} style={{marginRight: 4}} />
+                                        {member.email}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className={styles.memberRole}>
+                                <Badge variant="secondary" size="sm">Miembro</Badge>
+                                {/* Logic to show "Admin" or project count could go here */}
+                            </div>
+                        </div>
+                    ))}
+                 </div>
+             )}
           </div>
         </div>
       </div>

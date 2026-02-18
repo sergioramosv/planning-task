@@ -11,9 +11,10 @@ import { useProposals } from '@/hooks/useProposals'
 import { usePermissions } from '@/hooks/usePermissions'
 import Spinner from '@/components/ui/Spinner'
 import Button from '@/components/ui/Button'
-import { ArrowLeft, Plus, Calendar } from 'lucide-react'
+import { ArrowLeft, Plus, Calendar, MessageSquare } from 'lucide-react'
 import TaskForm from '@/components/tasks/TaskForm'
 import TaskModal from '@/components/tasks/TaskModal'
+import TaskActivityPanel from '@/components/tasks/TaskActivityPanel'
 import TaskKanban from '@/components/tasks/TaskKanban'
 import TaskTableFilters from '@/components/tasks/TaskTableFilters'
 import Modal from '@/components/ui/Modal'
@@ -42,6 +43,7 @@ export default function ProjectDetailsPage() {
   const { canCreateTask, canEditTask, canDeleteTask, canCreateSprint, canDeleteSprint, canCreateBug, canEditBug, canDeleteBug, canCreateProposal, canApproveProposal, canRejectProposal } = usePermissions(project)
   const [activeTab, setActiveTab] = useState<'tasks' | 'bugs' | 'proposals'>('tasks')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalTab, setModalTab] = useState<'details' | 'activity'>('details')
   const [isBugModalOpen, setIsBugModalOpen] = useState(false)
   const [isProposalModalOpen, setIsProposalModalOpen] = useState(false)
   const [isDeleteBugConfirmOpen, setIsDeleteBugConfirmOpen] = useState(false)
@@ -222,6 +224,7 @@ export default function ProjectDetailsPage() {
 
   const handleEditTask = (task: any) => {
     setSelectedTask(task)
+    setModalTab('details')
     setIsModalOpen(true)
   }
 
@@ -529,6 +532,9 @@ export default function ProjectDetailsPage() {
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{task.startDate}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{task.endDate || '-'}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', textAlign: 'center', display: 'flex', gap: 'var(--spacing-2)', justifyContent: 'center' }}>
+                          <Button size="sm" variant="tertiary" onClick={() => { setSelectedTask(task); setModalTab('activity'); setIsModalOpen(true); }}>
+                            <MessageSquare size={14} style={{ marginRight: '0.25rem' }} /> Actividad
+                          </Button>
                           {canEditTask && (
                             <Button size="sm" variant="secondary" onClick={() => handleEditTask(task)}>Editar</Button>
                           )}
@@ -597,6 +603,7 @@ export default function ProjectDetailsPage() {
         developers={developers}
         onSubmit={handleTaskSubmit}
         onCreateSprint={handleCreateSprint}
+        initialTab={modalTab}
         currentUser={user}
         projectMembers={project ? Object.keys(project.members || {}).map(uid => ({
           uid,

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Modal from '@/components/ui/Modal'
 import modalStyles from '@/components/ui/Modal.module.css'
 import TaskForm from './TaskForm'
@@ -20,6 +20,7 @@ interface TaskModalProps {
   onCreateSprint?: (data: any) => Promise<void>
   currentUser?: User | null
   projectMembers?: Array<{ uid: string; displayName: string }>
+  initialTab?: 'details' | 'activity'
 }
 
 export default function TaskModal({
@@ -32,10 +33,18 @@ export default function TaskModal({
   onCreateSprint,
   currentUser,
   projectMembers = [],
+  initialTab = 'details',
 }: TaskModalProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isSprintModalOpen, setIsSprintModalOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState<'details' | 'activity'>('details')
+  const [activeTab, setActiveTab] = useState<'details' | 'activity'>(initialTab)
+
+  useEffect(() => {
+    if (isOpen) {
+      setActiveTab(initialTab)
+    }
+  }, [isOpen, initialTab])
+
 
   const handleSubmit = async (data: any) => {
     setIsLoading(true)
@@ -63,52 +72,39 @@ export default function TaskModal({
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        title={task ? 'Editar Tarea' : 'Crear Nueva Tarea'}
+        title={
+          task
+            ? activeTab === 'activity'
+              ? 'Actividad de la Tarea'
+              : 'Editar Tarea'
+            : 'Crear Nueva Tarea'
+        }
         className={modalStyles.contentLg}
       >
-        {task && (
-          <div className={styles.tabsContainer}>
-            <div className={styles.tabsBar}>
-              <button
-                className={`${styles.tab} ${activeTab === 'details' ? styles.tabActive : ''}`}
-                onClick={() => setActiveTab('details')}
-              >
-                Detalles
-              </button>
-              <button
-                className={`${styles.tab} ${activeTab === 'activity' ? styles.tabActive : ''}`}
-                onClick={() => setActiveTab('activity')}
-              >
-                Actividad
-              </button>
-            </div>
+        {task ? (
+          <>
+            {activeTab === 'details' && (
+              <TaskForm
+                task={task}
+                sprints={sprints}
+                developers={developers}
+                onSubmit={handleSubmit}
+                isLoading={isLoading}
+                onCreateSprint={handleCreateSprint}
+              />
+            )}
 
-            <div className={styles.tabContent}>
-              {activeTab === 'details' && (
-                <TaskForm
-                  task={task}
-                  sprints={sprints}
-                  developers={developers}
-                  onSubmit={handleSubmit}
-                  isLoading={isLoading}
-                  onCreateSprint={handleCreateSprint}
-                />
-              )}
-
-              {activeTab === 'activity' && currentUser && (
-                <TaskActivityPanel
-                  task={task}
-                  currentUserId={currentUser.uid}
-                  currentUserName={currentUser.displayName || 'Usuario'}
-                  currentUserPhotoURL={currentUser.photoURL || undefined}
-                  projectMembers={projectMembers}
-                />
-              )}
-            </div>
-          </div>
-        )}
-
-        {!task && (
+            {activeTab === 'activity' && currentUser && (
+              <TaskActivityPanel
+                task={task}
+                currentUserId={currentUser.uid}
+                currentUserName={currentUser.displayName || 'Usuario'}
+                currentUserPhotoURL={currentUser.photoURL || undefined}
+                projectMembers={projectMembers}
+              />
+            )}
+          </>
+        ) : (
           <TaskForm
             sprints={sprints}
             developers={developers}
