@@ -33,6 +33,10 @@ export default function SprintForm({ sprint, onSubmit, onCancel, isLoading = fal
   })
 
   const onFormSubmit = async (data: SprintFormData) => {
+    // Validación adicional: endDate debe ser posterior a startDate
+    if (new Date(data.endDate) <= new Date(data.startDate)) {
+      return
+    }
     await onSubmit(data)
     reset()
   }

@@ -13,7 +13,13 @@ export const sprintSchema = z.object({
   startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Formato de fecha inválido'),
   endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Formato de fecha inválido'),
   status: z.enum(['planned', 'active', 'completed']),
-})
+}).refine(
+  (data) => new Date(data.endDate) > new Date(data.startDate),
+  {
+    message: 'La fecha de fin debe ser posterior a la fecha de inicio',
+    path: ['endDate'],
+  }
+)
 
 export const taskSchema = z.object({
   title: z.string().min(3, 'El título debe tener al menos 3 caracteres').max(200),

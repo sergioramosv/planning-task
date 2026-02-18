@@ -30,6 +30,8 @@ export default function SprintsPage() {
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
   const [sprintToDelete, setSprintToDelete] = useState<Sprint | null>(null)
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   if (authLoading || sprintsLoading || tasksLoading) {
     return (
@@ -85,6 +87,8 @@ export default function SprintsPage() {
   }
 
   const handleFormSubmit = async (data: any) => {
+    setIsSubmitting(true)
+    setSubmitError(null)
     try {
       if (selectedSprint) {
         await updateSprint(selectedSprint.id, data)
@@ -93,8 +97,11 @@ export default function SprintsPage() {
       }
       setIsModalOpen(false)
       setSelectedSprint(null)
-    } catch (error) {
+      setIsSubmitting(false)
+    } catch (error: any) {
       console.error('Error saving sprint:', error)
+      setSubmitError(error.message || 'Error al guardar el sprint')
+      setIsSubmitting(false)
     }
   }
 
@@ -166,16 +173,32 @@ export default function SprintsPage() {
         onClose={() => {
           setIsModalOpen(false)
           setSelectedSprint(null)
+          setSubmitError(null)
         }}
         title={selectedSprint ? 'Editar Sprint' : 'Crear Sprint'}
       >
+        {submitError && (
+          <div style={{
+            padding: '12px',
+            marginBottom: '16px',
+            backgroundColor: '#FEE2E2',
+            border: '1px solid #FECACA',
+            borderRadius: '6px',
+            color: '#DC2626',
+            fontSize: '14px'
+          }}>
+            {submitError}
+          </div>
+        )}
         <SprintForm
           sprint={selectedSprint || undefined}
           onSubmit={handleFormSubmit}
           onCancel={() => {
             setIsModalOpen(false)
             setSelectedSprint(null)
+            setSubmitError(null)
           }}
+          isLoading={isSubmitting}
         />
       </Modal>
 
