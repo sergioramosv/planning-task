@@ -49,7 +49,6 @@ export default function ProjectDetailsPage() {
     selectedStatus: '',
     selectedSprint: '',
   })
-  const { bugs, loading: bugsLoading, createBug, updateBug, deleteBug } = useBugs(projectId)
 
   // Initialize filtered tasks on load and apply filters
   useEffect(() => {
