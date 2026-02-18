@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.29.3] - 2026-02-18
+
+### Fixed
+- TypeScript build error in `calendar/page.tsx`: replaced string accessors (`"start"`, `"end"`) with function accessors in `DnDCalendar` to satisfy the stricter overload types of `withDragAndDrop`.
+
 ## [1.29.2] - 2026-02-18
 
 ### Fixed
