@@ -5,6 +5,15 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-02-18
+
+### Added
+- ConfirmationModal for bug deletion instead of native alert
+- Alignment of bug filters and "Reportar Bug" button in same row
+
+### Changed
+- Move action button into BugsList component to optimize layout
+
 ## [1.8.3] - 2026-02-18
 
 ### Fixed
