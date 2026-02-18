@@ -7,7 +7,7 @@ import Spinner from '@/components/ui/Spinner'
 import { Task, Sprint } from '@/types'
 import { database } from '@/lib/firebase/config'
 import { ref, onValue, update } from 'firebase/database'
-import { Calendar, dateFnsLocalizer, Event, Views } from 'react-big-calendar'
+import { Calendar, dateFnsLocalizer, Event, Views, View } from 'react-big-calendar'
 import withDragAndDrop, { withDragAndDropProps } from 'react-big-calendar/lib/addons/dragAndDrop'
 import { format, parse, startOfWeek, getDay } from 'date-fns'
 import { enUS, es } from 'date-fns/locale'
@@ -49,11 +49,11 @@ export default function CalendarPage() {
   const [allSprints, setAllSprints] = useState<Sprint[]>([])
   const [events, setEvents] = useState<CalendarEvent[]>([])
 
-  const [view, setView] = useState<Views>(Views.MONTH)
+  const [view, setView] = useState<View>(Views.MONTH)
   const [date, setDate] = useState(new Date())
 
   const handleNavigate = useCallback((newDate: Date) => setDate(newDate), [])
-  const handleViewChange = useCallback((newView: Views) => setView(newView), [])
+  const handleViewChange = useCallback((newView: View) => setView(newView), [])
 
   const userProjects = projects.filter(
     (p) => p.members && user?.uid && p.members[user.uid]
