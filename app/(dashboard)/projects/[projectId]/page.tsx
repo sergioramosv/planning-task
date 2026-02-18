@@ -8,6 +8,7 @@ import { useTasks } from '@/hooks/useTasks'
 import { useSprints } from '@/hooks/useSprints'
 import { useBugs } from '@/hooks/useBugs'
 import { useProposals } from '@/hooks/useProposals'
+import { usePermissions } from '@/hooks/usePermissions'
 import Spinner from '@/components/ui/Spinner'
 import Button from '@/components/ui/Button'
 import { ArrowLeft, Plus, Calendar } from 'lucide-react'
@@ -38,6 +39,7 @@ export default function ProjectDetailsPage() {
   const { proposals, loading: proposalsLoading, createProposal, updateProposalStatus, deleteProposal } = useProposals(projectId)
   const { projects } = useProjects(user?.uid || null)
   const project = projects.find(p => p.id === projectId)
+  const { canCreateTask, canEditTask, canDeleteTask, canCreateSprint, canDeleteSprint, canCreateBug, canEditBug, canDeleteBug, canCreateProposal, canApproveProposal, canRejectProposal } = usePermissions(project)
   const [activeTab, setActiveTab] = useState<'tasks' | 'bugs' | 'proposals'>('tasks')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isBugModalOpen, setIsBugModalOpen] = useState(false)
@@ -427,9 +429,11 @@ export default function ProjectDetailsPage() {
                 <Button size="sm" onClick={() => router.push(`/projects/${projectId}/sprints`)}>
                   <Calendar size={16} style={{ marginRight: '0.25rem' }} /> Ver Sprints
                 </Button>
-                <Button size="sm" onClick={() => { setSelectedTask(undefined); setIsModalOpen(true); }}>
-                  <Plus size={16} style={{ marginRight: '0.25rem' }} /> Agregar Tarea
-                </Button>
+                {canCreateTask && (
+                  <Button size="sm" onClick={() => { setSelectedTask(undefined); setIsModalOpen(true); }}>
+                    <Plus size={16} style={{ marginRight: '0.25rem' }} /> Agregar Tarea
+                  </Button>
+                )}
               </div>
             </div>
 
@@ -525,8 +529,12 @@ export default function ProjectDetailsPage() {
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{task.startDate}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{task.endDate || '-'}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', textAlign: 'center', display: 'flex', gap: 'var(--spacing-2)', justifyContent: 'center' }}>
-                          <Button size="sm" variant="secondary" onClick={() => handleEditTask(task)}>Editar</Button>
-                          <Button size="sm" variant="danger" onClick={() => handleDeleteTask(task.id)}>Borrar</Button>
+                          {canEditTask && (
+                            <Button size="sm" variant="secondary" onClick={() => handleEditTask(task)}>Editar</Button>
+                          )}
+                          {canDeleteTask && (
+                            <Button size="sm" variant="danger" onClick={() => handleDeleteTask(task.id)}>Borrar</Button>
+                          )}
                         </td>
                       </tr>
                         ))
@@ -554,17 +562,21 @@ export default function ProjectDetailsPage() {
             onStatusChange={handleBugStatusChange}
             isLoading={false}
             actionButton={
-              <Button size="sm" onClick={() => setIsBugModalOpen(true)}>
-                <Plus size={16} style={{ marginRight: '0.25rem' }} /> Reportar Bug
-              </Button>
+              canCreateBug && (
+                <Button size="sm" onClick={() => setIsBugModalOpen(true)}>
+                  <Plus size={16} style={{ marginRight: '0.25rem' }} /> Reportar Bug
+                </Button>
+              )
             }
           />
         ) : (
           <>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 'var(--spacing-4)' }}>
-              <Button size="sm" onClick={() => setIsProposalModalOpen(true)}>
-                <Plus size={16} style={{ marginRight: '0.25rem' }} /> Nueva Propuesta
-              </Button>
+              {canCreateProposal && (
+                <Button size="sm" onClick={() => setIsProposalModalOpen(true)}>
+                  <Plus size={16} style={{ marginRight: '0.25rem' }} /> Nueva Propuesta
+                </Button>
+              )}
             </div>
             <ProposalsList
               proposals={proposals}

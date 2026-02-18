@@ -42,7 +42,9 @@
       "Bash(npx husky install)",
       "Bash(npx semantic-release --dry-run)",
       "Bash(npx tsc:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(npm ls:*)",
+      "Bash(git reset:*)"
     ]
   }
 }

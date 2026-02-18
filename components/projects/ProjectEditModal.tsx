@@ -211,7 +211,9 @@ export default function ProjectEditModal({
         {activeTab === 'members' && (
           <div className={styles.content}>
             <MembersManager
-              members={project.members}
+              members={Object.fromEntries(
+                Object.entries(project.members).map(([uid, value]) => [uid, typeof value === 'boolean' ? value : true])
+              )}
               projectCreatorId={project.createdBy}
               projectId={project.id}
               projectName={project.name}
