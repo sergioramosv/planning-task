@@ -5,6 +5,15 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-02-18
+
+### Added
+- Notification service for sending notifications to users
+- Task assignment notifications: users are notified when a task is assigned to them
+- Member removal notifications: users are notified when they are removed from a project
+- Project invitation notifications: users are notified when invited to a project
+- All notifications include relevant context (project name, creator name, task details)
+
 ## [1.5.16] - 2026-02-18
 
 ### Fixed
