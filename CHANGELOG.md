@@ -5,6 +5,20 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2026-02-18
+
+### Added
+- Proposals system for suggesting new tasks before they are created
+- ProposalForm component with same fields as tasks (user story, points, criteria)
+- Users can create proposals with title, user story (who/what/why), acceptance criteria, dates, and points
+- ProposalCard shows proposal details with calculated priority score
+- ProposalsList for managing proposals with status tracking
+- Proposals tab in project details page with counter badge
+- Accept proposal flow: select sprint and automatically create task with proposal data
+- Reject proposal option to mark proposals as rejected
+- Proposal status: pending, accepted, rejected
+- Real-time proposal list updates using Firebase listeners
+
 ## [1.7.1] - 2026-02-18
 
 ### Fixed
