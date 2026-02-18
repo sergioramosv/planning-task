@@ -109,10 +109,60 @@
   gap: var(--spacing-6);
 }
 
+.chartContent {
+  display: flex;
+  gap: var(--spacing-6);
+  align-items: flex-start;
+}
+
 .chartContainer {
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   height: 400px;
   margin-top: var(--spacing-4);
+}
+
+.metricsPanel {
+  flex: 0 0 300px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.metricsSection {
+  background-color: var(--color-neutral-50);
+  padding: var(--spacing-4);
+  border-radius: var(--radius-md);
+}
+
+.metricsSectionTitle {
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  color: var(--color-neutral-800);
+  margin-bottom: var(--spacing-3);
+  display: block;
+}
+
+.metricRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-2);
+  font-size: var(--text-sm);
+}
+
+.metricRow:last-child {
+  margin-bottom: 0;
+}
+
+.metricLabel {
+  color: var(--color-neutral-600);
+}
+
+.metricValue {
+  font-weight: var(--font-bold);
+  font-size: var(--text-base);
 }
 
 .emptyMessage {

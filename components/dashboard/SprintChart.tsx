@@ -196,7 +196,7 @@ export default function SprintChart({
               No hay sprints con datos para mostrar
             </div>
           ) : (
-            <>
+            <div className={styles.chartContent}>
               <div className={styles.chartContainer}>
                 <ResponsiveContainer width="100%" height={400}>
                   <LineChart data={chartData}>
@@ -233,27 +233,62 @@ export default function SprintChart({
                 </ResponsiveContainer>
               </div>
 
-              <div className={styles.summary}>
-                <div className={styles.summaryItem}>
-                  <span className={styles.summaryLabel}>Total Pts Negocio:</span>
-                  <span className={styles.summaryValue} style={{ color: '#8B5CF6' }}>
-                    {chartData.reduce((sum, d) => sum + (d['Pts Negocio'] || 0), 0)}
-                  </span>
+              <div className={styles.metricsPanel}>
+                <div className={styles.metricsSection}>
+                  <label className={styles.metricsSectionTitle}>Puntos de Negocio</label>
+                  <div className={styles.metricRow}>
+                    <span className={styles.metricLabel}>Total:</span>
+                    <span className={styles.metricValue} style={{ color: '#8B5CF6' }}>
+                      {chartData.reduce((sum, d) => sum + (d['Pts Negocio'] || 0), 0)}
+                    </span>
+                  </div>
+                  <div className={styles.metricRow}>
+                    <span className={styles.metricLabel}>Promedio:</span>
+                    <span className={styles.metricValue} style={{ color: '#8B5CF6' }}>
+                      {chartData.length > 0
+                        ? (chartData.reduce((sum, d) => sum + (d['Pts Negocio'] || 0), 0) / chartData.length).toFixed(1)
+                        : 0}
+                    </span>
+                  </div>
                 </div>
-                <div className={styles.summaryItem}>
-                  <span className={styles.summaryLabel}>Total Pts Desarrollo:</span>
-                  <span className={styles.summaryValue} style={{ color: '#06B6D4' }}>
-                    {chartData.reduce((sum, d) => sum + (d['Pts Desarrollo'] || 0), 0)}
-                  </span>
+
+                <div className={styles.metricsSection}>
+                  <label className={styles.metricsSectionTitle}>Puntos de Desarrollo</label>
+                  <div className={styles.metricRow}>
+                    <span className={styles.metricLabel}>Total:</span>
+                    <span className={styles.metricValue} style={{ color: '#06B6D4' }}>
+                      {chartData.reduce((sum, d) => sum + (d['Pts Desarrollo'] || 0), 0)}
+                    </span>
+                  </div>
+                  <div className={styles.metricRow}>
+                    <span className={styles.metricLabel}>Promedio:</span>
+                    <span className={styles.metricValue} style={{ color: '#06B6D4' }}>
+                      {chartData.length > 0
+                        ? (chartData.reduce((sum, d) => sum + (d['Pts Desarrollo'] || 0), 0) / chartData.length).toFixed(1)
+                        : 0}
+                    </span>
+                  </div>
                 </div>
-                <div className={styles.summaryItem}>
-                  <span className={styles.summaryLabel}>Total Bugs Done:</span>
-                  <span className={styles.summaryValue} style={{ color: '#F97316' }}>
-                    {chartData.reduce((sum, d) => sum + (d['Bugs Done'] || 0), 0)}
-                  </span>
+
+                <div className={styles.metricsSection}>
+                  <label className={styles.metricsSectionTitle}>Bugs</label>
+                  <div className={styles.metricRow}>
+                    <span className={styles.metricLabel}>Total Done:</span>
+                    <span className={styles.metricValue} style={{ color: '#F97316' }}>
+                      {chartData.reduce((sum, d) => sum + (d['Bugs Done'] || 0), 0)}
+                    </span>
+                  </div>
+                  <div className={styles.metricRow}>
+                    <span className={styles.metricLabel}>Promedio:</span>
+                    <span className={styles.metricValue} style={{ color: '#F97316' }}>
+                      {chartData.length > 0
+                        ? (chartData.reduce((sum, d) => sum + (d['Bugs Done'] || 0), 0) / chartData.length).toFixed(1)
+                        : 0}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </>
+            </div>
           )}
         </CardContent>
       </Card>
