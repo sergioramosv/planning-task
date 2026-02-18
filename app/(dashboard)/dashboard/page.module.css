@@ -68,6 +68,24 @@
   }
 }
 
+.gridThree {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-6);
+}
+
+@media (min-width: 1280px) {
+  .gridThree {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .gridThree {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 .statContainer {
   text-align: center;
 }

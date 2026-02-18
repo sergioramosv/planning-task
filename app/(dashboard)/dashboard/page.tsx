@@ -178,13 +178,6 @@ export default function DashboardPage() {
         />
       </div>
 
-      <OverdueTasks
-        projects={allProjects}
-        tasks={allTasks}
-        users={allUsers}
-        selectedProjectIds={selectedProjectIds}
-      />
-
       <TeamVelocity
         projects={allProjects}
         sprints={allSprints}
@@ -208,7 +201,14 @@ export default function DashboardPage() {
         />
       </div>
 
-      <div className={styles.gridTwo}>
+      <div className={styles.gridThree}>
+        <OverdueTasks
+          projects={allProjects}
+          tasks={allTasks}
+          users={allUsers}
+          selectedProjectIds={selectedProjectIds}
+        />
+
         <BugsSeverity
           projects={allProjects}
           bugs={allBugs}
