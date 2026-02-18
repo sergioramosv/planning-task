@@ -67,7 +67,7 @@ export default function BugCard({ bug, onDelete, onStatusChange, isLoading = fal
         </span>
       </div>
 
-      {bug.attachments.length > 0 && (
+      {bug.attachments && bug.attachments.length > 0 && (
         <div className={styles.attachments}>
           <strong className={styles.attachmentsTitle}>Archivos ({bug.attachments.length})</strong>
           <div className={styles.attachmentsList}>
