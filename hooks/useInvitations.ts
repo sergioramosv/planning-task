@@ -82,7 +82,7 @@ export function useInvitations(userId: string | null) {
       })
 
       // Agregar usuario a miembros del proyecto
-      await update(ref(database, `projects/${projectId}/members/${userId}`), true)
+      await update(ref(database, `projects/${projectId}/members`), { [userId]: true })
     } catch (err: any) {
       setError(err.message)
       throw err
