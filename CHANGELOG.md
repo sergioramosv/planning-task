@@ -5,6 +5,13 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.24.3] - 2026-02-18
+
+### Fixed
+- Increased Activity Heatmap cell size from 14px to 22px for better visibility
+- Centered heatmap layout with improved spacing and alignment
+- Added scale animation on cell hover for better interactivity
+
 ## [1.24.2] - 2026-02-18
 
 ### Changed
