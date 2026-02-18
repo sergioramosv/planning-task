@@ -48,10 +48,14 @@ export function useSprints(projectId: string | null) {
   const createSprint = useCallback(
     async (sprintData: Omit<Sprint, 'id' | 'createdAt'>) => {
       try {
+        if (!projectId) {
+          throw new Error('No project selected')
+        }
         const newSprintRef = push(ref(database, 'sprints'))
         const sprintId = newSprintRef.key
         const sprint: Sprint = {
           ...sprintData,
+          projectId, // Ensure projectId is set
           id: sprintId!,
           createdAt: Date.now(),
         }
@@ -64,7 +68,7 @@ export function useSprints(projectId: string | null) {
         throw err
       }
     },
-    []
+    [projectId]
   )
 
   const updateSprint = useCallback(async (sprintId: string, updates: Partial<Sprint>) => {

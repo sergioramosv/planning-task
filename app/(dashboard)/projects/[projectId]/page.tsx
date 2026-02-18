@@ -16,6 +16,7 @@ import TaskTableFilters from '@/components/tasks/TaskTableFilters'
 import Modal from '@/components/ui/Modal'
 import { Task, TaskStatus } from '@/types'
 import { TASK_STATUS_LABELS, TASK_STATUS_COLORS } from '@/lib/constants/taskStates'
+import { UserService } from '@/lib/services/user.service'
 import styles from './page.module.css'
 
 export default function ProjectDetailsPage() {
@@ -33,6 +34,8 @@ export default function ProjectDetailsPage() {
   const [sortColumn, setSortColumn] = useState<'id' | 'title' | 'status' | 'priority' | 'developer' | 'startDate'>('priority')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([])
+  const [developers, setDevelopers] = useState<Array<{ id: string; name: string }>>([])
+  const [loadingDevelopers, setLoadingDevelopers] = useState(true)
   const [filters, setFilters] = useState({
     searchText: '',
     selectedDeveloper: '',
@@ -69,15 +72,36 @@ export default function ProjectDetailsPage() {
     setFilteredTasks(filtered)
   }, [tasks, filters])
 
-  if (authLoading || tasksLoading || sprintsLoading) {
+  // Fetch project members as developers
+  useEffect(() => {
+    const fetchDevelopers = async () => {
+      if (!project) return
+      try {
+        setLoadingDevelopers(true)
+        const memberIds = Object.keys(project.members || {})
+        if (memberIds.length > 0) {
+          const members = await UserService.getUsersByIds(memberIds)
+          setDevelopers(members.map(m => ({ id: m.uid, name: m.displayName || m.email })))
+        } else {
+          setDevelopers([])
+        }
+      } catch (error) {
+        console.error('Error fetching developers:', error)
+        setDevelopers([])
+      } finally {
+        setLoadingDevelopers(false)
+      }
+    }
+    fetchDevelopers()
+  }, [project])
+
+  if (authLoading || tasksLoading || sprintsLoading || loadingDevelopers) {
     return (
       <div className={styles.loadingContainer}>
         <Spinner />
       </div>
     )
   }
-
-  const developers = user ? [{ id: user.uid, name: user.displayName || 'Usuario' }] : []
 
   const getSprintName = (sprintId?: string) => {
     if (!sprintId) return '-'
