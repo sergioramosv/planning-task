@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { useNotifications } from '@/hooks/useNotifications'
 import { useInvitations } from '@/hooks/useInvitations'
-import { LogOut, Bell, User as UserIcon, Mail } from 'lucide-react'
+import { LogOut, Bell, User as UserIcon, Mail, BarChart3 } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import NotificationModal from './NotificationModal'
 import ChangelogModal from './ChangelogModal'
@@ -14,6 +15,7 @@ import { APP_VERSION } from '@/lib/constants/appVersion'
 import styles from './Header.module.css'
 
 export default function Header() {
+  const router = useRouter()
   const { user, logout } = useAuth()
   const { unreadCount, notifications } = useNotifications(user?.uid || null)
   const { invitations, acceptInvitation, rejectInvitation } = useInvitations(user?.uid || null)
@@ -51,6 +53,17 @@ export default function Header() {
             </div>
 
             <div className={styles.actions}>
+              <div title="Ir a Dashboard">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => router.push('/dashboard')}
+                >
+                  <BarChart3 size={16} style={{ marginRight: '0.25rem' }} />
+                  Dashboard
+                </Button>
+              </div>
+
               <button
                 onClick={() => setIsInvitationsOpen(true)}
                 className={styles.notificationButton}
