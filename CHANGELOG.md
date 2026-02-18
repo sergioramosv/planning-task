@@ -5,6 +5,12 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.1] - 2026-02-18
+
+### Fixed
+- Tasks completion chart now displays bars side by side instead of stacked
+- Improved X-axis label positioning for better readability
+
 ## [1.14.0] - 2026-02-18
 
 ### Added
