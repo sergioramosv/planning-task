@@ -65,13 +65,13 @@ export default function TasksCompletionChart({
         ) : (
           <div className={styles.chartContainer}>
             <ResponsiveContainer width="100%" height={400}>
-              <BarChart data={chartData} margin={{ bottom: 80 }}>
+              <BarChart data={chartData} margin={{ bottom: 150 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis
                   dataKey="name"
-                  angle={-45}
+                  angle={-90}
                   textAnchor="end"
-                  height={80}
+                  height={150}
                 />
                 <YAxis />
                 <Tooltip />
