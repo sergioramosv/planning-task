@@ -5,6 +5,23 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.28.0] - 2026-02-18
+
+### Added
+- Role-based access control (RBAC) system with 4 permission levels
+- ProjectRole types: owner, admin, member, viewer
+- usePermissions hook for checking user permissions
+- ROLE_PERMISSIONS matrix defining actions per role
+- Owner: full access to all project actions
+- Admin: manage members and content but cannot delete project
+- Member: create and edit resources but cannot delete
+- Viewer: read-only access to dashboard
+
+### Changed
+- Project member format now supports both boolean and ProjectMember objects
+- Action buttons now hidden based on user role and permissions
+- Enhanced type safety for member management
+
 ## [1.27.1] - 2026-02-18
 
 ### Fixed
