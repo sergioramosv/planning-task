@@ -16,6 +16,7 @@ import TaskModal from '@/components/tasks/TaskModal'
 import TaskKanban from '@/components/tasks/TaskKanban'
 import TaskTableFilters from '@/components/tasks/TaskTableFilters'
 import Modal from '@/components/ui/Modal'
+import ConfirmationModal from '@/components/ui/ConfirmationModal'
 import TabsBar from '@/components/layout/TabsBar'
 import BugModal from '@/components/bugs/BugModal'
 import BugsList from '@/components/bugs/BugsList'
@@ -41,6 +42,8 @@ export default function ProjectDetailsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isBugModalOpen, setIsBugModalOpen] = useState(false)
   const [isProposalModalOpen, setIsProposalModalOpen] = useState(false)
+  const [isDeleteBugConfirmOpen, setIsDeleteBugConfirmOpen] = useState(false)
+  const [bugToDelete, setBugToDelete] = useState<string | null>(null)
   const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined)
   const [viewMode, setViewMode] = useState<'table' | 'kanban'>('table')
   const [sortColumn, setSortColumn] = useState<'id' | 'title' | 'status' | 'priority' | 'developer' | 'startDate'>('priority')
@@ -296,13 +299,19 @@ export default function ProjectDetailsPage() {
   }
 
   const handleDeleteBug = async (bugId: string) => {
-    if (!confirm('¿Estás seguro de que quieres borrar este bug?')) {
-      return
-    }
+    setBugToDelete(bugId)
+    setIsDeleteBugConfirmOpen(true)
+  }
+
+  const handleConfirmDeleteBug = async () => {
+    if (!bugToDelete) return
     try {
-      await deleteBug(bugId)
+      await deleteBug(bugToDelete)
     } catch (error) {
       console.error('Error deleting bug:', error)
+    } finally {
+      setBugToDelete(null)
+      setIsDeleteBugConfirmOpen(false)
     }
   }
 
@@ -539,19 +548,17 @@ export default function ProjectDetailsPage() {
             )}
           </>
         ) : activeTab === 'bugs' ? (
-          <>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 'var(--spacing-4)' }}>
+          <BugsList
+            bugs={bugs}
+            onDelete={handleDeleteBug}
+            onStatusChange={handleBugStatusChange}
+            isLoading={false}
+            actionButton={
               <Button size="sm" onClick={() => setIsBugModalOpen(true)}>
                 <Plus size={16} style={{ marginRight: '0.25rem' }} /> Reportar Bug
               </Button>
-            </div>
-            <BugsList
-              bugs={bugs}
-              onDelete={handleDeleteBug}
-              onStatusChange={handleBugStatusChange}
-              isLoading={false}
-            />
-          </>
+            }
+          />
         ) : (
           <>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 'var(--spacing-4)' }}>
@@ -585,6 +592,20 @@ export default function ProjectDetailsPage() {
         onClose={() => setIsBugModalOpen(false)}
         onSubmit={handleBugSubmit}
         isLoading={false}
+      />
+
+      <ConfirmationModal
+        isOpen={isDeleteBugConfirmOpen}
+        onClose={() => {
+          setIsDeleteBugConfirmOpen(false)
+          setBugToDelete(null)
+        }}
+        onConfirm={handleConfirmDeleteBug}
+        title="Eliminar Bug"
+        message="¿Estás seguro de que deseas eliminar este bug? Esta acción no se puede deshacer."
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        variant="danger"
       />
 
       <ProposalModal

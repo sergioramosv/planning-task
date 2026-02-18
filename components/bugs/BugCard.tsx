@@ -7,7 +7,7 @@ import styles from './BugCard.module.css'
 
 interface BugCardProps {
   bug: Bug
-  onDelete?: (id: string) => Promise<void>
+  onDelete?: (id: string) => void | Promise<void>
   onStatusChange?: (id: string, status: Bug['status']) => Promise<void>
   isLoading?: boolean
 }

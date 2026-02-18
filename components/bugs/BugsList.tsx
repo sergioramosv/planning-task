@@ -2,14 +2,15 @@
 
 import { Bug } from '@/types/bug'
 import BugCard from './BugCard'
-import { useState } from 'react'
+import { useState, ReactNode } from 'react'
 import styles from './BugsList.module.css'
 
 interface BugsListProps {
   bugs: Bug[]
-  onDelete?: (id: string) => Promise<void>
+  onDelete?: (id: string) => void | Promise<void>
   onStatusChange?: (id: string, status: Bug['status']) => Promise<void>
   isLoading?: boolean
+  actionButton?: ReactNode
 }
 
 type FilterStatus = 'all' | Bug['status']
@@ -19,6 +20,7 @@ export default function BugsList({
   onDelete,
   onStatusChange,
   isLoading = false,
+  actionButton,
 }: BugsListProps) {
   const [filterStatus, setFilterStatus] = useState<FilterStatus>('all')
   const [filterSeverity, setFilterSeverity] = useState<'all' | Bug['severity']>('all')
@@ -31,8 +33,30 @@ export default function BugsList({
 
   if (bugs.length === 0) {
     return (
-      <div className={styles.emptyState}>
-        <p>No hay bugs reportados</p>
+      <div className={styles.container}>
+        <div className={styles.filters}>
+          <div style={{ flex: 1, display: 'flex', gap: 'var(--spacing-2)' }}>
+            <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value as FilterStatus)} className={styles.filterSelect}>
+              <option value="all">Todos los estados</option>
+              <option value="open">Abiertos</option>
+              <option value="in-progress">En Progreso</option>
+              <option value="resolved">Resueltos</option>
+              <option value="closed">Cerrados</option>
+            </select>
+
+            <select value={filterSeverity} onChange={(e) => setFilterSeverity(e.target.value as any)} className={styles.filterSelect}>
+              <option value="all">Todas las severidades</option>
+              <option value="critical">Crítica</option>
+              <option value="high">Alta</option>
+              <option value="medium">Media</option>
+              <option value="low">Baja</option>
+            </select>
+          </div>
+          {actionButton}
+        </div>
+        <div className={styles.emptyState}>
+          <p>No hay bugs reportados</p>
+        </div>
       </div>
     )
   }
@@ -40,21 +64,24 @@ export default function BugsList({
   return (
     <div className={styles.container}>
       <div className={styles.filters}>
-        <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value as FilterStatus)} className={styles.filterSelect}>
-          <option value="all">Todos los estados</option>
-          <option value="open">Abiertos</option>
-          <option value="in-progress">En Progreso</option>
-          <option value="resolved">Resueltos</option>
-          <option value="closed">Cerrados</option>
-        </select>
+        <div style={{ flex: 1, display: 'flex', gap: 'var(--spacing-2)' }}>
+          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value as FilterStatus)} className={styles.filterSelect}>
+            <option value="all">Todos los estados</option>
+            <option value="open">Abiertos</option>
+            <option value="in-progress">En Progreso</option>
+            <option value="resolved">Resueltos</option>
+            <option value="closed">Cerrados</option>
+          </select>
 
-        <select value={filterSeverity} onChange={(e) => setFilterSeverity(e.target.value as any)} className={styles.filterSelect}>
-          <option value="all">Todas las severidades</option>
-          <option value="critical">Crítica</option>
-          <option value="high">Alta</option>
-          <option value="medium">Media</option>
-          <option value="low">Baja</option>
-        </select>
+          <select value={filterSeverity} onChange={(e) => setFilterSeverity(e.target.value as any)} className={styles.filterSelect}>
+            <option value="all">Todas las severidades</option>
+            <option value="critical">Crítica</option>
+            <option value="high">Alta</option>
+            <option value="medium">Media</option>
+            <option value="low">Baja</option>
+          </select>
+        </div>
+        {actionButton}
       </div>
 
       {filteredBugs.length === 0 ? (
