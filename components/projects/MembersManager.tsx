@@ -18,14 +18,20 @@ interface Member {
 interface MembersManagerProps {
   members: Record<string, boolean>
   projectCreatorId: string
-  onAddMember: (uid: string) => Promise<void>
+  projectId: string
+  projectName: string
+  projectCreatorName: string
+  onInviteMember: (uid: string, email: string) => Promise<void>
   onRemoveMember: (uid: string) => Promise<void>
 }
 
 export default function MembersManager({
   members,
   projectCreatorId,
-  onAddMember,
+  projectId,
+  projectName,
+  projectCreatorName,
+  onInviteMember,
   onRemoveMember,
 }: MembersManagerProps) {
   const { user: currentUser } = useAuth()
@@ -64,19 +70,14 @@ export default function MembersManager({
         user.email.toLowerCase().includes(searchTerm.toLowerCase()))
   )
 
-  const handleAddMember = async (uid: string) => {
+  const handleInviteMember = async (uid: string, email: string) => {
     try {
       setLoading(true)
       setError(null)
-      await onAddMember(uid)
-      // Actualizar localMembers inmediatamente
-      setLocalMembers(prev => ({
-        ...prev,
-        [uid]: true,
-      }))
+      await onInviteMember(uid, email)
       setSearchTerm('')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al agregar miembro')
+      setError(err instanceof Error ? err.message : 'Error al enviar invitación')
     } finally {
       setLoading(false)
     }
@@ -191,11 +192,11 @@ export default function MembersManager({
                       <Button
                         size="sm"
                         variant="primary"
-                        onClick={() => handleAddMember(user.uid)}
+                        onClick={() => handleInviteMember(user.uid, user.email)}
                         disabled={loading}
                       >
                         <Plus size={16} />
-                        Agregar
+                        Invitar
                       </Button>
                     </div>
                   ))

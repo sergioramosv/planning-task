@@ -16,7 +16,7 @@ interface ProjectEditModalProps {
   onClose: () => void
   project: Project
   onSave: (updates: Partial<Project>) => Promise<void>
-  onAddMember: (projectId: string, uid: string) => Promise<void>
+  onInviteMember: (projectId: string, uid: string, email: string) => Promise<void>
   onRemoveMember: (projectId: string, uid: string) => Promise<void>
 }
 
@@ -32,7 +32,7 @@ export default function ProjectEditModal({
   onClose,
   project,
   onSave,
-  onAddMember,
+  onInviteMember,
   onRemoveMember,
 }: ProjectEditModalProps) {
   const { user } = useAuth()
@@ -90,12 +90,12 @@ export default function ProjectEditModal({
     }
   }
 
-  const handleAddMember = async (uid: string) => {
+  const handleInviteMember = async (uid: string, email: string) => {
     try {
       setLoading(true)
-      await onAddMember(project.id, uid)
+      await onInviteMember(project.id, uid, email)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al agregar miembro')
+      setError(err instanceof Error ? err.message : 'Error al enviar invitación')
     } finally {
       setLoading(false)
     }
@@ -213,7 +213,10 @@ export default function ProjectEditModal({
             <MembersManager
               members={project.members}
               projectCreatorId={project.createdBy}
-              onAddMember={handleAddMember}
+              projectId={project.id}
+              projectName={project.name}
+              projectCreatorName={user?.displayName || 'Usuario'}
+              onInviteMember={handleInviteMember}
               onRemoveMember={handleRemoveMember}
             />
           </div>

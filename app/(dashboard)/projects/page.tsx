@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { useProjects } from '@/hooks/useProjects'
+import { useInvitations } from '@/hooks/useInvitations'
 import Button from '@/components/ui/Button'
 import ProjectList from '@/components/projects/ProjectList'
 import ProjectModal from '@/components/projects/ProjectModal'
@@ -17,6 +18,7 @@ import styles from './page.module.css'
 export default function ProjectsPage() {
   const { user, loading: authLoading } = useAuth()
   const { projects, loading, error, createProject, updateProject, deleteProject } = useProjects(user?.uid || null)
+  const { sendInvitation } = useInvitations(user?.uid || null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [projectToEdit, setProjectToEdit] = useState<Project | null>(null)
@@ -75,20 +77,23 @@ export default function ProjectsPage() {
     }
   }
 
-  const handleAddMember = async (projectId: string, uid: string) => {
+  const handleInviteMember = async (projectId: string, uid: string, email: string) => {
     try {
       const project = projects.find(p => p.id === projectId)
-      if (project) {
-        await updateProject(projectId, {
-          members: {
-            ...project.members,
-            [uid]: true,
-          },
+      if (project && user) {
+        await sendInvitation({
+          projectId,
+          projectName: project.name,
+          projectCreatorId: user.uid,
+          projectCreatorName: user.displayName || 'Usuario',
+          invitedUserId: uid,
+          invitedUserEmail: email,
+          status: 'pending',
         })
-        toast.success('Miembro agregado exitosamente')
+        toast.success('Invitación enviada exitosamente')
       }
     } catch (err) {
-      toast.error('Error al agregar miembro')
+      toast.error('Error al enviar invitación')
     }
   }
 
@@ -172,7 +177,7 @@ export default function ProjectsPage() {
           }}
           project={projectToEdit}
           onSave={handleSaveProjectEdit}
-          onAddMember={handleAddMember}
+          onInviteMember={handleInviteMember}
           onRemoveMember={handleRemoveMember}
         />
       )}

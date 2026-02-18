@@ -3,10 +3,12 @@
 import { useState } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { useNotifications } from '@/hooks/useNotifications'
-import { LogOut, Bell, User as UserIcon } from 'lucide-react'
+import { useInvitations } from '@/hooks/useInvitations'
+import { LogOut, Bell, User as UserIcon, Mail } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import NotificationModal from './NotificationModal'
 import ChangelogModal from './ChangelogModal'
+import InvitationsModal from './InvitationsModal'
 import Link from 'next/link'
 import { APP_VERSION } from '@/lib/constants/appVersion'
 import styles from './Header.module.css'
@@ -14,7 +16,9 @@ import styles from './Header.module.css'
 export default function Header() {
   const { user, logout } = useAuth()
   const { unreadCount, notifications } = useNotifications(user?.uid || null)
+  const { invitations, acceptInvitation, rejectInvitation } = useInvitations(user?.uid || null)
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
+  const [isInvitationsOpen, setIsInvitationsOpen] = useState(false)
   const [isChangelogOpen, setIsChangelogOpen] = useState(false)
 
   const handleLogout = async () => {
@@ -47,6 +51,18 @@ export default function Header() {
             </div>
 
             <div className={styles.actions}>
+              <button
+                onClick={() => setIsInvitationsOpen(true)}
+                className={styles.notificationButton}
+                aria-label="Invitaciones"
+                title={invitations.length > 0 ? `${invitations.length} invitación${invitations.length > 1 ? 'es' : ''}` : 'Sin invitaciones'}
+              >
+                <Mail size={20} />
+                {invitations.length > 0 && (
+                  <span className={styles.notificationBadge}>{invitations.length}</span>
+                )}
+              </button>
+
               <button
                 onClick={() => setIsNotificationsOpen(true)}
                 className={styles.notificationButton}
@@ -95,6 +111,14 @@ export default function Header() {
             </div>
           </div>
       </header>
+
+      <InvitationsModal
+        isOpen={isInvitationsOpen}
+        onClose={() => setIsInvitationsOpen(false)}
+        invitations={invitations}
+        onAccept={acceptInvitation}
+        onReject={rejectInvitation}
+      />
 
       <NotificationModal
         isOpen={isNotificationsOpen}
