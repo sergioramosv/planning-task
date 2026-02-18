@@ -5,6 +5,21 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-02-18
+
+### Added
+- Bugs system as a separate workflow from regular tasks
+- Bug creation with simplified form: title, description, severity, and attachments
+- Bugs tab in project details page with counter badge
+- BugForm component with file upload support (multiple attachments per bug)
+- BugCard component displaying bug details with severity indicators
+- BugsList component with filters by status and severity
+- TabsBar component for navigation between Tasks and Bugs views
+- Bug severities: critical, high, medium, low
+- Bug statuses: open, in-progress, resolved, closed
+- No sprints, story points, or developers assignment for bugs (simpler workflow)
+- Real-time bug list updates using Firebase listeners
+
 ## [1.6.0] - 2026-02-18
 
 ### Added
