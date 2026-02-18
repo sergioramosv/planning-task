@@ -271,8 +271,8 @@ export default function CalendarPage() {
         <DnDCalendar
           localizer={localizer}
           events={events}
-          startAccessor="start"
-          endAccessor="end"
+          startAccessor={(event: object) => (event as CalendarEvent).start as Date}
+          endAccessor={(event: object) => (event as CalendarEvent).end as Date}
           style={{ height: 600 }}
           onEventDrop={onEventDrop}
           onEventResize={onEventResize}
