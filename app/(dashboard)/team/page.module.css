@@ -6,7 +6,6 @@
 }
 
 .container {
-  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -40,6 +39,9 @@
 }
 
 .cardTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
   padding: var(--spacing-4);
   background-color: var(--color-primary-50);
   border-bottom: 1px solid var(--color-neutral-200);
@@ -119,6 +121,12 @@
   background-color: var(--color-red-50);
   border: 1px solid var(--color-red-200);
   border-radius: var(--radius-lg);
+}
+
+.noteContainer {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: flex-start;
 }
 
 .note {

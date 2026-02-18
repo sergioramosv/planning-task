@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useProjects } from '@/hooks/useProjects'
 import { User } from '@/types'
 import Spinner from '@/components/ui/Spinner'
+import { Users, AlertCircle } from 'lucide-react'
 import styles from './page.module.css'
 
 export default function TeamPage() {
@@ -92,9 +93,12 @@ export default function TeamPage() {
         <div className={styles.card}>
           <div className={styles.cardTitle}>Miembros del Equipo</div>
           <div className={styles.cardContent}>
-            <p className={styles.note}>
-              ℹ️ Próximamente: Vista detallada de miembros, gestión de roles y permisos
-            </p>
+            <div className={styles.noteContainer}>
+              <AlertCircle size={16} />
+              <p className={styles.note}>
+                Próximamente: Vista detallada de miembros, gestión de roles y permisos
+              </p>
+            </div>
           </div>
         </div>
       </div>

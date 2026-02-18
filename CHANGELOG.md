@@ -5,6 +5,16 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.27.0] - 2026-02-18
+
+### Added
+- Team Management page at `/team` route with member overview
+- Calendar page at `/calendar` route with sprint and task visualization
+- Navigation buttons in Header for Team and Calendar sections
+- Project filtering in calendar view
+- Sprint and task listing with metadata display
+- Team dashboard showing project members and active projects
+
 ## [1.26.0] - 2026-02-18
 
 ### Added

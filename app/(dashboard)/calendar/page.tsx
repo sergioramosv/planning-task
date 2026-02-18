@@ -6,6 +6,7 @@ import { useProjects } from '@/hooks/useProjects'
 import { useTasks } from '@/hooks/useTasks'
 import { useSprints } from '@/hooks/useSprints'
 import Spinner from '@/components/ui/Spinner'
+import { Calendar, AlertCircle, CheckSquare } from 'lucide-react'
 import styles from './page.module.css'
 
 export default function CalendarPage() {
@@ -85,7 +86,10 @@ export default function CalendarPage() {
 
       <div className={styles.content}>
         <div className={styles.card}>
-          <div className={styles.cardTitle}>📅 Sprints</div>
+          <div className={styles.cardTitle}>
+            <Calendar size={18} style={{ marginRight: '8px' }} />
+            Sprints
+          </div>
           <div className={styles.cardBody}>
             {sprintsToShow.length === 0 ? (
               <p className={styles.emptyText}>No hay sprints en los proyectos seleccionados</p>
@@ -95,7 +99,8 @@ export default function CalendarPage() {
                   <div key={sprint.id} className={styles.sprintItem}>
                     <div className={styles.sprintName}>{sprint.name}</div>
                     <div className={styles.sprintDates}>
-                      📅 {new Date(sprint.startDate).toLocaleDateString('es-ES')} -{' '}
+                      <Calendar size={14} style={{ marginRight: '4px' }} />
+                      {new Date(sprint.startDate).toLocaleDateString('es-ES')} -{' '}
                       {new Date(sprint.endDate).toLocaleDateString('es-ES')}
                     </div>
                     <div className={styles.sprintStatus}>
@@ -109,7 +114,10 @@ export default function CalendarPage() {
         </div>
 
         <div className={styles.card}>
-          <div className={styles.cardTitle}>📋 Tareas</div>
+          <div className={styles.cardTitle}>
+            <CheckSquare size={18} style={{ marginRight: '8px' }} />
+            Tareas
+          </div>
           <div className={styles.cardBody}>
             {tasksToShow.length === 0 ? (
               <p className={styles.emptyText}>No hay tareas en los proyectos seleccionados</p>
@@ -131,8 +139,11 @@ export default function CalendarPage() {
       </div>
 
       <div className={styles.note}>
-        <strong>ℹ️ Próximamente:</strong> Vista calendario completa con react-big-calendar, drag-drop
-        para reasignar tareas, y exportación a ICS/Google Calendar/Outlook
+        <AlertCircle size={16} style={{ marginRight: '8px' }} />
+        <div>
+          <strong>Próximamente:</strong> Vista calendario completa con react-big-calendar, drag-drop
+          para reasignar tareas, y exportación a ICS/Google Calendar/Outlook
+        </div>
       </div>
     </div>
   )
