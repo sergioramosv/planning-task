@@ -164,27 +164,26 @@ export default function SprintChart({
         </div>
       )}
 
-      {hasData && (
-        <div className={styles.filterGroup}>
-          <label className={styles.label}>Developer:</label>
-          <select
-            value={selectedDeveloper}
-            onChange={(e) => setSelectedDeveloper(e.target.value)}
-            className={styles.select}
-          >
-            <option value="all">Todos los Developers</option>
-            {developers.map(([id, name]) => (
-              <option key={id} value={id}>
-                {name}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
       <Card>
-        <CardHeader>
+        <CardHeader className={styles.cardHeader}>
           <CardTitle>Gráfica de Puntos por Sprint</CardTitle>
+          {hasData && (
+            <div className={styles.developerFilter}>
+              <label className={styles.filterLabel}>Developer:</label>
+              <select
+                value={selectedDeveloper}
+                onChange={(e) => setSelectedDeveloper(e.target.value)}
+                className={styles.select}
+              >
+                <option value="all">Todos los Developers</option>
+                {developers.map(([id, name]) => (
+                  <option key={id} value={id}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </CardHeader>
         <CardContent className={styles.content}>
           {!hasData ? (
