@@ -7,49 +7,53 @@
 .heatmap {
   display: flex;
   flex-direction: row-reverse;
-  gap: var(--spacing-3);
+  gap: var(--spacing-2);
   overflow-x: auto;
-  padding: var(--spacing-4);
+  padding: var(--spacing-6);
   background-color: var(--color-neutral-50);
   border-radius: var(--radius-md);
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .dayLabels {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding-top: 12px;
+  gap: 4px;
+  padding-top: 20px;
+  margin-right: var(--spacing-3);
 }
 
 .dayLabel {
-  width: 40px;
+  width: 50px;
   text-align: center;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: var(--font-semibold);
   color: var(--color-neutral-600);
 }
 
 .weeksContainer {
   display: flex;
-  gap: 2px;
+  gap: 4px;
 }
 
 .week {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .cell {
-  width: 14px;
-  height: 14px;
-  border-radius: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 3px;
   cursor: pointer;
-  transition: opacity var(--transition-fast);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
 }
 
 .cell:hover {
   opacity: 0.8;
+  transform: scale(1.1);
 }
 
 .cell.empty {
