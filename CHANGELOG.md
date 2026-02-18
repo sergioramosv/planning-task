@@ -5,6 +5,13 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.12] - 2026-02-18
+
+### Fixed
+- Ensure sprints always include projectId when created
+- Show all project members in developer dropdown (not just current user)
+- Fetch and display project members as available developers for task assignment
+
 ## [1.5.11] - 2026-02-18
 
 ### Fixed
