@@ -5,6 +5,22 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.25.0] - 2026-02-18
+
+### Added
+- Expanded notification system with 8 new notification types
+- Task status change notifications (when task status is updated)
+- Task update notifications (points, sprint, developer changes)
+- Sprint status change notifications (planned → active → completed)
+- Sprint deadline approaching notifications (proactive alert)
+- Task deleted notifications
+- Task reassignment notifications
+- Task comment and mention notifications (foundation for comments feature)
+- Toast notifications for real-time feedback (using react-hot-toast)
+- Notification filtering by type (Tasks, Sprints, Projects)
+- Notification grouping by date (Today, Yesterday, Older)
+- Clickable notifications with navigation links
+
 ## [1.24.3] - 2026-02-18
 
 ### Fixed
