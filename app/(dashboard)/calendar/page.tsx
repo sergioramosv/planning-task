@@ -1,20 +1,22 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { useProjects } from '@/hooks/useProjects'
-import { useTasks } from '@/hooks/useTasks'
-import { useSprints } from '@/hooks/useSprints'
 import Spinner from '@/components/ui/Spinner'
 import { Calendar, AlertCircle, CheckSquare } from 'lucide-react'
+import { Task, Sprint } from '@/types'
+import { database } from '@/lib/firebase/config'
+import { ref, onValue } from 'firebase/database'
 import styles from './page.module.css'
 
 export default function CalendarPage() {
   const { user, loading: authLoading } = useAuth()
   const { projects } = useProjects(user?.uid || null)
-  const { tasks } = useTasks()
-  const { sprints } = useSprints()
   const [selectedProjects, setSelectedProjects] = useState<string[]>([])
+  const [allTasks, setAllTasks] = useState<Task[]>([])
+  const [allSprints, setAllSprints] = useState<Sprint[]>([])
+  const [dataLoading, setDataLoading] = useState(false)
 
   if (authLoading) {
     return (
@@ -40,9 +42,58 @@ export default function CalendarPage() {
     ? userProjects.filter((p) => selectedProjects.includes(p.id))
     : userProjects
 
-  const sprintsToShow = sprints.filter((s) => projectsToShow.some((p) => p.id === s.projectId))
+  // Fetch data for selected projects
+  useEffect(() => {
+    if (projectsToShow.length === 0) {
+      setAllTasks([])
+      setAllSprints([])
+      return
+    }
 
-  const tasksToShow = tasks.filter((t) => projectsToShow.some((p) => p.id === t.projectId))
+    setDataLoading(true)
+    const unsubscribers: (() => void)[] = []
+
+    projectsToShow.forEach((project) => {
+      // Subscribe to tasks
+      const tasksRef = ref(database, `tasks/${project.id}`)
+      const tasksUnsub = onValue(
+        tasksRef,
+        (snapshot) => {
+          const data = snapshot.val() || {}
+          const projectTasks = Object.entries(data).map(([id, value]: [string, any]) => ({
+            ...value,
+            id,
+          })) as Task[]
+          setAllTasks((prev) => [...prev.filter((t) => t.projectId !== project.id), ...projectTasks])
+        }
+      )
+      unsubscribers.push(tasksUnsub)
+
+      // Subscribe to sprints
+      const sprintsRef = ref(database, `sprints/${project.id}`)
+      const sprintsUnsub = onValue(
+        sprintsRef,
+        (snapshot) => {
+          const data = snapshot.val() || {}
+          const projectSprints = Object.entries(data).map(([id, value]: [string, any]) => ({
+            ...value,
+            id,
+          })) as Sprint[]
+          setAllSprints((prev) => [...prev.filter((s) => s.projectId !== project.id), ...projectSprints])
+        }
+      )
+      unsubscribers.push(sprintsUnsub)
+    })
+
+    setDataLoading(false)
+
+    return () => {
+      unsubscribers.forEach((unsub) => unsub())
+    }
+  }, [projectsToShow])
+
+  const tasksToShow = allTasks
+  const sprintsToShow = allSprints
 
   return (
     <div className={styles.container}>

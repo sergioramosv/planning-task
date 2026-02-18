@@ -585,6 +585,11 @@ export default function ProjectDetailsPage() {
         developers={developers}
         onSubmit={handleTaskSubmit}
         onCreateSprint={handleCreateSprint}
+        currentUser={user}
+        projectMembers={project ? Object.keys(project.members || {}).map(uid => ({
+          uid,
+          displayName: developers.find(d => d.id === uid)?.name || 'Usuario'
+        })) : []}
       />
 
       <BugModal

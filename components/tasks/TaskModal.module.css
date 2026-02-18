@@ -1,1 +1,41 @@
-/* TaskModal uses Modal component styles - no additional styles needed */
+.tabsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.tabsBar {
+  display: flex;
+  gap: var(--spacing-2);
+  border-bottom: 2px solid var(--color-neutral-200);
+}
+
+.tab {
+  padding: var(--spacing-3) var(--spacing-4);
+  border: none;
+  background-color: transparent;
+  color: var(--color-neutral-600);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  position: relative;
+  bottom: -2px;
+}
+
+.tab:hover {
+  color: var(--color-neutral-900);
+}
+
+.tabActive {
+  color: var(--color-primary-600);
+  border-bottom-color: var(--color-primary-600);
+}
+
+.tabContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}

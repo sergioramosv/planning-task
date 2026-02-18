@@ -5,6 +5,17 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.27.1] - 2026-02-18
+
+### Fixed
+- TaskActivityPanel now integrated into TaskModal with tabs for Details and Activity
+- Calendar page now properly fetches data from multiple projects
+- Fixed ReactMarkdown className wrapper in CommentItem
+- TaskActivityPanel accessible when editing existing tasks with proper context
+
+### Changed
+- TaskModal now requires currentUser and projectMembers props for comment/activity features
+
 ## [1.27.0] - 2026-02-18
 
 ### Added

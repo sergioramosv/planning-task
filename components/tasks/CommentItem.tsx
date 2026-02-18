@@ -100,9 +100,11 @@ export default function CommentItem({
         </div>
       ) : (
         <div className={styles.content}>
-          <ReactMarkdown remarkPlugins={[remarkGfm]} className={styles.markdown}>
-            {comment.text}
-          </ReactMarkdown>
+          <div className={styles.markdown}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {comment.text}
+            </ReactMarkdown>
+          </div>
 
           {comment.mentions && comment.mentions.length > 0 && (
             <div className={styles.mentions}>
