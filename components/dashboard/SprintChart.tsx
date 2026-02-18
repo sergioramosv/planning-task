@@ -246,6 +246,12 @@ export default function SprintChart({
                     {chartData.reduce((sum, d) => sum + (d['Pts Desarrollo'] || 0), 0)}
                   </span>
                 </div>
+                <div className={styles.summaryItem}>
+                  <span className={styles.summaryLabel}>Total Bugs Done:</span>
+                  <span className={styles.summaryValue} style={{ color: '#F97316' }}>
+                    {chartData.reduce((sum, d) => sum + (d['Bugs Done'] || 0), 0)}
+                  </span>
+                </div>
               </div>
             </>
           )}
