@@ -18,24 +18,8 @@ export default function CalendarPage() {
   const [allSprints, setAllSprints] = useState<Sprint[]>([])
   const [dataLoading, setDataLoading] = useState(false)
 
-  if (authLoading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <Spinner />
-      </div>
-    )
-  }
-
-  if (!user) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.errorMessage}>Por favor inicia sesión para ver el calendario</div>
-      </div>
-    )
-  }
-
   const userProjects = projects.filter(
-    (p) => p.members && user.uid && p.members[user.uid]
+    (p) => p.members && user?.uid && p.members[user.uid]
   )
 
   const projectsToShow = selectedProjects.length > 0
@@ -94,6 +78,22 @@ export default function CalendarPage() {
 
   const tasksToShow = allTasks
   const sprintsToShow = allSprints
+
+  if (authLoading) {
+    return (
+      <div className={styles.loadingContainer}>
+        <Spinner />
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.errorMessage}>Por favor inicia sesión para ver el calendario</div>
+      </div>
+    )
+  }
 
   return (
     <div className={styles.container}>
