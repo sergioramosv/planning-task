@@ -5,6 +5,14 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.11] - 2026-02-18
+
+### Fixed
+- Improve sprint creation form with proper error handling and validation
+- Add validation to ensure sprint end date is after start date
+- Display validation errors clearly in sprint creation modal
+- Add loading state feedback during sprint creation
+
 ## [1.5.10] - 2026-02-18
 
 ### Changed
