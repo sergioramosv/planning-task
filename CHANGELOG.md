@@ -5,6 +5,15 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.13] - 2026-02-18
+
+### Added
+- Automatic version checking system with 60-second polling interval
+- Update notification modal that displays current vs new version
+- Auto-refresh mechanism: forces update after 10 seconds if user doesn't click update
+- Version endpoint at /api/version for fetching current app version
+- Update notification cannot be dismissed - ensures users always update
+
 ## [1.5.12] - 2026-02-18
 
 ### Fixed
