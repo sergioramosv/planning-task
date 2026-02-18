@@ -532,7 +532,7 @@ export default function ProjectDetailsPage() {
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{task.startDate}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{task.endDate || '-'}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', textAlign: 'center', display: 'flex', gap: 'var(--spacing-2)', justifyContent: 'center' }}>
-                          <Button size="sm" variant="tertiary" onClick={() => { setSelectedTask(task); setModalTab('activity'); setIsModalOpen(true); }}>
+                          <Button size="sm" variant="ghost" onClick={() => { setSelectedTask(task); setModalTab('activity'); setIsModalOpen(true); }}>
                             <MessageSquare size={14} style={{ marginRight: '0.25rem' }} /> Actividad
                           </Button>
                           {canEditTask && (
