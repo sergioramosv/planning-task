@@ -5,6 +5,13 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.1] - 2026-02-18
+
+### Changed
+- Update ProposalForm styling to match TaskForm layout with Card components
+- Reorganize proposal form sections (Information > Dates & Points > User Story > Criteria)
+- Improve form consistency across task and proposal creation flows
+
 ## [1.8.0] - 2026-02-18
 
 ### Added
