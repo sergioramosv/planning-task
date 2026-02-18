@@ -5,6 +5,19 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.26.0] - 2026-02-18
+
+### Added
+- Comment system with markdown support (react-markdown + remark-gfm)
+- CommentForm component with @ mention autocomplete for developers
+- CommentItem component with edit/delete functionality (only for authors)
+- HistoryItem component displaying task change history in timeline format
+- TaskActivityPanel unified timeline showing comments and history changes
+- Activity filters: All Activity, Comments Only, Changes Only
+- Comment mentions parsing and highlighting
+- Real-time comment subscriptions via Firebase
+- Rich text editing with markdown preview
+
 ## [1.25.0] - 2026-02-18
 
 ### Added
