@@ -5,6 +5,12 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.24.2] - 2026-02-18
+
+### Changed
+- Aligned Overdue Tasks, Bugs Severity, and Activity Heatmap in 3-column responsive grid
+- Responsive breakpoints: 3 columns (1280px+), 2 columns (1024-1279px), 1 column (mobile)
+
 ## [1.24.1] - 2026-02-18
 
 ### Changed
