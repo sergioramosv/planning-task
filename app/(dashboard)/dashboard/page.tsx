@@ -14,6 +14,16 @@ import { BugService } from '@/lib/services/bug.service'
 import DeveloperPerformance from '@/components/dashboard/DeveloperPerformance'
 import SprintChart from '@/components/dashboard/SprintChart'
 import TasksCompletionChart from '@/components/dashboard/TasksCompletionChart'
+import DashboardKPIs from '@/components/dashboard/DashboardKPIs'
+import TaskStateDistribution from '@/components/dashboard/TaskStateDistribution'
+import OverdueTasks from '@/components/dashboard/OverdueTasks'
+import TeamVelocity from '@/components/dashboard/TeamVelocity'
+import DeveloperWorkload from '@/components/dashboard/DeveloperWorkload'
+import SprintTimeline from '@/components/dashboard/SprintTimeline'
+import SprintBurndown from '@/components/dashboard/SprintBurndown'
+import BugsSeverity from '@/components/dashboard/BugsSeverity'
+import ActivityHeatmap from '@/components/dashboard/ActivityHeatmap'
+import DeveloperPerformanceMetrics from '@/components/dashboard/DeveloperPerformanceMetrics'
 import { Project, Task, User, Sprint } from '@/types'
 import { Bug } from '@/types/bug'
 import Link from 'next/link'
@@ -134,6 +144,14 @@ export default function DashboardPage() {
         <p className={styles.subtitle}>Gestiona tus proyectos y tareas de forma eficiente</p>
       </div>
 
+      <DashboardKPIs
+        projects={allProjects}
+        sprints={allSprints}
+        tasks={allTasks}
+        bugs={allBugs}
+        selectedProjectIds={selectedProjectIds}
+      />
+
       <SprintChart
         projects={allProjects}
         sprints={allSprints}
@@ -145,10 +163,75 @@ export default function DashboardPage() {
         onSelectedProjectsChange={setSelectedProjectIds}
       />
 
-      <TasksCompletionChart
+      <div className={styles.gridTwo}>
+        <TasksCompletionChart
+          projects={allProjects}
+          sprints={allSprints}
+          tasks={allTasks}
+          selectedProjectIds={selectedProjectIds}
+        />
+
+        <TaskStateDistribution
+          projects={allProjects}
+          tasks={allTasks}
+          selectedProjectIds={selectedProjectIds}
+        />
+      </div>
+
+      <OverdueTasks
+        projects={allProjects}
+        tasks={allTasks}
+        users={allUsers}
+        selectedProjectIds={selectedProjectIds}
+      />
+
+      <TeamVelocity
         projects={allProjects}
         sprints={allSprints}
         tasks={allTasks}
+        selectedProjectIds={selectedProjectIds}
+      />
+
+      <div className={styles.gridTwo}>
+        <DeveloperWorkload
+          projects={allProjects}
+          tasks={allTasks}
+          users={allUsers}
+          selectedProjectIds={selectedProjectIds}
+        />
+
+        <SprintBurndown
+          projects={allProjects}
+          sprints={allSprints}
+          tasks={allTasks}
+          selectedProjectIds={selectedProjectIds}
+        />
+      </div>
+
+      <SprintTimeline
+        projects={allProjects}
+        sprints={allSprints}
+        tasks={allTasks}
+        selectedProjectIds={selectedProjectIds}
+      />
+
+      <BugsSeverity
+        projects={allProjects}
+        bugs={allBugs}
+        selectedProjectIds={selectedProjectIds}
+      />
+
+      <ActivityHeatmap
+        projects={allProjects}
+        tasks={allTasks}
+        selectedProjectIds={selectedProjectIds}
+      />
+
+      <DeveloperPerformanceMetrics
+        projects={allProjects}
+        sprints={allSprints}
+        tasks={allTasks}
+        users={allUsers}
         selectedProjectIds={selectedProjectIds}
       />
 

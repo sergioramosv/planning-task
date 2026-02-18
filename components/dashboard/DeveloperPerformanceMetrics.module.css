@@ -1,0 +1,107 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+.summary {
+  display: flex;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4);
+  background-color: var(--color-neutral-50);
+  border-radius: var(--radius-md);
+}
+
+.summaryItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+  gap: var(--spacing-3);
+  font-size: var(--text-sm);
+}
+
+.value {
+  font-weight: var(--font-bold);
+  font-size: var(--text-lg);
+  color: #10B981;
+}
+
+.developersList {
+  display: grid;
+  gap: var(--spacing-4);
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.developerCard {
+  padding: var(--spacing-4);
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-md);
+  background-color: var(--color-neutral-50);
+}
+
+.developerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-4);
+  padding-bottom: var(--spacing-3);
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.developerName {
+  font-weight: var(--font-semibold);
+  font-size: var(--text-base);
+  color: var(--color-neutral-900);
+}
+
+.metricsGrid {
+  display: grid;
+  gap: var(--spacing-3);
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.metricLabel {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-neutral-700);
+}
+
+.metricValue {
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--color-neutral-900);
+}
+
+.metricProgress {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: var(--text-xs);
+}
+
+.progressBar {
+  flex: 1;
+  height: 6px;
+  background-color: var(--color-neutral-300);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: #10B981;
+  transition: width 0.3s ease;
+}
+
+.emptyMessage {
+  text-align: center;
+  padding: var(--spacing-6);
+  color: var(--color-neutral-600);
+  font-size: var(--text-sm);
+}

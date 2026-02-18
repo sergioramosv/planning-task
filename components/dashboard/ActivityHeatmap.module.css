@@ -1,0 +1,84 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+.heatmap {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: var(--spacing-3);
+  overflow-x: auto;
+  padding: var(--spacing-4);
+  background-color: var(--color-neutral-50);
+  border-radius: var(--radius-md);
+}
+
+.dayLabels {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 12px;
+}
+
+.dayLabel {
+  width: 40px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: var(--font-semibold);
+  color: var(--color-neutral-600);
+}
+
+.weeksContainer {
+  display: flex;
+  gap: 2px;
+}
+
+.week {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cell {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.cell:hover {
+  opacity: 0.8;
+}
+
+.cell.empty {
+  background-color: var(--color-neutral-200);
+}
+
+.cell.low {
+  background-color: #A1E8D4;
+}
+
+.cell.medium {
+  background-color: #3DD5C3;
+}
+
+.cell.high {
+  background-color: #1EA89F;
+}
+
+.legend {
+  display: flex;
+  gap: var(--spacing-6);
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: var(--spacing-4);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: var(--text-sm);
+}
