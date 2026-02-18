@@ -6,14 +6,18 @@ import { useAuth } from '@/hooks/useAuth'
 import { useProjects } from '@/hooks/useProjects'
 import { useTasks } from '@/hooks/useTasks'
 import { useSprints } from '@/hooks/useSprints'
+import { useBugs } from '@/hooks/useBugs'
 import Spinner from '@/components/ui/Spinner'
 import Button from '@/components/ui/Button'
-import { ArrowLeft, Plus, Calendar } from 'lucide-react'
+import { ArrowLeft, Plus, Calendar, Bug } from 'lucide-react'
 import TaskForm from '@/components/tasks/TaskForm'
 import TaskModal from '@/components/tasks/TaskModal'
 import TaskKanban from '@/components/tasks/TaskKanban'
 import TaskTableFilters from '@/components/tasks/TaskTableFilters'
 import Modal from '@/components/ui/Modal'
+import TabsBar from '@/components/layout/TabsBar'
+import BugModal from '@/components/bugs/BugModal'
+import BugsList from '@/components/bugs/BugsList'
 import { Task, TaskStatus } from '@/types'
 import { TASK_STATUS_LABELS, TASK_STATUS_COLORS } from '@/lib/constants/taskStates'
 import { UserService } from '@/lib/services/user.service'
@@ -28,7 +32,9 @@ export default function ProjectDetailsPage() {
   const { sprints, loading: sprintsLoading, createSprint } = useSprints(projectId)
   const { projects } = useProjects(user?.uid || null)
   const project = projects.find(p => p.id === projectId)
+  const [activeTab, setActiveTab] = useState<'tasks' | 'bugs'>('tasks')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isBugModalOpen, setIsBugModalOpen] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined)
   const [viewMode, setViewMode] = useState<'table' | 'kanban'>('table')
   const [sortColumn, setSortColumn] = useState<'id' | 'title' | 'status' | 'priority' | 'developer' | 'startDate'>('priority')
@@ -42,6 +48,7 @@ export default function ProjectDetailsPage() {
     selectedStatus: '',
     selectedSprint: '',
   })
+  const { bugs, loading: bugsLoading, createBug, updateBug, deleteBug } = useBugs(projectId)
 
   // Initialize filtered tasks on load and apply filters
   useEffect(() => {
@@ -95,7 +102,7 @@ export default function ProjectDetailsPage() {
     fetchDevelopers()
   }, [project])
 
-  if (authLoading || tasksLoading || sprintsLoading || loadingDevelopers) {
+  if (authLoading || tasksLoading || sprintsLoading || loadingDevelopers || bugsLoading) {
     return (
       <div className={styles.loadingContainer}>
         <Spinner />
@@ -257,6 +264,51 @@ export default function ProjectDetailsPage() {
     })
   }
 
+  const handleBugSubmit = async (data: any, attachments: File[]) => {
+    try {
+      if (!user) {
+        console.error('No user logged in')
+        return
+      }
+
+      await createBug(
+        {
+          title: data.title,
+          description: data.description,
+          severity: data.severity,
+          projectId,
+          attachments: [],
+          status: 'open',
+          createdBy: user.uid,
+          createdByName: user.displayName || 'Usuario',
+        },
+        { projectName: project?.name, creatorName: user.displayName || 'Usuario' }
+      )
+      setIsBugModalOpen(false)
+    } catch (error) {
+      console.error('Error saving bug:', error)
+    }
+  }
+
+  const handleDeleteBug = async (bugId: string) => {
+    if (!confirm('¿Estás seguro de que quieres borrar este bug?')) {
+      return
+    }
+    try {
+      await deleteBug(bugId)
+    } catch (error) {
+      console.error('Error deleting bug:', error)
+    }
+  }
+
+  const handleBugStatusChange = async (bugId: string, newStatus: any) => {
+    try {
+      await updateBug(bugId, { status: newStatus })
+    } catch (error) {
+      console.error('Error updating bug status:', error)
+    }
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -266,41 +318,52 @@ export default function ProjectDetailsPage() {
         <h1 className={styles.title}>{project?.name}</h1>
       </div>
 
-      <div className={styles.card}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-4)' }}>
-          <div className={styles.viewToggleContainer}>
-            <Button
-              variant={viewMode === 'table' ? 'primary' : 'secondary'}
-              size="sm"
-              onClick={() => setViewMode('table')}
-            >
-              Tabla
-            </Button>
-            <Button
-              variant={viewMode === 'kanban' ? 'primary' : 'secondary'}
-              size="sm"
-              onClick={() => setViewMode('kanban')}
-            >
-              Kanban
-            </Button>
-          </div>
-          <div style={{ display: 'flex', gap: 'var(--spacing-2)' }}>
-            <Button size="sm" onClick={() => router.push(`/projects/${projectId}/sprints`)}>
-              <Calendar size={16} style={{ marginRight: '0.25rem' }} /> Ver Sprints
-            </Button>
-            <Button size="sm" onClick={() => { setSelectedTask(undefined); setIsModalOpen(true); }}>
-              <Plus size={16} style={{ marginRight: '0.25rem' }} /> Agregar Tarea
-            </Button>
-          </div>
-        </div>
+      <TabsBar
+        tabs={[
+          { id: 'tasks', label: 'Tareas', badge: tasks.length },
+          { id: 'bugs', label: 'Bugs', badge: bugs.length },
+        ]}
+        activeTab={activeTab}
+        onTabChange={(tabId) => setActiveTab(tabId as 'tasks' | 'bugs')}
+      />
 
-        {tasks.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: 'var(--spacing-8) 0', color: 'var(--color-neutral-600)' }}>
-            <p>No hay tareas aún. Crea una para comenzar.</p>
-          </div>
-        ) : (
+      <div className={styles.card}>
+        {activeTab === 'tasks' ? (
           <>
-            <TaskTableFilters
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-4)' }}>
+              <div className={styles.viewToggleContainer}>
+                <Button
+                  variant={viewMode === 'table' ? 'primary' : 'secondary'}
+                  size="sm"
+                  onClick={() => setViewMode('table')}
+                >
+                  Tabla
+                </Button>
+                <Button
+                  variant={viewMode === 'kanban' ? 'primary' : 'secondary'}
+                  size="sm"
+                  onClick={() => setViewMode('kanban')}
+                >
+                  Kanban
+                </Button>
+              </div>
+              <div style={{ display: 'flex', gap: 'var(--spacing-2)' }}>
+                <Button size="sm" onClick={() => router.push(`/projects/${projectId}/sprints`)}>
+                  <Calendar size={16} style={{ marginRight: '0.25rem' }} /> Ver Sprints
+                </Button>
+                <Button size="sm" onClick={() => { setSelectedTask(undefined); setIsModalOpen(true); }}>
+                  <Plus size={16} style={{ marginRight: '0.25rem' }} /> Agregar Tarea
+                </Button>
+              </div>
+            </div>
+
+            {tasks.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: 'var(--spacing-8) 0', color: 'var(--color-neutral-600)' }}>
+                <p>No hay tareas aún. Crea una para comenzar.</p>
+              </div>
+            ) : (
+              <>
+                <TaskTableFilters
               tasks={tasks}
               sprints={sprints}
               developers={developers}
@@ -405,6 +468,22 @@ export default function ProjectDetailsPage() {
                 onStatusChange={handleStatusChange}
               />
             )}
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 'var(--spacing-4)' }}>
+              <Button size="sm" onClick={() => setIsBugModalOpen(true)}>
+                <Plus size={16} style={{ marginRight: '0.25rem' }} /> Reportar Bug
+              </Button>
+            </div>
+            <BugsList
+              bugs={bugs}
+              onDelete={handleDeleteBug}
+              onStatusChange={handleBugStatusChange}
+              isLoading={false}
+            />
           </>
         )}
       </div>
@@ -417,6 +496,13 @@ export default function ProjectDetailsPage() {
         developers={developers}
         onSubmit={handleTaskSubmit}
         onCreateSprint={handleCreateSprint}
+      />
+
+      <BugModal
+        isOpen={isBugModalOpen}
+        onClose={() => setIsBugModalOpen(false)}
+        onSubmit={handleBugSubmit}
+        isLoading={false}
       />
     </div>
   )
