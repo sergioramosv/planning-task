@@ -5,6 +5,17 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.15] - 2026-02-18
+
+### Added
+- Invitation system for adding project members
+- Users receive invitations in header with Mail icon notification badge
+- Invitations show project name and creator information
+- Users can accept or reject invitations
+- Accepting invitation automatically adds user to project members
+- InvitationsModal component to manage pending invitations
+- Invitation persistence in Firebase database
+
 ## [1.5.14] - 2026-02-18
 
 ### Fixed
