@@ -5,6 +5,12 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.14] - 2026-02-18
+
+### Fixed
+- Update members list in real-time when adding or removing members from project
+- No longer required to close and reopen modal to see new members
+
 ## [1.5.13] - 2026-02-18
 
 ### Added
