@@ -50,7 +50,7 @@ export default function ProposalForm({ onSubmit, isLoading = false, initialData 
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<ProposalFormData>({
+  } = useForm<any>({
     resolver: zodResolver(proposalValidationSchema) as any,
     defaultValues: {
       title: initialData?.title || '',
@@ -67,7 +67,7 @@ export default function ProposalForm({ onSubmit, isLoading = false, initialData 
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'acceptanceCriteria',
-  })
+  } as any)
 
   const handleFormSubmit = async (data: ProposalFormData) => {
     await onSubmit(data)
