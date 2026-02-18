@@ -1,0 +1,39 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.proposalsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 16px;
+}
+
+.emptyState {
+  padding: 40px 20px;
+  text-align: center;
+  color: #a3a3a3;
+  font-size: 16px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.stats {
+  display: flex;
+  gap: 24px;
+  padding: 16px 0;
+  border-top: 1px solid #e5e5e5;
+  font-size: 14px;
+  color: #737373;
+}
+
+.statItem {
+  display: flex;
+  gap: 6px;
+}
+
+.statItem strong {
+  color: #171717;
+}

@@ -7,9 +7,10 @@ import { useProjects } from '@/hooks/useProjects'
 import { useTasks } from '@/hooks/useTasks'
 import { useSprints } from '@/hooks/useSprints'
 import { useBugs } from '@/hooks/useBugs'
+import { useProposals } from '@/hooks/useProposals'
 import Spinner from '@/components/ui/Spinner'
 import Button from '@/components/ui/Button'
-import { ArrowLeft, Plus, Calendar, Bug } from 'lucide-react'
+import { ArrowLeft, Plus, Calendar } from 'lucide-react'
 import TaskForm from '@/components/tasks/TaskForm'
 import TaskModal from '@/components/tasks/TaskModal'
 import TaskKanban from '@/components/tasks/TaskKanban'
@@ -18,6 +19,8 @@ import Modal from '@/components/ui/Modal'
 import TabsBar from '@/components/layout/TabsBar'
 import BugModal from '@/components/bugs/BugModal'
 import BugsList from '@/components/bugs/BugsList'
+import ProposalModal from '@/components/proposals/ProposalModal'
+import ProposalsList from '@/components/proposals/ProposalsList'
 import { Task, TaskStatus } from '@/types'
 import { TASK_STATUS_LABELS, TASK_STATUS_COLORS } from '@/lib/constants/taskStates'
 import { UserService } from '@/lib/services/user.service'
@@ -31,11 +34,13 @@ export default function ProjectDetailsPage() {
   const { tasks, loading: tasksLoading, createTask, updateTask, deleteTask } = useTasks(projectId)
   const { sprints, loading: sprintsLoading, createSprint } = useSprints(projectId)
   const { bugs, loading: bugsLoading, createBug, updateBug, deleteBug } = useBugs(projectId)
+  const { proposals, loading: proposalsLoading, createProposal, updateProposalStatus, deleteProposal } = useProposals(projectId)
   const { projects } = useProjects(user?.uid || null)
   const project = projects.find(p => p.id === projectId)
-  const [activeTab, setActiveTab] = useState<'tasks' | 'bugs'>('tasks')
+  const [activeTab, setActiveTab] = useState<'tasks' | 'bugs' | 'proposals'>('tasks')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isBugModalOpen, setIsBugModalOpen] = useState(false)
+  const [isProposalModalOpen, setIsProposalModalOpen] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined)
   const [viewMode, setViewMode] = useState<'table' | 'kanban'>('table')
   const [sortColumn, setSortColumn] = useState<'id' | 'title' | 'status' | 'priority' | 'developer' | 'startDate'>('priority')
@@ -102,7 +107,7 @@ export default function ProjectDetailsPage() {
     fetchDevelopers()
   }, [project])
 
-  if (authLoading || tasksLoading || sprintsLoading || loadingDevelopers || bugsLoading) {
+  if (authLoading || tasksLoading || sprintsLoading || loadingDevelopers || bugsLoading || proposalsLoading) {
     return (
       <div className={styles.loadingContainer}>
         <Spinner />
@@ -309,6 +314,67 @@ export default function ProjectDetailsPage() {
     }
   }
 
+  const handleProposalSubmit = async (data: any) => {
+    try {
+      if (!user) {
+        console.error('No user logged in')
+        return
+      }
+
+      await createProposal({
+        title: data.title,
+        projectId,
+        acceptanceCriteria: data.acceptanceCriteria,
+        userStory: data.userStory,
+        startDate: data.startDate,
+        bizPoints: data.bizPoints,
+        devPoints: data.devPoints,
+        status: 'pending',
+        createdBy: user.uid,
+        createdByName: user.displayName || 'Usuario',
+      })
+      setIsProposalModalOpen(false)
+    } catch (error) {
+      console.error('Error saving proposal:', error)
+    }
+  }
+
+  const handleProposalAccept = async (proposalId: string, sprintId: string) => {
+    try {
+      const proposal = proposals.find(p => p.id === proposalId)
+      if (!proposal) return
+
+      // Crear tarea a partir de la propuesta
+      await createTask({
+        title: proposal.title,
+        sprintId,
+        developer: user?.uid || '',
+        status: 'to-do',
+        startDate: proposal.startDate,
+        endDate: undefined,
+        bizPoints: proposal.bizPoints,
+        devPoints: proposal.devPoints,
+        acceptanceCriteria: proposal.acceptanceCriteria,
+        userStory: proposal.userStory,
+        projectId,
+        createdBy: user?.uid || '',
+      })
+
+      // Marcar propuesta como aceptada
+      await updateProposalStatus(proposalId, 'accepted')
+    } catch (error) {
+      console.error('Error accepting proposal:', error)
+    }
+  }
+
+  const handleProposalReject = async (proposalId: string) => {
+    try {
+      await updateProposalStatus(proposalId, 'rejected')
+    } catch (error) {
+      console.error('Error rejecting proposal:', error)
+    }
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -322,9 +388,10 @@ export default function ProjectDetailsPage() {
         tabs={[
           { id: 'tasks', label: 'Tareas', badge: tasks.length },
           { id: 'bugs', label: 'Bugs', badge: bugs.length },
+          { id: 'proposals', label: 'Propuestas', badge: proposals.length },
         ]}
         activeTab={activeTab}
-        onTabChange={(tabId) => setActiveTab(tabId as 'tasks' | 'bugs')}
+        onTabChange={(tabId) => setActiveTab(tabId as 'tasks' | 'bugs' | 'proposals')}
       />
 
       <div className={styles.card}>
@@ -471,7 +538,7 @@ export default function ProjectDetailsPage() {
               </>
             )}
           </>
-        ) : (
+        ) : activeTab === 'bugs' ? (
           <>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 'var(--spacing-4)' }}>
               <Button size="sm" onClick={() => setIsBugModalOpen(true)}>
@@ -482,6 +549,21 @@ export default function ProjectDetailsPage() {
               bugs={bugs}
               onDelete={handleDeleteBug}
               onStatusChange={handleBugStatusChange}
+              isLoading={false}
+            />
+          </>
+        ) : (
+          <>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 'var(--spacing-4)' }}>
+              <Button size="sm" onClick={() => setIsProposalModalOpen(true)}>
+                <Plus size={16} style={{ marginRight: '0.25rem' }} /> Nueva Propuesta
+              </Button>
+            </div>
+            <ProposalsList
+              proposals={proposals}
+              sprints={sprints}
+              onAccept={handleProposalAccept}
+              onReject={handleProposalReject}
               isLoading={false}
             />
           </>
@@ -502,6 +584,13 @@ export default function ProjectDetailsPage() {
         isOpen={isBugModalOpen}
         onClose={() => setIsBugModalOpen(false)}
         onSubmit={handleBugSubmit}
+        isLoading={false}
+      />
+
+      <ProposalModal
+        isOpen={isProposalModalOpen}
+        onClose={() => setIsProposalModalOpen(false)}
+        onSubmit={handleProposalSubmit}
         isLoading={false}
       />
     </div>
