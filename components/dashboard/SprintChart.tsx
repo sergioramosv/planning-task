@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import { Project, Sprint, Task, User } from '@/types'
+import { Bug } from '@/types/bug'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import styles from './SprintChart.module.css'
@@ -10,6 +11,7 @@ interface SprintChartProps {
   projects: Project[]
   sprints: Sprint[]
   tasks: Task[]
+  bugs?: Bug[]
   users: User[]
   currentUserId?: string
   selectedProjectIds: string[]
@@ -20,6 +22,7 @@ export default function SprintChart({
   projects,
   sprints,
   tasks,
+  bugs = [],
   users,
   currentUserId,
   selectedProjectIds,
@@ -77,13 +80,22 @@ export default function SprintChart({
       const bizPoints = sprintTasks.reduce((sum, t) => sum + (t.bizPoints || 0), 0)
       const devPoints = sprintTasks.reduce((sum, t) => sum + (t.devPoints || 0), 0)
 
+      // Count bugs done that fall within sprint date range based on creation date
+      const sprintBugsDone = bugs.filter(b =>
+        selectedProjectIds.includes(b.projectId) &&
+        b.status === 'closed' &&
+        new Date(b.createdAt).getTime() >= new Date(sprint.startDate).getTime() &&
+        new Date(b.createdAt).getTime() <= new Date(sprint.endDate).getTime()
+      ).length
+
       return {
         name: sprint.name,
         'Pts Negocio': bizPoints,
-        'Pts Desarrollo': devPoints
+        'Pts Desarrollo': devPoints,
+        'Bugs Done': sprintBugsDone
       }
     })
-  }, [selectedProjectIds, filteredTasks, sprints])
+  }, [selectedProjectIds, filteredTasks, sprints, bugs])
 
   const toggleProjectSelection = (projectId: string) => {
     if (selectedProjectIds.includes(projectId)) {
@@ -207,6 +219,14 @@ export default function SprintChart({
                       stroke="#06B6D4"
                       strokeWidth={2}
                       dot={{ fill: '#06B6D4', r: 4 }}
+                      activeDot={{ r: 6 }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="Bugs Done"
+                      stroke="#F97316"
+                      strokeWidth={2}
+                      dot={{ fill: '#F97316', r: 4 }}
                       activeDot={{ r: 6 }}
                     />
                   </LineChart>

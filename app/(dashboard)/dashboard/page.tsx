@@ -10,9 +10,11 @@ import { ProjectService } from '@/lib/services/project.service'
 import { SprintService } from '@/lib/services/sprint.service'
 import { TaskService } from '@/lib/services/task.service'
 import { UserService } from '@/lib/services/user.service'
+import { BugService } from '@/lib/services/bug.service'
 import DeveloperPerformance from '@/components/dashboard/DeveloperPerformance'
 import SprintChart from '@/components/dashboard/SprintChart'
 import { Project, Task, User, Sprint } from '@/types'
+import { Bug } from '@/types/bug'
 import Link from 'next/link'
 import { formatDate } from '@/lib/utils/formatters'
 import Badge from '@/components/ui/Badge'
@@ -34,6 +36,7 @@ export default function DashboardPage() {
   const [allUsers, setAllUsers] = useState<User[]>([])
   const [allProjects, setAllProjects] = useState<Project[]>([])
   const [allSprints, setAllSprints] = useState<Sprint[]>([])
+  const [allBugs, setAllBugs] = useState<Bug[]>([])
   const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([])
 
   useEffect(() => {
@@ -41,11 +44,12 @@ export default function DashboardPage() {
       if (!user) return
 
       try {
-        const [projects, sprints, tasks, users] = await Promise.all([
+        const [projects, sprints, tasks, users, bugs] = await Promise.all([
           ProjectService.getAllProjects(),
           SprintService.getAllSprints(),
           TaskService.getAllTasks(),
-          UserService.getAllUsers()
+          UserService.getAllUsers(),
+          BugService.getAllBugs()
         ])
 
         // Filter projects for current user
@@ -85,11 +89,12 @@ export default function DashboardPage() {
 
         setAllTasks(tasks)
         setAllUsers(users)
-        setAllProjects(projects)
+        setAllProjects(userProjects)
         setAllSprints(sprints)
-        // Initialize selected projects with the first project if available
-        if (projects.length > 0) {
-          setSelectedProjectIds([projects[0].id])
+        setAllBugs(bugs)
+        // Initialize selected projects with the first user project if available
+        if (userProjects.length > 0) {
+          setSelectedProjectIds([userProjects[0].id])
         }
 
       } catch (error) {
@@ -132,6 +137,7 @@ export default function DashboardPage() {
         projects={allProjects}
         sprints={allSprints}
         tasks={allTasks}
+        bugs={allBugs}
         users={allUsers}
         currentUserId={user?.uid}
         selectedProjectIds={selectedProjectIds}
