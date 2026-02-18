@@ -13,6 +13,7 @@ import { UserService } from '@/lib/services/user.service'
 import { BugService } from '@/lib/services/bug.service'
 import DeveloperPerformance from '@/components/dashboard/DeveloperPerformance'
 import SprintChart from '@/components/dashboard/SprintChart'
+import TasksCompletionChart from '@/components/dashboard/TasksCompletionChart'
 import { Project, Task, User, Sprint } from '@/types'
 import { Bug } from '@/types/bug'
 import Link from 'next/link'
@@ -142,6 +143,13 @@ export default function DashboardPage() {
         currentUserId={user?.uid}
         selectedProjectIds={selectedProjectIds}
         onSelectedProjectsChange={setSelectedProjectIds}
+      />
+
+      <TasksCompletionChart
+        projects={allProjects}
+        sprints={allSprints}
+        tasks={allTasks}
+        selectedProjectIds={selectedProjectIds}
       />
 
       <DeveloperPerformance tasks={allTasks} users={allUsers} selectedProjectIds={selectedProjectIds} />
