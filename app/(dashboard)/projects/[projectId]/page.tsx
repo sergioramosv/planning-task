@@ -9,7 +9,7 @@ import { useSprints } from '@/hooks/useSprints'
 import { useBugs } from '@/hooks/useBugs'
 import Spinner from '@/components/ui/Spinner'
 import Button from '@/components/ui/Button'
-import { ArrowLeft, Plus, Calendar } from 'lucide-react'
+import { ArrowLeft, Plus, Calendar, Bug } from 'lucide-react'
 import TaskForm from '@/components/tasks/TaskForm'
 import TaskModal from '@/components/tasks/TaskModal'
 import TaskKanban from '@/components/tasks/TaskKanban'
@@ -49,6 +49,7 @@ export default function ProjectDetailsPage() {
     selectedStatus: '',
     selectedSprint: '',
   })
+  const { bugs, loading: bugsLoading, createBug, updateBug, deleteBug } = useBugs(projectId)
 
   // Initialize filtered tasks on load and apply filters
   useEffect(() => {
