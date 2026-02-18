@@ -5,24 +5,26 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.15.0] - 2026-02-18
-
-### Added
-- Dashboard KPIs card with completion rate, team velocity, bug resolution rate, and active sprints
-- Task State Distribution pie chart (To-Do, In-Progress, To-Validate, Done)
-- Overdue Tasks table with visual alerts for past-deadline tasks
-- Team Velocity line chart tracking points delivered across sprints
-- Developer Workload bar chart showing task distribution and balance
-- Sprint Timeline with visual status badges and remaining days (scrollable, max 8 sprints)
-- Sprint Burndown bar chart for pending vs completed tasks per sprint
-- Bugs by Severity bar chart with open/closed breakdown
-- Activity Heatmap (GitHub-style) showing 12-week work patterns
-- Developer Performance Metrics detailed dashboard with productivity badges
-- All analytics components respect selected projects and team members only
+## [1.24.1] - 2026-02-18
 
 ### Changed
 - Optimized dashboard layout with grouped grid charts (Bugs + Heatmap side by side)
 - Sprint Timeline now shows max 8 sprints with scrollable overflow
+
+## [1.24.0] - 2026-02-18
+
+### Added
+- Dashboard KPIs card with completion rate, team velocity, bug resolution rate, and active sprints (v1.15)
+- Task State Distribution pie chart (To-Do, In-Progress, To-Validate, Done) (v1.16)
+- Overdue Tasks table with visual alerts for past-deadline tasks (v1.17)
+- Team Velocity line chart tracking points delivered across sprints (v1.18)
+- Developer Workload bar chart showing task distribution and balance (v1.19)
+- Sprint Timeline with visual status badges and remaining days (v1.20)
+- Sprint Burndown bar chart for pending vs completed tasks per sprint (v1.21)
+- Bugs by Severity bar chart with open/closed breakdown (v1.22)
+- Activity Heatmap (GitHub-style) showing 12-week work patterns (v1.23)
+- Developer Performance Metrics detailed dashboard with productivity badges (v1.24)
+- All analytics components respect selected projects and team members only
 
 ## [1.14.3] - 2026-02-18
 
