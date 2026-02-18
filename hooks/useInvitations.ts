@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { database } from '@/lib/firebase/config'
 import { ref, onValue, push, update, remove } from 'firebase/database'
 import { Invitation } from '@/types/invitation'
+import { NotificationService } from '@/lib/services/notification.service'
 
 export function useInvitations(userId: string | null) {
   const [invitations, setInvitations] = useState<Invitation[]>([])
@@ -60,6 +61,19 @@ export function useInvitations(userId: string | null) {
         await update(ref(database), {
           [`invitations/${invitationId}`]: invitationData,
         })
+
+        // Send notification to invited user
+        try {
+          await NotificationService.notifyProjectInvitation(
+            invitation.invitedUserId,
+            invitation.projectName,
+            invitation.projectCreatorName
+          )
+        } catch (notifErr) {
+          console.error('Error sending notification:', notifErr)
+          // Don't throw, invitation was created successfully
+        }
+
         return invitationId
       } catch (err: any) {
         setError(err.message)

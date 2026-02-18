@@ -6,6 +6,7 @@ import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import { useAuth } from '@/hooks/useAuth'
 import { UserService } from '@/lib/services/user.service'
+import { NotificationService } from '@/lib/services/notification.service'
 import styles from './MembersManager.module.css'
 
 interface Member {
@@ -87,12 +88,24 @@ export default function MembersManager({
     try {
       setLoading(true)
       setError(null)
+
       await onRemoveMember(uid)
       // Actualizar localMembers inmediatamente
       setLocalMembers(prev => ({
         ...prev,
         [uid]: false,
       }))
+
+      // Enviar notificación al miembro removido
+      try {
+        await NotificationService.notifyMemberRemoval(
+          uid,
+          projectName,
+          projectCreatorName
+        )
+      } catch (notifErr) {
+        console.error('Error sending member removal notification:', notifErr)
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al remover miembro')
     } finally {

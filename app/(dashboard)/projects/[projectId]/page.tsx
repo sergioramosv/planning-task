@@ -160,20 +160,26 @@ export default function ProjectDetailsPage() {
         })
       } else {
         // Create new task
-        await createTask({
-          title: data.title,
-          sprintId: data.sprint || undefined,
-          developer: data.developer,
-          status: data.status,
-          startDate: data.startDate,
-          endDate: data.endDate,
-          bizPoints: data.bizPoints,
-          devPoints: data.devPoints,
-          acceptanceCriteria: data.acceptanceCriteria,
-          userStory: data.userStory,
-          projectId,
-          createdBy: user.uid,
-        })
+        await createTask(
+          {
+            title: data.title,
+            sprintId: data.sprint || undefined,
+            developer: data.developer,
+            status: data.status,
+            startDate: data.startDate,
+            endDate: data.endDate,
+            bizPoints: data.bizPoints,
+            devPoints: data.devPoints,
+            acceptanceCriteria: data.acceptanceCriteria,
+            userStory: data.userStory,
+            projectId,
+            createdBy: user.uid,
+          },
+          {
+            projectName: project?.name,
+            creatorName: user.displayName || 'Usuario',
+          }
+        )
       }
       setIsModalOpen(false)
     } catch (error) {

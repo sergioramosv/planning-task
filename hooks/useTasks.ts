@@ -5,6 +5,7 @@ import { database } from '@/lib/firebase/config'
 import { ref, onValue, push, update, remove } from 'firebase/database'
 import { Task, Filters } from '@/types'
 import { calculatePriority } from '@/lib/utils/calculations'
+import { NotificationService } from '@/lib/services/notification.service'
 
 export function useTasks(projectId: string | null, sprintId?: string | null, filters?: Filters) {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -70,7 +71,10 @@ export function useTasks(projectId: string | null, sprintId?: string | null, fil
   }, [tasks, filters])
 
   const createTask = useCallback(
-    async (taskData: Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'priority' | 'history'>) => {
+    async (
+      taskData: Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'priority' | 'history'>,
+      options?: { projectName?: string; creatorName?: string }
+    ) => {
       try {
         const newTaskRef = push(ref(database, 'tasks'))
         const taskId = newTaskRef.key
@@ -86,6 +90,22 @@ export function useTasks(projectId: string | null, sprintId?: string | null, fil
         await update(ref(database), {
           [`tasks/${taskId}`]: task,
         })
+
+        // Send notification to assigned developer
+        try {
+          if (options?.projectName && options?.creatorName) {
+            await NotificationService.notifyTaskAssignment(
+              taskData.developer,
+              taskData.title,
+              options.projectName,
+              options.creatorName
+            )
+          }
+        } catch (notifErr) {
+          console.error('Error sending task notification:', notifErr)
+          // Don't throw, task was created successfully
+        }
+
         return taskId
       } catch (err: any) {
         setError(err.message)
