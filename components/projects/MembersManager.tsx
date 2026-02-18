@@ -33,6 +33,7 @@ export default function MembersManager({
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [localMembers, setLocalMembers] = useState<Record<string, boolean>>(members)
 
 
 
@@ -49,7 +50,12 @@ export default function MembersManager({
     fetchUsers()
   }, [])
 
-  const membersList = Object.keys(members).filter((uid) => members[uid])
+  // Sincronizar localMembers cuando cambia el prop members
+  useEffect(() => {
+    setLocalMembers(members)
+  }, [members])
+
+  const membersList = Object.keys(localMembers).filter((uid) => localMembers[uid])
 
   const filteredUsers = allUsers.filter(
     (user) =>
@@ -61,7 +67,13 @@ export default function MembersManager({
   const handleAddMember = async (uid: string) => {
     try {
       setLoading(true)
+      setError(null)
       await onAddMember(uid)
+      // Actualizar localMembers inmediatamente
+      setLocalMembers(prev => ({
+        ...prev,
+        [uid]: true,
+      }))
       setSearchTerm('')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al agregar miembro')
@@ -73,7 +85,13 @@ export default function MembersManager({
   const handleRemoveMember = async (uid: string) => {
     try {
       setLoading(true)
+      setError(null)
       await onRemoveMember(uid)
+      // Actualizar localMembers inmediatamente
+      setLocalMembers(prev => ({
+        ...prev,
+        [uid]: false,
+      }))
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al remover miembro')
     } finally {
