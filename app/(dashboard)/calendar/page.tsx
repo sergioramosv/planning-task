@@ -194,8 +194,6 @@ export default function CalendarPage() {
   const eventStyleGetter = (event: CalendarEvent) => {
     let backgroundColor = '#3174ad'
     if (event.type === 'task') {
-      // Use color based on status
-       // Simplified mapping or reuse constant
        if (event.status === 'done') backgroundColor = '#10B981' // Green
        else if (event.status === 'in-progress') backgroundColor = '#3B82F6' // Blue
        else if (event.status === 'to-validate') backgroundColor = '#F59E0B' // Yellow
@@ -275,12 +273,12 @@ export default function CalendarPage() {
           events={events}
           startAccessor="start"
           endAccessor="end"
-          style={{ height: 600 }} // Fixed height for now
+          style={{ height: 600 }}
           onEventDrop={onEventDrop}
           onEventResize={onEventResize}
           resizable
           draggableAccessor={(event: any) => event.type === 'task'}
-          eventPropGetter={eventStyleGetter}
+          eventPropGetter={(event: any) => eventStyleGetter(event)}
           views={[Views.MONTH, Views.WEEK, Views.DAY, Views.AGENDA]}
           view={view}
           date={date}
