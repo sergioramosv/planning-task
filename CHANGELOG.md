@@ -5,7 +5,7 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - 2026-02-18
+## [1.15.0] - 2026-02-18
 
 ### Added
 - Dashboard KPIs card with completion rate, team velocity, bug resolution rate, and active sprints
@@ -13,12 +13,16 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 - Overdue Tasks table with visual alerts for past-deadline tasks
 - Team Velocity line chart tracking points delivered across sprints
 - Developer Workload bar chart showing task distribution and balance
-- Sprint Timeline with visual status badges and remaining days
+- Sprint Timeline with visual status badges and remaining days (scrollable, max 8 sprints)
 - Sprint Burndown bar chart for pending vs completed tasks per sprint
 - Bugs by Severity bar chart with open/closed breakdown
 - Activity Heatmap (GitHub-style) showing 12-week work patterns
 - Developer Performance Metrics detailed dashboard with productivity badges
 - All analytics components respect selected projects and team members only
+
+### Changed
+- Optimized dashboard layout with grouped grid charts (Bugs + Heatmap side by side)
+- Sprint Timeline now shows max 8 sprints with scrollable overflow
 
 ## [1.14.3] - 2026-02-18
 
