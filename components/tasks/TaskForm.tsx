@@ -47,6 +47,7 @@ export default function TaskForm({
       devPoints: String(task.devPoints),
       bizPoints: task.bizPoints,
       developer: task.developer,
+      coDeveloper: task.coDeveloper || '',
       startDate: task.startDate,
       endDate: task.endDate,
       status: task.status,
@@ -55,6 +56,7 @@ export default function TaskForm({
     } : {
       sprint: '',
       status: 'to-do',
+      coDeveloper: '',
       acceptanceCriteria: [''],
       userStory: { who: '', what: '', why: '' },
     },
@@ -124,18 +126,29 @@ export default function TaskForm({
             />
 
             <Select
-              label="Estado"
-              required
-              {...register('status')}
+              label="Co-Developer"
+              {...register('coDeveloper')}
               disabled={isLoading}
+              placeholder="Sin co-developer"
               options={[
-                { value: 'to-do', label: 'To Do' },
-                { value: 'in-progress', label: 'In Progress' },
-                { value: 'to-validate', label: 'To Validate' },
-                { value: 'done', label: 'Done' },
+                { value: '', label: 'Sin co-developer' },
+                ...developers.map(d => ({ value: d.id, label: d.name })),
               ]}
             />
           </div>
+
+          <Select
+            label="Estado"
+            required
+            {...register('status')}
+            disabled={isLoading}
+            options={[
+              { value: 'to-do', label: 'To Do' },
+              { value: 'in-progress', label: 'In Progress' },
+              { value: 'to-validate', label: 'To Validate' },
+              { value: 'done', label: 'Done' },
+            ]}
+          />
         </CardContent>
       </Card>
 

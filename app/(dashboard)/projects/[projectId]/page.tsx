@@ -169,6 +169,7 @@ export default function ProjectDetailsPage() {
           title: data.title,
           sprintId: data.sprint || undefined,
           developer: data.developer,
+          coDeveloper: data.coDeveloper || undefined,
           status: data.status,
           startDate: data.startDate,
           endDate: data.endDate,
@@ -184,6 +185,7 @@ export default function ProjectDetailsPage() {
             title: data.title,
             sprintId: data.sprint || undefined,
             developer: data.developer,
+            coDeveloper: data.coDeveloper || undefined,
             status: data.status,
             startDate: data.startDate,
             endDate: data.endDate,
@@ -468,6 +470,7 @@ export default function ProjectDetailsPage() {
                       <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)', cursor: 'pointer' }} onClick={() => handleSort('status')}>Estado {sortColumn === 'status' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
                       <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)', cursor: 'pointer' }} onClick={() => handleSort('priority')}>Prioridad {sortColumn === 'priority' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
                       <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)', cursor: 'pointer' }} onClick={() => handleSort('developer')}>Developer {sortColumn === 'developer' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
+                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)' }}>Co-Dev</th>
                       <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)' }}>Sprint</th>
                       <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)', cursor: 'pointer' }} onClick={() => handleSort('startDate')}>Fecha Inicio {sortColumn === 'startDate' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
                       <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)' }}>Fecha Fin</th>
@@ -477,7 +480,7 @@ export default function ProjectDetailsPage() {
                   <tbody>
                     {filteredTasks.length === 0 ? (
                       <tr>
-                        <td colSpan={8} style={{ padding: 'var(--spacing-4)', textAlign: 'center', color: 'var(--color-neutral-600)', fontSize: 'var(--text-sm)' }}>
+                        <td colSpan={10} style={{ padding: 'var(--spacing-4)', textAlign: 'center', color: 'var(--color-neutral-600)', fontSize: 'var(--text-sm)' }}>
                           No se encontraron tareas con los filtros aplicados
                         </td>
                       </tr>
@@ -528,6 +531,7 @@ export default function ProjectDetailsPage() {
                         </td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-primary-600)' }}>{task.priority}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{getDeveloperName(task.developer)}</td>
+                        <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{task.coDeveloper ? getDeveloperName(task.coDeveloper) : '-'}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{getSprintName(task.sprintId)}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{task.startDate}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{task.endDate || '-'}</td>

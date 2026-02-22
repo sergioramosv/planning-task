@@ -26,6 +26,7 @@ export interface Task {
   acceptanceCriteria: string[]
   userStory: UserStory
   developer: string
+  coDeveloper?: string
   startDate: string
   endDate?: string
   bizPoints: number

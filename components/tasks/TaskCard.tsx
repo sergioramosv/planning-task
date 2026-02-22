@@ -14,10 +14,11 @@ interface TaskCardProps {
   onClick?: () => void
   isDragging?: boolean
   developerName?: string
+  coDeveloperName?: string
   sprintName?: string
 }
 
-export default function TaskCard({ task, onClick, isDragging = false, developerName, sprintName }: TaskCardProps) {
+export default function TaskCard({ task, onClick, isDragging = false, developerName, coDeveloperName, sprintName }: TaskCardProps) {
   const priority = calculatePriority(task.bizPoints, task.devPoints)
 
   const getStatusVariant = (status: string) => {
@@ -51,6 +52,12 @@ export default function TaskCard({ task, onClick, isDragging = false, developerN
             <span className={styles.label}>Developer:</span>
             <span className={styles.value}>{developerName || task.developer}</span>
           </div>
+          {(coDeveloperName || task.coDeveloper) && (
+            <div className={styles.row}>
+              <span className={styles.label}>Co-Dev:</span>
+              <span className={styles.value}>{coDeveloperName || task.coDeveloper}</span>
+            </div>
+          )}
           <div className={styles.row}>
             <span className={styles.label}>Sprint:</span>
             <span className={styles.value}>{sprintName || '-'}</span>
