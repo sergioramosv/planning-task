@@ -5,6 +5,14 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.30.0] - 2026-02-22
+
+### Added
+- Campo **Co-Developer** opcional en la creación y edición de tareas, permitiendo asignar un segundo developer de apoyo.
+- Columna "Co-Dev" en la vista de tabla de tareas del proyecto.
+- Visualización del co-developer en las tarjetas del Kanban (TaskCard).
+- Selector de co-developer en el formulario de tareas con la misma lista de miembros del proyecto.
+
 ## [1.29.4] - 2026-02-18
 
 ### Fixed
