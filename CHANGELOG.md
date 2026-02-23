@@ -5,6 +5,12 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.30.1] - 2026-02-23
+
+### Fixed
+- Añadida opción de estado "Validated" que faltaba en el selector del formulario de tareas, lo que impedía actualizar tareas correctamente.
+- Añadido logging de errores de validación en el formulario de tareas para facilitar depuración.
+
 ## [1.30.0] - 2026-02-22
 
 ### Added
