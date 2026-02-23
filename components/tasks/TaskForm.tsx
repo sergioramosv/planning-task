@@ -77,8 +77,12 @@ export default function TaskForm({
     reset()
   }
 
+  const onFormError = (errors: any) => {
+    console.error('Task form validation errors:', errors)
+  }
+
   return (
-    <form onSubmit={handleSubmit(onFormSubmit)} className={styles.form}>
+    <form onSubmit={handleSubmit(onFormSubmit, onFormError)} className={styles.form}>
       <Card>
         <CardHeader>
           <CardTitle>Información Básica</CardTitle>
@@ -146,6 +150,7 @@ export default function TaskForm({
               { value: 'to-do', label: 'To Do' },
               { value: 'in-progress', label: 'In Progress' },
               { value: 'to-validate', label: 'To Validate' },
+              { value: 'validated', label: 'Validated' },
               { value: 'done', label: 'Done' },
             ]}
           />
