@@ -5,6 +5,12 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.30.5] - 2026-02-24
+
+### Fixed
+- Reemplazados colores hex hardcodeados por CSS variables en 7 archivos CSS modules: SprintTimeline, DeveloperPerformanceMetrics, OverdueTasks, BugsList, ProposalsList, InvitationsModal y sprints/page.
+- Añadidas nuevas CSS variables al sistema de diseño: `--color-blue-500`, `--color-red-50`, `--color-red-800`, `--color-green-500` con soporte dark mode.
+
 ## [1.30.4] - 2026-02-24
 
 ### Fixed
