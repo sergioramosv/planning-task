@@ -16,7 +16,7 @@
 }
 
 .content {
-  background-color: white;
+  background-color: var(--bg-elevated);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   max-width: 42rem;
@@ -29,7 +29,7 @@
 .header {
   position: sticky;
   top: 0;
-  background-color: white;
+  background-color: var(--bg-elevated);
   border-bottom: 1px solid var(--color-neutral-200);
   padding: var(--spacing-4) var(--spacing-6);
   display: flex;

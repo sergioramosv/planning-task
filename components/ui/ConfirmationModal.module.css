@@ -58,7 +58,7 @@
 
 .input.error {
   border-color: var(--color-red-500);
-  background-color: #FEF2F2; /* red-50 */
+  background-color: var(--color-red-100);
 }
 
 .input.error:focus {

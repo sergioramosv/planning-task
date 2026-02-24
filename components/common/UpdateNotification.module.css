@@ -10,10 +10,10 @@
 }
 
 .modal {
-  background: white;
+  background: var(--bg-elevated);
   border-radius: 12px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 20px 25px -5px var(--shadow-color),
+    0 10px 10px -5px var(--shadow-color);
   max-width: 420px;
   width: 90%;
   padding: 32px;
@@ -39,14 +39,14 @@
 }
 
 .icon {
-  color: #ef4444;
+  color: var(--color-red-500);
   flex-shrink: 0;
 }
 
 .title {
   font-size: 20px;
   font-weight: 600;
-  color: #171717;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -55,7 +55,7 @@
 }
 
 .message {
-  color: #525252;
+  color: var(--text-secondary);
   font-size: 14px;
   line-height: 1.6;
   margin: 0 0 16px 0;
@@ -65,7 +65,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #f5f5f5;
+  background: var(--bg-secondary);
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 16px;
@@ -82,7 +82,7 @@
 
 .label {
   font-size: 12px;
-  color: #737373;
+  color: var(--text-muted);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -91,32 +91,32 @@
 .value {
   font-size: 16px;
   font-weight: 600;
-  color: #404040;
+  color: var(--text-secondary);
   font-family: 'Monaco', 'Menlo', monospace;
 }
 
 .valueNew {
   font-size: 16px;
   font-weight: 600;
-  color: #15803d;
+  color: var(--color-green-700);
   font-family: 'Monaco', 'Menlo', monospace;
 }
 
 .arrow {
-  color: #a3a3a3;
+  color: var(--text-faint);
   font-weight: 600;
   font-size: 16px;
 }
 
 .notice {
   font-size: 13px;
-  color: #666;
+  color: var(--text-secondary);
   text-align: center;
   margin: 0;
   padding: 8px 12px;
-  background: #fef3c7;
+  background: var(--color-yellow-100);
   border-radius: 6px;
-  border: 1px solid #fcd34d;
+  border: 1px solid var(--color-yellow-700);
 }
 
 .actions {
@@ -125,14 +125,14 @@
 
 .timer {
   height: 3px;
-  background-color: #e5e5e5;
+  background-color: var(--border-primary);
   border-radius: 2px;
   overflow: hidden;
 }
 
 .timerBar {
   height: 100%;
-  background-color: #ef4444;
+  background-color: var(--color-red-500);
   transition: width 0.1s linear;
   border-radius: 2px;
 }

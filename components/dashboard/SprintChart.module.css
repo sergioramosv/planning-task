@@ -59,7 +59,7 @@
 
 .select {
   padding: var(--spacing-2) var(--spacing-3);
-  background: white;
+  background: var(--bg-elevated);
   border: 1px solid var(--color-neutral-300);
   border-radius: var(--radius-md);
   font-size: var(--text-sm);
@@ -235,7 +235,7 @@
   align-items: center;
   gap: var(--spacing-2);
   padding: var(--spacing-2) var(--spacing-3);
-  background: white;
+  background: var(--bg-elevated);
   border: 2px solid var(--color-neutral-200);
   border-radius: var(--radius-md);
   cursor: pointer;

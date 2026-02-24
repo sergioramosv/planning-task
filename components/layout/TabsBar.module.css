@@ -1,8 +1,8 @@
 .tabsBar {
   display: flex;
   gap: 0;
-  border-bottom: 1px solid #e5e5e5;
-  background-color: white;
+  border-bottom: 1px solid var(--border-primary);
+  background-color: var(--bg-elevated);
   margin: 0 -20px;
   padding: 0 20px;
 }
@@ -14,7 +14,7 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  color: #737373;
+  color: var(--text-muted);
   border-bottom: 3px solid transparent;
   transition: all 0.2s;
   position: relative;
@@ -25,12 +25,12 @@
 }
 
 .tab:hover {
-  color: #404040;
+  color: var(--text-secondary);
 }
 
 .tab.active {
-  color: #2e8b57;
-  border-bottom-color: #2e8b57;
+  color: var(--color-primary-500);
+  border-bottom-color: var(--color-primary-500);
 }
 
 .badge {
@@ -40,7 +40,7 @@
   min-width: 20px;
   height: 20px;
   padding: 0 6px;
-  background-color: #2563eb;
+  background-color: var(--color-blue-700);
   color: white;
   border-radius: 10px;
   font-size: 11px;

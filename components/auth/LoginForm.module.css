@@ -1,6 +1,6 @@
 .container {
   min-height: 100vh;
-  background-color: white;
+  background-color: var(--bg-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -13,7 +13,7 @@
 }
 
 .card {
-  background-color: white;
+  background-color: var(--bg-elevated);
   border-radius: 1.875rem;
   box-shadow: var(--shadow-2xl);
   overflow: hidden;

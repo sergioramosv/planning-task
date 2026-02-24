@@ -1,6 +1,6 @@
 .sidebar {
-  background-color: white;
-  border-right: 1px solid var(--color-neutral-200);
+  background-color: var(--bg-elevated);
+  border-right: 1px solid var(--border-primary);
   height: 100vh;
   display: flex;
   flex-direction: column;

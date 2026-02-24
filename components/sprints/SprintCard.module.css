@@ -1,17 +1,17 @@
 .card {
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-primary);
   border-left: 4px solid;
   border-radius: 8px;
   padding: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-card);
   transition: all 0.2s ease;
   height: 100%;
 }
 
 .card:hover {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-color: #d1d5db;
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-neutral-300);
 }
 
 .header {
@@ -32,7 +32,7 @@
 .title {
   font-size: 18px;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -43,7 +43,7 @@
   padding: 4px 12px;
   border-radius: 4px;
   border: 1px solid;
-  background-color: #f9fafb;
+  background-color: var(--bg-tertiary);
   font-size: 12px;
   font-weight: 500;
   width: fit-content;
@@ -59,7 +59,7 @@
   border: none;
   padding: 8px;
   cursor: pointer;
-  color: #6b7280;
+  color: var(--text-muted);
   transition: all 0.2s ease;
   border-radius: 4px;
   display: flex;
@@ -68,17 +68,17 @@
 }
 
 .actionBtn:hover {
-  background: #f3f4f6;
-  color: #374151;
+  background: var(--bg-hover);
+  color: var(--text-secondary);
 }
 
 .actionBtn.delete {
-  color: #ef4444;
+  color: var(--color-red-500);
 }
 
 .actionBtn.delete:hover {
-  background: #fee2e2;
-  color: #dc2626;
+  background: var(--color-red-100);
+  color: var(--color-red-600);
 }
 
 .dates {
@@ -87,7 +87,7 @@
   gap: 12px;
   margin-bottom: 16px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--border-secondary);
 }
 
 .dateItem {
@@ -104,14 +104,14 @@
 
 .label {
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-muted);
   font-weight: 500;
   text-transform: uppercase;
 }
 
 .dates > div > span:last-child {
   font-size: 14px;
-  color: #1f2937;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
@@ -127,13 +127,13 @@
   align-items: center;
   gap: 4px;
   padding: 8px;
-  background: #f9fafb;
+  background: var(--bg-tertiary);
   border-radius: 6px;
 }
 
 .statLabel {
   font-size: 11px;
-  color: #6b7280;
+  color: var(--text-muted);
   font-weight: 500;
   text-transform: uppercase;
 }
@@ -141,5 +141,5 @@
 .statValue {
   font-size: 20px;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--text-primary);
 }
