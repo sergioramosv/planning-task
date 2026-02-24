@@ -11,7 +11,7 @@ import { useProposals } from '@/hooks/useProposals'
 import { usePermissions } from '@/hooks/usePermissions'
 import Spinner from '@/components/ui/Spinner'
 import Button from '@/components/ui/Button'
-import { ArrowLeft, Plus, Calendar, MessageSquare } from 'lucide-react'
+import { ArrowLeft, Plus, Calendar, MessageSquare, Edit2, Trash2 } from 'lucide-react'
 import TaskModal from '@/components/tasks/TaskModal'
 import DraftPickerModal from '@/components/tasks/DraftPickerModal'
 import TaskActivityPanel from '@/components/tasks/TaskActivityPanel'
@@ -608,14 +608,33 @@ export default function ProjectDetailsPage() {
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{task.startDate || '-'}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{task.endDate || '-'}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', textAlign: 'center', display: 'flex', gap: 'var(--spacing-2)', justifyContent: 'center' }}>
-                          <Button size="sm" variant="secondary" onClick={() => { setSelectedTask(task); setModalTab('activity'); setIsModalOpen(true); }}>
-                            <MessageSquare size={14} style={{ marginRight: '0.25rem' }} /> Actividad
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={() => { setSelectedTask(task); setModalTab('activity'); setIsModalOpen(true); }}
+                            aria-label="Ver actividad"
+                          >
+                            <MessageSquare size={16} />
                           </Button>
                           {canEditTask && (
-                            <Button size="sm" variant="secondary" onClick={() => handleEditTask(task)}>Editar</Button>
+                            <Button
+                              size="sm"
+                              variant="secondary"
+                              onClick={() => handleEditTask(task)}
+                              aria-label="Editar tarea"
+                            >
+                              <Edit2 size={16} />
+                            </Button>
                           )}
                           {canDeleteTask && (
-                            <Button size="sm" variant="danger" onClick={() => handleDeleteTaskClick(task.id)}>Borrar</Button>
+                            <Button
+                              size="sm"
+                              variant="danger"
+                              onClick={() => handleDeleteTaskClick(task.id)}
+                              aria-label="Eliminar tarea"
+                            >
+                              <Trash2 size={16} />
+                            </Button>
                           )}
                         </td>
                       </tr>
