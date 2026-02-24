@@ -5,6 +5,13 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.31.2] - 2026-02-24
+
+### Changed
+- Rediseño de cards kanban: mucho más compactas, título completo visible (sin truncado).
+- Eliminados badge de estado (redundante con columna) e ID de Firebase.
+- Layout ligero: título + tags developer/sprint + prioridad/puntos/fecha en una línea.
+
 ## [1.31.1] - 2026-02-24
 
 ### Changed
