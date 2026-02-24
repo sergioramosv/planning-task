@@ -131,7 +131,7 @@ const tools = [
           items: { type: SchemaType.STRING },
           description: 'Criterios de aceptacion',
         },
-        bizPoints: { type: SchemaType.NUMBER, description: 'Puntos de negocio (Fibonacci: 1,2,3,5,8,13,21,34)' },
+        bizPoints: { type: SchemaType.NUMBER, description: 'Puntos de negocio (Fibonacci: 1,2,3,5,8,13)' },
         devPoints: { type: SchemaType.NUMBER, description: 'Puntos desarrollo (Fibonacci: 1,2,3,5,8,13)' },
         developer: { type: SchemaType.STRING, description: 'UID del developer asignado' },
         status: { type: SchemaType.STRING, description: 'Estado inicial (default: to-do)' },
@@ -342,7 +342,7 @@ REGLAS:
 2. Responde SIEMPRE en español.
 3. Cuando el usuario pida crear tareas, SIEMPRE incluye User Story (who/what/why), criterios de aceptación, bizPoints y devPoints.
 4. Los devPoints DEBEN ser Fibonacci: 1, 2, 3, 5, 8 o 13.
-5. Los bizPoints van de 1 a 100.
+5. Los bizPoints TAMBIÉN deben ser Fibonacci: 1, 2, 3, 5, 8 o 13.
 6. Cuando te pidan el estado del proyecto, usa project_dashboard.
 7. Formatea las respuestas con markdown (tablas, listas, negritas).
 8. Sé conciso. El usuario quiere resultados, no explicaciones largas.
