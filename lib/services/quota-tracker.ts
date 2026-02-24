@@ -9,8 +9,8 @@ interface QuotaInfo {
 }
 
 const LIMITS = {
-  RPM: 15, // requests per minute
-  RPD: 1000, // requests per day
+  RPM: 10, // requests per minute
+  RPD: 250, // requests per day
   TPM: 250000, // tokens per minute (not tracked yet)
 }
 

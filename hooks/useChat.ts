@@ -67,10 +67,10 @@ export function useChat(projectId: string) {
 
       // Capture quota info from headers
       const rpmRemaining = parseInt(response.headers.get('X-RateLimit-RPM-Remaining') || '0')
-      const rpmLimit = parseInt(response.headers.get('X-RateLimit-RPM-Limit') || '15')
+      const rpmLimit = parseInt(response.headers.get('X-RateLimit-RPM-Limit') || '10')
       const rpmReset = parseInt(response.headers.get('X-RateLimit-RPM-Reset') || '0')
       const rpdRemaining = parseInt(response.headers.get('X-RateLimit-RPD-Remaining') || '0')
-      const rpdLimit = parseInt(response.headers.get('X-RateLimit-RPD-Limit') || '1000')
+      const rpdLimit = parseInt(response.headers.get('X-RateLimit-RPD-Limit') || '250')
       const rpdReset = parseInt(response.headers.get('X-RateLimit-RPD-Reset') || '0')
 
       setQuota({

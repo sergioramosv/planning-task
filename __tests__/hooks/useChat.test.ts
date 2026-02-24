@@ -29,11 +29,11 @@ describe('useChat Hook', () => {
       headers: {
         get: jest.fn((key: string) => {
           const headers: Record<string, string> = {
-            'X-RateLimit-RPM-Remaining': '10',
-            'X-RateLimit-RPM-Limit': '15',
+            'X-RateLimit-RPM-Remaining': '9',
+            'X-RateLimit-RPM-Limit': '10',
             'X-RateLimit-RPM-Reset': '60',
-            'X-RateLimit-RPD-Remaining': '900',
-            'X-RateLimit-RPD-Limit': '1000',
+            'X-RateLimit-RPD-Remaining': '240',
+            'X-RateLimit-RPD-Limit': '250',
             'X-RateLimit-RPD-Reset': '3600',
           }
           return headers[key] || null
@@ -68,11 +68,11 @@ describe('useChat Hook', () => {
       headers: {
         get: jest.fn((key: string) => {
           const headers: Record<string, string> = {
-            'X-RateLimit-RPM-Remaining': '10',
-            'X-RateLimit-RPM-Limit': '15',
+            'X-RateLimit-RPM-Remaining': '9',
+            'X-RateLimit-RPM-Limit': '10',
             'X-RateLimit-RPM-Reset': '60',
-            'X-RateLimit-RPD-Remaining': '900',
-            'X-RateLimit-RPD-Limit': '1000',
+            'X-RateLimit-RPD-Remaining': '240',
+            'X-RateLimit-RPD-Limit': '250',
             'X-RateLimit-RPD-Reset': '3600',
           }
           return headers[key] || null
