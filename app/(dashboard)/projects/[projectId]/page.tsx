@@ -24,6 +24,8 @@ import BugModal from '@/components/bugs/BugModal'
 import BugsList from '@/components/bugs/BugsList'
 import ProposalModal from '@/components/proposals/ProposalModal'
 import ProposalsList from '@/components/proposals/ProposalsList'
+import ChatPanel from '@/components/chat/ChatPanel'
+import ChatFab from '@/components/chat/ChatFab'
 import { Task, TaskStatus, TaskDraft } from '@/types'
 import { useTaskDrafts } from '@/hooks/useTaskDrafts'
 import { TASK_STATUS_LABELS, TASK_STATUS_COLORS } from '@/lib/constants/taskStates'
@@ -48,6 +50,7 @@ export default function ProjectDetailsPage() {
   const [isBugModalOpen, setIsBugModalOpen] = useState(false)
   const [isProposalModalOpen, setIsProposalModalOpen] = useState(false)
   const [isDeleteBugConfirmOpen, setIsDeleteBugConfirmOpen] = useState(false)
+  const [isChatOpen, setIsChatOpen] = useState(false)
   const [bugToDelete, setBugToDelete] = useState<string | null>(null)
   const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined)
   const [viewMode, setViewMode] = useState<'table' | 'kanban'>('table')
@@ -126,6 +129,11 @@ export default function ProjectDetailsPage() {
     }
     fetchDevelopers()
   }, [project])
+
+  // Close chat when projectId changes
+  useEffect(() => {
+    setIsChatOpen(false)
+  }, [projectId])
 
   if (authLoading || tasksLoading || sprintsLoading || loadingDevelopers || bugsLoading || proposalsLoading) {
     return (
@@ -712,6 +720,30 @@ export default function ProjectDetailsPage() {
         onSubmit={handleProposalSubmit}
         isLoading={false}
       />
+
+      {/* Chat FAB and Panel */}
+      <ChatFab onClick={() => setIsChatOpen(true)} />
+
+      {isChatOpen && (
+        <>
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              zIndex: 999,
+            }}
+            onClick={() => setIsChatOpen(false)}
+          />
+          <ChatPanel
+            projectId={projectId}
+            onClose={() => setIsChatOpen(false)}
+          />
+        </>
+      )}
     </div>
   )
 }

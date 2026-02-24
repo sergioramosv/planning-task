@@ -5,6 +5,25 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.34.0] - 2026-02-24
+
+### Added
+- **AI Chat Assistant con Gemini 1.5 Flash**: ChatPanel integrado en la vista de proyecto con acceso a todas las funciones de gestión de tareas, sprints, bugs y métricas.
+- Firebase Admin SDK para operaciones server-side seguras (Node.js).
+- Middleware de autenticación y validación de acceso a proyectos (`validateSession`, `validateProjectAccess`).
+- Servicios server-side: `ai-tools.service.ts` con 21 funciones (createTask, updateTask, listTasks, projectDashboard, sprintBurndown, etc.).
+- `NotificationAdminService` para notificaciones desde el servidor.
+- `GeminiService` con Function Calling: 21 herramientas registradas, system prompt builder, ejecutor de funciones y streaming.
+- API Route `/api/chat` (POST) con validación de sesión, contexto de proyecto y respuesta streaming con ReadableStream.
+- Hook `useChat` para gestión de estado del chat (mensajes, loading, error, envío de mensajes).
+- Componentes de UI: `ChatPanel`, `ChatMessage` (con ReactMarkdown + remarkGfm), `ChatInput` (textarea auto-resize), `ChatFab` (floating action button).
+- CSS Modules completos con animaciones (slide-in panel, bouncing dots typing indicator, backdrop).
+- Variables de entorno: `FIREBASE_ADMIN_PROJECT_ID`, `FIREBASE_ADMIN_CLIENT_EMAIL`, `FIREBASE_ADMIN_PRIVATE_KEY`, `GEMINI_API_KEY`.
+
+### Changed
+- Instaladas dependencias: `firebase-admin` (^13.3.0), `@google/generative-ai` (^0.24.1), `react-markdown` (^9.0.2), `remark-gfm` (^4.0.0).
+- La página de detalle de proyecto (`app/(dashboard)/projects/[projectId]/page.tsx`) ahora incluye ChatFab y ChatPanel con backdrop.
+
 ## [1.33.0] - 2026-02-24
 
 ### Added
