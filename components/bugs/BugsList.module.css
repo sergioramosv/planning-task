@@ -14,10 +14,10 @@
 
 .filterSelect {
   padding: 8px 12px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--border-primary);
   border-radius: 6px;
   font-size: 13px;
-  color: #171717;
+  color: var(--text-primary);
   background-color: var(--bg-elevated);
   cursor: pointer;
   transition: border-color 0.2s;
@@ -25,7 +25,7 @@
 
 .filterSelect:focus {
   outline: none;
-  border-color: #2e8b57;
+  border-color: var(--color-primary-500);
 }
 
 .bugsList {
@@ -37,20 +37,20 @@
 .emptyState {
   padding: 40px 20px;
   text-align: center;
-  color: #a3a3a3;
+  color: var(--text-faint);
   font-size: 16px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--border-primary);
   border-radius: 8px;
-  background-color: #fafafa;
+  background-color: var(--bg-tertiary);
 }
 
 .stats {
   display: flex;
   gap: 24px;
   padding: 16px 0;
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid var(--border-primary);
   font-size: 14px;
-  color: #737373;
+  color: var(--text-muted);
 }
 
 .statItem {
@@ -59,5 +59,5 @@
 }
 
 .statItem strong {
-  color: #171717;
+  color: var(--text-primary);
 }

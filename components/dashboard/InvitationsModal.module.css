@@ -5,7 +5,7 @@
 .emptyState {
   padding: 32px 24px;
   text-align: center;
-  color: #737373;
+  color: var(--text-muted);
   font-size: 14px;
 }
 
@@ -20,12 +20,12 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 24px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--border-primary);
   transition: background-color 0.2s;
 }
 
 .invitationItem:hover {
-  background-color: #f9f9f9;
+  background-color: var(--bg-tertiary);
 }
 
 .invitationItem:last-child {
@@ -39,23 +39,23 @@
 .projectName {
   font-size: 15px;
   font-weight: 600;
-  color: #171717;
+  color: var(--text-primary);
   margin: 0 0 6px 0;
 }
 
 .invitedBy {
   font-size: 13px;
-  color: #737373;
+  color: var(--text-muted);
   margin: 0 0 4px 0;
 }
 
 .invitedBy strong {
-  color: #404040;
+  color: var(--text-secondary);
 }
 
 .timestamp {
   font-size: 12px;
-  color: #a3a3a3;
+  color: var(--text-faint);
   margin: 0;
 }
 

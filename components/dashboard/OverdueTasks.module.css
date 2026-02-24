@@ -13,7 +13,7 @@
 .taskItem {
   padding: var(--spacing-3);
   background-color: var(--color-neutral-50);
-  border-left: 3px solid #EF4444;
+  border-left: 3px solid var(--color-red-500);
   border-radius: var(--radius-md);
 }
 
