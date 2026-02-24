@@ -5,6 +5,13 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.30.2] - 2026-02-24
+
+### Fixed
+- Corregido error de Firebase `undefined` en `coDeveloper` y `sprintId` que impedía crear y actualizar tareas.
+- Campos **Developer** y **Fecha de Inicio** ahora son opcionales en la creación de tareas.
+- Actualizadas vistas de tabla, kanban, tarjeta, calendario y cálculos para manejar developer/fecha vacíos.
+
 ## [1.30.1] - 2026-02-23
 
 ### Fixed
