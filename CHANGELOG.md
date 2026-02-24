@@ -5,6 +5,25 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.32.0] - 2026-02-24
+
+### Added
+- Campos de repositorios GitHub en proyectos: URL + tipo (Frontend/Backend/API/Full Stack) + badge "Por defecto", con soporte para múltiples repos dinámicos.
+- Campos de lenguajes y frameworks (texto libre) en la creación y edición de proyectos.
+- Tab "Repositorios" en el modal de edición de proyectos para gestionar repos, lenguajes y frameworks.
+- Plan de implementación opcional en tareas: enfoque técnico, pasos, cambios en modelo de datos, cambios en API, riesgos y fuera de alcance.
+- Sistema de archivos adjuntos en tareas con subida a Firebase Storage y seguimiento de progreso.
+- Servicio de Storage (`StorageService`) con upload individual/múltiple, progreso y eliminación.
+- Hook `useFileUpload` para gestión de estado de subida de archivos en React.
+- Inicialización de Firebase Storage en la configuración de Firebase.
+
+### Changed
+- TaskForm rediseñado con 4 tabs tipo Chrome: General, User Story, Implementación y Adjuntos (sin scroll).
+- Cada tab tiene altura fija con scroll independiente para mantener el layout compacto.
+- Validación de formulario redirige automáticamente al tab con errores.
+- Badge numérico en tab Adjuntos muestra cantidad de archivos.
+- Tests de TaskForm actualizados para la nueva interfaz con tabs.
+
 ## [1.31.3] - 2026-02-24
 
 ### Added
