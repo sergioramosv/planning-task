@@ -23,6 +23,9 @@ const customJestConfig = {
     '!**/dist/**',
   ],
   testPathIgnorePatterns: ['/node_modules/', '/.next/'],
+  transformIgnorePatterns: [
+    'node_modules/(?!(jose|jwks-rsa|react-markdown|remark-.*|unified|bail|is-plain-obj|trough|vfile|unist-.*|mdast-.*|micromark.*|decode-named-character-reference|character-entities|property-information|hast-util-whitespace|space-separated-tokens|comma-separated-tokens|ccount|escape-string-regexp|markdown-table)/)',
+  ],
 }
 
 module.exports = createJestConfig(customJestConfig)

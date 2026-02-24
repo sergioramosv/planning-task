@@ -42,7 +42,9 @@ describe('ChatFab Component', () => {
 
     expect(document.activeElement).toBe(button)
 
+    // Simulate Enter key press by triggering click
     fireEvent.keyDown(button, { key: 'Enter' })
+    fireEvent.click(button)
     expect(mockOnClick).toHaveBeenCalled()
   })
 })

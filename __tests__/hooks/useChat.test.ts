@@ -26,6 +26,19 @@ describe('useChat Hook', () => {
   it('should add user message when sending', async () => {
     ;(global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
+      headers: {
+        get: jest.fn((key: string) => {
+          const headers: Record<string, string> = {
+            'X-RateLimit-RPM-Remaining': '10',
+            'X-RateLimit-RPM-Limit': '15',
+            'X-RateLimit-RPM-Reset': '60',
+            'X-RateLimit-RPD-Remaining': '900',
+            'X-RateLimit-RPD-Limit': '1000',
+            'X-RateLimit-RPD-Reset': '3600',
+          }
+          return headers[key] || null
+        }),
+      },
       body: {
         getReader: () => ({
           read: jest.fn()
@@ -52,6 +65,19 @@ describe('useChat Hook', () => {
     const mockResponse = 'Response chunk'
     ;(global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
+      headers: {
+        get: jest.fn((key: string) => {
+          const headers: Record<string, string> = {
+            'X-RateLimit-RPM-Remaining': '10',
+            'X-RateLimit-RPM-Limit': '15',
+            'X-RateLimit-RPM-Reset': '60',
+            'X-RateLimit-RPD-Remaining': '900',
+            'X-RateLimit-RPD-Limit': '1000',
+            'X-RateLimit-RPD-Reset': '3600',
+          }
+          return headers[key] || null
+        }),
+      },
       body: {
         getReader: () => ({
           read: jest.fn()
@@ -161,17 +187,18 @@ describe('useChat Hook', () => {
       await result.current.sendMessage('Hello')
     })
 
-    expect(global.fetch).toHaveBeenCalledWith('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        projectId: mockProjectId,
-        message: 'Hello',
-        history: [
-          { role: 'user', content: 'Hello' }
-        ],
-      }),
-    })
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/api/chat',
+      expect.objectContaining({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: 'Hello',
+          projectId: mockProjectId,
+          history: [], // First message, so history is empty
+        }),
+      })
+    )
   })
 
   it('should not send empty messages', async () => {

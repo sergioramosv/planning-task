@@ -9,7 +9,12 @@ interface ChatFabProps {
 
 export default function ChatFab({ onClick }: ChatFabProps) {
   return (
-    <button className={styles.fab} onClick={onClick} title="Abrir chat IA">
+    <button
+      className={styles.fab}
+      onClick={onClick}
+      aria-label="Abrir chat con IA"
+      title="Abrir chat con IA"
+    >
       <MessageSquare size={22} />
     </button>
   )

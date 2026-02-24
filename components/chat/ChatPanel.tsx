@@ -13,7 +13,7 @@ interface ChatPanelProps {
 }
 
 export default function ChatPanel({ projectId, onClose }: ChatPanelProps) {
-  const { messages, isLoading, sendMessage, clearChat } = useChat(projectId)
+  const { messages, isLoading, error, quota, sendMessage, clearChat } = useChat(projectId)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export default function ChatPanel({ projectId, onClose }: ChatPanelProps) {
   }, [messages])
 
   return (
-    <div className={styles.panel}>
+    <div className={styles.panel} onClick={(e) => e.stopPropagation()}>
       <div className={styles.header}>
         <div className={styles.headerTitle}>
           <Sparkles size={18} />
@@ -29,17 +29,59 @@ export default function ChatPanel({ projectId, onClose }: ChatPanelProps) {
         </div>
         <div className={styles.headerActions}>
           {messages.length > 0 && (
-            <button className={styles.headerButton} onClick={clearChat} title="Limpiar chat">
+            <button
+              className={styles.headerButton}
+              onClick={clearChat}
+              title="Limpiar chat"
+              aria-label="Limpiar chat"
+            >
               <Trash2 size={16} />
             </button>
           )}
-          <button className={styles.headerButton} onClick={onClose} title="Cerrar">
+          <button
+            className={styles.headerButton}
+            onClick={onClose}
+            title="Cerrar"
+            aria-label="Cerrar chat"
+          >
             <X size={18} />
           </button>
         </div>
       </div>
 
+      {quota && (
+        <div className={styles.quotaBar}>
+          <div className={styles.quotaItem}>
+            <span className={styles.quotaLabel}>Uso/min:</span>
+            <span className={styles.quotaValue}>
+              {quota.rpm.used}/{quota.rpm.limit}
+            </span>
+            {quota.rpm.remaining <= 3 && (
+              <span className={styles.quotaWarning}>
+                (resetea en {quota.rpm.resetIn}s)
+              </span>
+            )}
+          </div>
+          <div className={styles.quotaItem}>
+            <span className={styles.quotaLabel}>Uso/día:</span>
+            <span className={styles.quotaValue}>
+              {quota.rpd.used}/{quota.rpd.limit}
+            </span>
+            {quota.rpd.remaining <= 100 && (
+              <span className={styles.quotaWarning}>
+                (resetea en {Math.floor(quota.rpd.resetIn / 3600)}h)
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+
       <div className={styles.body}>
+        {error && (
+          <div className={styles.error} role="alert">
+            Error: {error}
+          </div>
+        )}
         {messages.length === 0 ? (
           <div className={styles.emptyState}>
             <Sparkles size={32} />

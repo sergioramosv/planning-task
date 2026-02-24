@@ -44,7 +44,8 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
         value={value}
         onChange={e => setValue(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder="Escribe un mensaje..."
+        placeholder="Escribe tu mensaje..."
+        aria-label="Campo de mensaje"
         disabled={disabled}
         rows={1}
       />
@@ -53,6 +54,7 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
         onClick={handleSubmit}
         disabled={!value.trim() || disabled}
         title="Enviar"
+        aria-label="Enviar mensaje"
       >
         <Send size={18} />
       </button>

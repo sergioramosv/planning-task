@@ -108,9 +108,9 @@ describe('validateProjectAccess', () => {
   it('should handle Firebase database errors', async () => {
     mockRef.once.mockRejectedValueOnce(new Error('Database error'))
 
-    await expect(validateProjectAccess('user-123', 'project-456')).rejects.toThrow(
-      'Database error'
-    )
+    const result = await validateProjectAccess('user-123', 'project-456')
+
+    expect(result).toBeNull()
   })
 
   it('should query correct project member path', async () => {

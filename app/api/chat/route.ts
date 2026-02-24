@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { validateSession } from '@/lib/auth/validateSession'
 import { validateProjectAccess } from '@/lib/auth/validateProjectAccess'
-import { createChatModel, buildSystemPrompt, executeFunctionCall } from '@/lib/services/gemini.service'
+import { createChatModel, buildSystemPrompt, executeFunctionCall } from '@/lib/services/chat.service'
 import { getProject, listMembers } from '@/lib/services/ai-tools.service'
+import { trackRequest, isRateLimited } from '@/lib/services/quota-tracker'
 import type { Content } from '@google/generative-ai'
 
 const MAX_FUNCTION_CALLS = 10
@@ -27,13 +28,26 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Se requiere message y projectId' }, { status: 400 })
   }
 
-  // 3. Validate project access
+  // 3. Check rate limits
+  const rateLimitCheck = isRateLimited()
+  if (rateLimitCheck.limited) {
+    return NextResponse.json(
+      {
+        error: `Límite de cuota alcanzado. ${rateLimitCheck.reason}. Intenta de nuevo en ${rateLimitCheck.resetIn} segundos.`,
+      },
+      { status: 429 }
+    )
+  }
+
+  // 4. Validate project access
   const access = await validateProjectAccess(sessionUser.uid, projectId)
   if (!access) {
     return NextResponse.json({ error: 'No tienes acceso a este proyecto' }, { status: 403 })
   }
 
   try {
+    // Track this request
+    const quotaStatus = trackRequest()
     // 4. Load context
     const project = await getProject(projectId)
     if (!project) {
@@ -131,6 +145,12 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'text/plain; charset=utf-8',
         'Cache-Control': 'no-cache',
         'Transfer-Encoding': 'chunked',
+        'X-RateLimit-RPM-Remaining': quotaStatus.rpm.remaining.toString(),
+        'X-RateLimit-RPM-Limit': quotaStatus.rpm.limit.toString(),
+        'X-RateLimit-RPM-Reset': quotaStatus.rpm.resetIn.toString(),
+        'X-RateLimit-RPD-Remaining': quotaStatus.rpd.remaining.toString(),
+        'X-RateLimit-RPD-Limit': quotaStatus.rpd.limit.toString(),
+        'X-RateLimit-RPD-Reset': quotaStatus.rpd.resetIn.toString(),
       },
     })
   } catch (error: any) {

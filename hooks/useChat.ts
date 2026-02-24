@@ -9,10 +9,16 @@ export interface ChatMessage {
   timestamp: number
 }
 
+export interface QuotaInfo {
+  rpm: { used: number; limit: number; remaining: number; resetIn: number }
+  rpd: { used: number; limit: number; remaining: number; resetIn: number }
+}
+
 export function useChat(projectId: string) {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [quota, setQuota] = useState<QuotaInfo | null>(null)
   const abortRef = useRef<AbortController | null>(null)
 
   const sendMessage = useCallback(async (content: string) => {
@@ -57,6 +63,29 @@ export function useChat(projectId: string) {
           history,
         }),
         signal: abortRef.current.signal,
+      })
+
+      // Capture quota info from headers
+      const rpmRemaining = parseInt(response.headers.get('X-RateLimit-RPM-Remaining') || '0')
+      const rpmLimit = parseInt(response.headers.get('X-RateLimit-RPM-Limit') || '15')
+      const rpmReset = parseInt(response.headers.get('X-RateLimit-RPM-Reset') || '0')
+      const rpdRemaining = parseInt(response.headers.get('X-RateLimit-RPD-Remaining') || '0')
+      const rpdLimit = parseInt(response.headers.get('X-RateLimit-RPD-Limit') || '1000')
+      const rpdReset = parseInt(response.headers.get('X-RateLimit-RPD-Reset') || '0')
+
+      setQuota({
+        rpm: {
+          used: rpmLimit - rpmRemaining,
+          limit: rpmLimit,
+          remaining: rpmRemaining,
+          resetIn: rpmReset,
+        },
+        rpd: {
+          used: rpdLimit - rpdRemaining,
+          limit: rpdLimit,
+          remaining: rpdRemaining,
+          resetIn: rpdReset,
+        },
       })
 
       if (!response.ok) {
@@ -123,5 +152,5 @@ export function useChat(projectId: string) {
     setIsLoading(false)
   }, [])
 
-  return { messages, isLoading, error, sendMessage, clearChat }
+  return { messages, isLoading, error, quota, sendMessage, clearChat }
 }

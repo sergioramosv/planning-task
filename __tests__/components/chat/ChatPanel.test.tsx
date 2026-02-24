@@ -2,6 +2,14 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import ChatPanel from '@/components/chat/ChatPanel'
 import { useChat } from '@/hooks/useChat'
 
+// Mock react-markdown and remark-gfm to avoid ESM issues
+jest.mock('react-markdown', () => {
+  return function ReactMarkdown({ children }: { children: string }) {
+    return <div>{children}</div>
+  }
+})
+jest.mock('remark-gfm', () => () => {})
+
 // Mock the useChat hook
 jest.mock('@/hooks/useChat')
 
@@ -45,6 +53,11 @@ describe('ChatPanel Component', () => {
   })
 
   it('should render clear chat button', () => {
+    ;(useChat as jest.Mock).mockReturnValue({
+      ...mockUseChat,
+      messages: [{ id: '1', role: 'user', content: 'Test', timestamp: Date.now() }],
+    })
+
     render(<ChatPanel projectId={mockProjectId} onClose={mockOnClose} />)
 
     const clearButton = screen.getByRole('button', { name: /limpiar chat/i })
@@ -52,12 +65,18 @@ describe('ChatPanel Component', () => {
   })
 
   it('should call clearChat when clear button is clicked', () => {
+    ;(useChat as jest.Mock).mockReturnValue({
+      ...mockUseChat,
+      messages: [{ id: '1', role: 'user', content: 'Test', timestamp: Date.now() }],
+    })
+
     render(<ChatPanel projectId={mockProjectId} onClose={mockOnClose} />)
 
     const clearButton = screen.getByRole('button', { name: /limpiar chat/i })
     fireEvent.click(clearButton)
 
-    expect(mockUseChat.clearChat).toHaveBeenCalledTimes(1)
+    const mockClearChat = (useChat as jest.Mock).mock.results[0].value.clearChat
+    expect(mockClearChat).toHaveBeenCalledTimes(1)
   })
 
   it('should display empty state when no messages', () => {
@@ -149,6 +168,11 @@ describe('ChatPanel Component', () => {
   })
 
   it('should have proper ARIA labels', () => {
+    ;(useChat as jest.Mock).mockReturnValue({
+      ...mockUseChat,
+      messages: [{ id: '1', role: 'user', content: 'Test', timestamp: Date.now() }],
+    })
+
     render(<ChatPanel projectId={mockProjectId} onClose={mockOnClose} />)
 
     expect(screen.getByRole('button', { name: /cerrar chat/i })).toBeInTheDocument()

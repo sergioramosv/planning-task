@@ -45,7 +45,9 @@
       "Bash(find:*)",
       "Bash(npm ls:*)",
       "Bash(git reset:*)",
-      "Bash(npx jest)"
+      "Bash(npx jest)",
+      "Bash(npx jest:*)",
+      "Bash(npx next build:*)"
     ]
   }
 }

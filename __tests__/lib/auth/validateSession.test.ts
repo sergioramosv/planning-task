@@ -1,6 +1,31 @@
 import { validateSession } from '@/lib/auth/validateSession'
 import { adminDb } from '@/lib/firebase/admin'
-import { NextRequest } from 'next/server'
+
+// Mock NextRequest completely
+jest.mock('next/server', () => ({
+  NextRequest: jest.fn().mockImplementation((url: string, init?: any) => {
+    const cookies = new Map<string, { value: string }>()
+
+    // Parse cookies from headers
+    if (init?.headers?.cookie) {
+      const cookieString = init.headers.cookie
+      cookieString.split(';').forEach((cookie: string) => {
+        const [name, ...valueParts] = cookie.trim().split('=')
+        const value = valueParts.join('=')
+        if (name && value !== undefined) {
+          cookies.set(name, { value })
+        }
+      })
+    }
+
+    return {
+      url,
+      cookies: {
+        get: (name: string) => cookies.get(name) || null,
+      },
+    }
+  }),
+}))
 
 // Mock Firebase Admin
 jest.mock('@/lib/firebase/admin', () => ({
@@ -8,6 +33,8 @@ jest.mock('@/lib/firebase/admin', () => ({
     ref: jest.fn(),
   },
 }))
+
+import { NextRequest } from 'next/server'
 
 describe('validateSession', () => {
   const mockRef = {
@@ -130,7 +157,9 @@ describe('validateSession', () => {
 
     mockRef.once.mockRejectedValueOnce(new Error('Database connection failed'))
 
-    await expect(validateSession(request)).rejects.toThrow('Database connection failed')
+    const result = await validateSession(request)
+
+    expect(result).toBeNull()
   })
 
   it('should query correct user path in database', async () => {

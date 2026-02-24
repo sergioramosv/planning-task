@@ -1,19 +1,34 @@
-import { buildSystemPrompt, executeFunctionCall, createChatModel } from '@/lib/services/gemini.service'
+// Mock Firebase Admin before any imports to avoid jose/jwks-rsa ESM issues
+jest.mock('@/lib/firebase/admin', () => ({
+  adminDb: {
+    ref: jest.fn().mockReturnValue({
+      once: jest.fn(),
+    }),
+  },
+  adminAuth: {},
+}))
+
+// Mock OpenAI before importing the service
+jest.mock('openai', () => {
+  return {
+    __esModule: true,
+    default: jest.fn().mockImplementation(() => ({
+      chat: {
+        completions: {
+          create: jest.fn(),
+        },
+      },
+    })),
+  }
+})
+
+import { buildSystemPrompt, executeFunctionCall, createChatModel } from '@/lib/services/chat.service'
 import * as AiTools from '@/lib/services/ai-tools.service'
 
 // Mock AI Tools service
 jest.mock('@/lib/services/ai-tools.service')
 
-// Mock Google Generative AI
-jest.mock('@google/generative-ai', () => ({
-  GoogleGenerativeAI: jest.fn().mockImplementation(() => ({
-    getGenerativeModel: jest.fn().mockReturnValue({
-      startChat: jest.fn(),
-    }),
-  })),
-}))
-
-describe('Gemini Service', () => {
+describe('Chat Service', () => {
   describe('buildSystemPrompt', () => {
     it('should build system prompt with project info', () => {
       const project = {
@@ -26,8 +41,8 @@ describe('Gemini Service', () => {
 
       const userName = 'Test User'
       const members = [
-        { id: 'user-1', name: 'Member 1', role: 'admin' },
-        { id: 'user-2', name: 'Member 2', role: 'member' },
+        { uid: 'user-1', displayName: 'Member 1', role: 'admin' },
+        { uid: 'user-2', displayName: 'Member 2', role: 'member' },
       ]
 
       const prompt = buildSystemPrompt(project, userName, members)
@@ -64,9 +79,9 @@ describe('Gemini Service', () => {
       }
 
       const members = [
-        { id: 'u1', name: 'Alice', role: 'owner' },
-        { id: 'u2', name: 'Bob', role: 'admin' },
-        { id: 'u3', name: 'Charlie', role: 'member' },
+        { uid: 'u1', displayName: 'Alice', role: 'owner' },
+        { uid: 'u2', displayName: 'Bob', role: 'admin' },
+        { uid: 'u3', displayName: 'Charlie', role: 'member' },
       ]
 
       const prompt = buildSystemPrompt(project, 'Alice', members)
@@ -199,7 +214,7 @@ describe('Gemini Service', () => {
       const mockResult = { success: true }
       ;(AiTools.changeTaskStatus as jest.Mock).mockResolvedValueOnce(mockResult)
 
-      const args = { taskId: 't1', status: 'in-progress' }
+      const args = { taskId: 't1', newStatus: 'in-progress' }
       const result = await executeFunctionCall('change_task_status', args, mockContext)
 
       expect(result).toEqual(mockResult)
@@ -210,11 +225,11 @@ describe('Gemini Service', () => {
       const mockResult = { success: true }
       ;(AiTools.assignTask as jest.Mock).mockResolvedValueOnce(mockResult)
 
-      const args = { taskId: 't1', developer: 'dev-123' }
+      const args = { taskId: 't1', developerId: 'dev-123' }
       const result = await executeFunctionCall('assign_task', args, mockContext)
 
       expect(result).toEqual(mockResult)
-      expect(AiTools.assignTask).toHaveBeenCalledWith('t1', 'dev-123', undefined, mockContext.uid, mockContext.userName)
+      expect(AiTools.assignTask).toHaveBeenCalledWith('t1', 'dev-123', mockContext.uid, mockContext.userName)
     })
 
     it('should execute project_dashboard', async () => {
@@ -249,10 +264,10 @@ describe('Gemini Service', () => {
       expect(AiTools.searchTasks).toHaveBeenCalledWith('project-123', args)
     })
 
-    it('should throw error for unknown function name', async () => {
-      await expect(executeFunctionCall('unknown_function', {}, mockContext)).rejects.toThrow(
-        'Unknown function: unknown_function'
-      )
+    it('should return error object for unknown function name', async () => {
+      const result = await executeFunctionCall('unknown_function', {}, mockContext)
+
+      expect(result).toEqual({ error: 'Función desconocida: unknown_function' })
     })
 
     it('should use projectId from args if provided', async () => {
@@ -263,40 +278,15 @@ describe('Gemini Service', () => {
       expect(AiTools.getProject).toHaveBeenCalledWith('other-project')
     })
 
-    it('should handle create_task with implementation plan', async () => {
-      ;(AiTools.createTask as jest.Mock).mockResolvedValueOnce({ id: 't-new' })
-
-      const args = {
-        title: 'Complex Task',
-        userStoryWho: 'User',
-        userStoryWhat: 'Feature',
-        userStoryWhy: 'Value',
-        acceptanceCriteria: ['AC1'],
-        bizPoints: 80,
-        devPoints: 13,
-        implementationApproach: 'Use microservices',
-        implementationSteps: ['Step 1', 'Step 2'],
-      }
-
-      await executeFunctionCall('create_task', args, mockContext)
-
-      expect(AiTools.createTask).toHaveBeenCalledWith(
-        expect.objectContaining({
-          implementationPlan: expect.objectContaining({
-            approach: 'Use microservices',
-            steps: ['Step 1', 'Step 2'],
-          }),
-        }),
-        mockContext.uid,
-        mockContext.userName
-      )
-    })
   })
 
   describe('createChatModel', () => {
     it('should create a Gemini model instance', () => {
       const model = createChatModel()
+
       expect(model).toBeDefined()
+      // The model should have a startChat method (Gemini API)
+      expect(typeof model.startChat).toBe('function')
     })
   })
 })

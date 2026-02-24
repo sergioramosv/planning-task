@@ -734,14 +734,16 @@ export default function ProjectDetailsPage() {
               right: 0,
               bottom: 0,
               backgroundColor: 'rgba(0, 0, 0, 0.3)',
-              zIndex: 999,
+              zIndex: 998,
             }}
             onClick={() => setIsChatOpen(false)}
           />
-          <ChatPanel
-            projectId={projectId}
-            onClose={() => setIsChatOpen(false)}
-          />
+          <div style={{ position: 'fixed', zIndex: 1000 }}>
+            <ChatPanel
+              projectId={projectId}
+              onClose={() => setIsChatOpen(false)}
+            />
+          </div>
         </>
       )}
     </div>
