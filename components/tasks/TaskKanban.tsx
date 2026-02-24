@@ -113,11 +113,12 @@ export default function TaskKanban({
                 draggable
                 onDragStart={(e) => handleDragStart(e, task.id)}
                 onDragEnd={handleDragEnd}
-                onClick={() => onEdit?.(task)}
                 className={`${styles.taskItem} ${draggedTaskId === task.id ? styles.dragging : ''}`}
               >
                 <TaskCard
                   task={task}
+                  onClick={() => onEdit?.(task)}
+                  onDelete={onDelete ? () => onDelete(task.id) : undefined}
                   developerName={task.developer ? getDeveloperName(task.developer) : undefined}
                   coDeveloperName={task.coDeveloper ? getDeveloperName(task.coDeveloper) : undefined}
                   sprintName={getSprintName(task.sprintId)}
