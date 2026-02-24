@@ -1,19 +1,79 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-6);
-}
-
-.cardSection {
-  /* Uses Card styles */
-}
-
-.formGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: var(--spacing-4);
 }
 
+/* Section layout - lightweight replacement for Cards */
+.section {
+  padding-bottom: var(--spacing-4);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.section:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.sectionTitle {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--spacing-3);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-3);
+}
+
+.sectionHeader .sectionTitle {
+  margin-bottom: 0;
+}
+
+.sectionContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.criteriaContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+/* Grid layouts */
+.grid3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--spacing-3);
+}
+
+.grid4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: var(--spacing-3);
+}
+
+/* No sprint fallback */
+.noSprint {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.noSprintLabel {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-neutral-700);
+}
+
+/* Criteria */
 .criteriaRow {
   display: flex;
   gap: var(--spacing-2);
@@ -48,19 +108,13 @@
   font-size: var(--text-sm);
 }
 
-.requiredLabel {
-  color: var(--color-red-600);
-  font-weight: var(--font-semibold);
-  margin-left: 2px;
-}
+/* Responsive: stack grids on small screens */
+@media (max-width: 768px) {
+  .grid3 {
+    grid-template-columns: 1fr;
+  }
 
-.requiredField {
-  position: relative;
-}
-
-.requiredField::after {
-  content: '*';
-  color: var(--color-red-600);
-  margin-left: 4px;
-  font-weight: var(--font-bold);
+  .grid4 {
+    grid-template-columns: 1fr 1fr;
+  }
 }

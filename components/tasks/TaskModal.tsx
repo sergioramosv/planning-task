@@ -79,7 +79,7 @@ export default function TaskModal({
               : 'Editar Tarea'
             : 'Crear Nueva Tarea'
         }
-        className={modalStyles.contentLg}
+        className={modalStyles.contentXl}
       >
         {task ? (
           <>

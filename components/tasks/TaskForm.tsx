@@ -6,8 +6,6 @@ import { taskSchema, type TaskFormData } from '@/lib/utils/validators'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import cardStyles from '@/components/ui/Card.module.css'
 import { Task, Sprint } from '@/types'
 import { FIBONACCI_LABELS } from '@/lib/constants/fibonacciPoints'
 import { Plus, X } from 'lucide-react'
@@ -83,11 +81,10 @@ export default function TaskForm({
 
   return (
     <form onSubmit={handleSubmit(onFormSubmit, onFormError)} className={styles.form}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Información Básica</CardTitle>
-        </CardHeader>
-        <CardContent className={cardStyles.contentSpaced4}>
+      {/* Información Básica */}
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>Información Básica</h3>
+        <div className={styles.sectionContent}>
           <Input
             label="Título"
             placeholder="Ej: Implementar autenticación"
@@ -97,28 +94,28 @@ export default function TaskForm({
             disabled={isLoading}
           />
 
-          {sprints.length > 0 ? (
-            <Select
-              label="Sprint"
-              {...register('sprint')}
-              error={errors.sprint?.message as string}
-              disabled={isLoading}
-              placeholder="Selecciona un sprint (opcional)"
-              options={[
-                { value: '', label: 'Sin asignar' },
-                ...sprints.map(s => ({ value: s.id, label: s.name }))
-              ]}
-            />
-          ) : (
-            <div style={{ padding: 'var(--spacing-3) var(--spacing-4)', backgroundColor: 'var(--color-yellow-100)', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-yellow-700)' }}>
-              <p style={{ color: 'var(--color-yellow-700)', fontSize: 'var(--text-sm)', margin: 0, marginBottom: 'var(--spacing-2)' }}>No hay sprints creados</p>
-              <Button size="sm" variant="secondary" type="button" onClick={onCreateSprint}>
-                Crear Sprint
-              </Button>
-            </div>
-          )}
+          <div className={styles.grid3}>
+            {sprints.length > 0 ? (
+              <Select
+                label="Sprint"
+                {...register('sprint')}
+                error={errors.sprint?.message as string}
+                disabled={isLoading}
+                placeholder="Sin asignar"
+                options={[
+                  { value: '', label: 'Sin asignar' },
+                  ...sprints.map(s => ({ value: s.id, label: s.name }))
+                ]}
+              />
+            ) : (
+              <div className={styles.noSprint}>
+                <span className={styles.noSprintLabel}>Sprint</span>
+                <Button size="sm" variant="secondary" type="button" onClick={onCreateSprint}>
+                  Crear Sprint
+                </Button>
+              </div>
+            )}
 
-          <div className={styles.formGrid}>
             <Select
               label="Developer"
               {...register('developer')}
@@ -155,34 +152,31 @@ export default function TaskForm({
               { value: 'done', label: 'Done' },
             ]}
           />
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Fechas y Puntos</CardTitle>
-        </CardHeader>
-        <CardContent className={cardStyles.contentSpaced4}>
-          <div className={styles.formGrid}>
+      {/* Fechas y Puntos */}
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>Fechas y Puntos</h3>
+        <div className={styles.sectionContent}>
+          <div className={styles.grid4}>
             <Input
-              label="Fecha de Inicio"
+              label="Fecha Inicio"
               type="date"
               {...register('startDate')}
               disabled={isLoading}
             />
 
             <Input
-              label="Fecha de Fin"
+              label="Fecha Fin"
               type="date"
               {...register('endDate')}
               error={errors.endDate?.message as string}
               disabled={isLoading}
             />
-          </div>
 
-          <div className={styles.formGrid}>
             <Input
-              label="Puntos de Negocio (1-100)"
+              label="Puntos Negocio"
               type="number"
               min="1"
               max="100"
@@ -193,7 +187,7 @@ export default function TaskForm({
             />
 
             <Select
-              label="Puntos de Desarrollo"
+              label="Puntos Dev"
               required
               {...register('devPoints')}
               error={errors.devPoints?.message as string}
@@ -208,59 +202,59 @@ export default function TaskForm({
               ]}
             />
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>User Story</CardTitle>
-        </CardHeader>
-        <CardContent className={cardStyles.contentSpaced4}>
-          <Input
-            label="Quién (Como...)"
-            placeholder="Como usuario"
-            required
-            {...register('userStory.who')}
-            error={(errors.userStory as any)?.who?.message as string}
-            disabled={isLoading}
-          />
-
-          <Input
-            label="Qué (quiero...)"
-            placeholder="quiero poder iniciar sesión"
-            required
-            {...register('userStory.what')}
-            error={(errors.userStory as any)?.what?.message as string}
-            disabled={isLoading}
-          />
-
-          <Input
-            label="Para qué (para...)"
-            placeholder="para acceder a mis tareas"
-            required
-            {...register('userStory.why')}
-            error={(errors.userStory as any)?.why?.message as string}
-            disabled={isLoading}
-          />
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className={cardStyles.titleWithAction}>
-            <span>Criterios de Aceptación</span>
-            <Button
-              type="button"
-              size="sm"
-              variant="secondary"
-              onClick={() => append('')}
+      {/* User Story */}
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>User Story</h3>
+        <div className={styles.sectionContent}>
+          <div className={styles.grid3}>
+            <Input
+              label="Quién (Como...)"
+              placeholder="Como usuario"
+              required
+              {...register('userStory.who')}
+              error={(errors.userStory as any)?.who?.message as string}
               disabled={isLoading}
-            >
-              <Plus size={16} />
-            </Button>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className={cardStyles.contentSpaced3}>
+            />
+
+            <Input
+              label="Qué (quiero...)"
+              placeholder="quiero poder iniciar sesión"
+              required
+              {...register('userStory.what')}
+              error={(errors.userStory as any)?.what?.message as string}
+              disabled={isLoading}
+            />
+
+            <Input
+              label="Para qué (para...)"
+              placeholder="para acceder a mis tareas"
+              required
+              {...register('userStory.why')}
+              error={(errors.userStory as any)?.why?.message as string}
+              disabled={isLoading}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Criterios de Aceptación */}
+      <div className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <h3 className={styles.sectionTitle}>Criterios de Aceptación</h3>
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            onClick={() => append('')}
+            disabled={isLoading}
+          >
+            <Plus size={16} />
+          </Button>
+        </div>
+        <div className={styles.criteriaContent}>
           {fields.map((field, index) => (
             <div key={field.id} className={styles.criteriaRow}>
               <div className={styles.criteriaInput}>
@@ -286,8 +280,8 @@ export default function TaskForm({
           {errors.acceptanceCriteria && (
             <p className={styles.errorMessage}>{(errors.acceptanceCriteria as any)?.message}</p>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       <Button type="submit" fullWidth loading={isLoading} disabled={isLoading}>
         {task ? 'Actualizar Tarea' : 'Crear Tarea'}
