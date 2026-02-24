@@ -1,11 +1,18 @@
 export type ProjectStatus = 'planned' | 'active' | 'completed' | 'archived'
 export type ProjectRole = 'owner' | 'admin' | 'member' | 'viewer'
+export type RepositoryType = 'front' | 'back' | 'api' | 'fullstack'
 
 export interface ProjectMember {
   userId: string
   role: ProjectRole
   addedAt: number
   addedBy: string
+}
+
+export interface ProjectRepository {
+  url: string
+  type: RepositoryType
+  isDefault: boolean
 }
 
 export interface Project {
@@ -18,6 +25,9 @@ export interface Project {
   createdAt: number
   createdBy: string
   members: Record<string, boolean | ProjectMember> // Support both old format and new
+  repositories?: ProjectRepository[]
+  languages?: string
+  frameworks?: string
 }
 
 // Permission levels for different actions

@@ -9,3 +9,101 @@
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-4);
 }
+
+/* Sections */
+.section {
+  padding-top: var(--spacing-3);
+  border-top: 1px solid var(--border-primary);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-3);
+}
+
+.sectionTitle {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sectionContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+/* Repository rows */
+.repoRow {
+  display: grid;
+  grid-template-columns: 1fr 130px auto auto;
+  gap: var(--spacing-2);
+  align-items: flex-start;
+}
+
+.defaultBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  height: 38px;
+}
+
+.defaultBadge:hover {
+  border-color: var(--color-primary-500);
+  color: var(--color-primary-600);
+}
+
+.defaultBadgeActive {
+  background-color: var(--color-primary-50);
+  border-color: var(--color-primary-500);
+  color: var(--color-primary-700);
+  font-weight: var(--font-semibold);
+}
+
+.removeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2);
+  color: var(--color-red-600);
+  background: none;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  height: 38px;
+}
+
+.removeButton:hover {
+  background-color: var(--color-red-50);
+}
+
+/* Tech stack grid */
+.techStackGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-3);
+}
+
+@media (max-width: 768px) {
+  .repoRow {
+    grid-template-columns: 1fr;
+  }
+
+  .techStackGrid {
+    grid-template-columns: 1fr;
+  }
+}

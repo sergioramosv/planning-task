@@ -21,6 +21,7 @@ interface TaskModalProps {
   currentUser?: User | null
   projectMembers?: Array<{ uid: string; displayName: string }>
   initialTab?: 'details' | 'activity'
+  projectId?: string
 }
 
 export default function TaskModal({
@@ -34,6 +35,7 @@ export default function TaskModal({
   currentUser,
   projectMembers = [],
   initialTab = 'details',
+  projectId,
 }: TaskModalProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isSprintModalOpen, setIsSprintModalOpen] = useState(false)
@@ -91,6 +93,8 @@ export default function TaskModal({
                 onSubmit={handleSubmit}
                 isLoading={isLoading}
                 onCreateSprint={handleCreateSprint}
+                projectId={projectId}
+                currentUserId={currentUser?.uid}
               />
             )}
 
@@ -111,6 +115,8 @@ export default function TaskModal({
             onSubmit={handleSubmit}
             isLoading={isLoading}
             onCreateSprint={handleCreateSprint}
+            projectId={projectId}
+            currentUserId={currentUser?.uid}
           />
         )}
       </Modal>

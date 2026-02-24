@@ -7,8 +7,9 @@ import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select'
 import MembersManager from './MembersManager'
-import { Project } from '@/types/project'
+import { Project, ProjectRepository } from '@/types/project'
 import { useAuth } from '@/hooks/useAuth'
+import { Plus, X, Star } from 'lucide-react'
 import styles from './ProjectEditModal.module.css'
 
 interface ProjectEditModalProps {
@@ -27,6 +28,13 @@ const statusOptions = [
   { value: 'archived', label: 'Archivado' },
 ]
 
+const repoTypeOptions = [
+  { value: 'front', label: 'Frontend' },
+  { value: 'back', label: 'Backend' },
+  { value: 'api', label: 'API' },
+  { value: 'fullstack', label: 'Full Stack' },
+]
+
 export default function ProjectEditModal({
   isOpen,
   onClose,
@@ -43,9 +51,12 @@ export default function ProjectEditModal({
     endDate: project.endDate,
     status: project.status,
   })
+  const [repositories, setRepositories] = useState<ProjectRepository[]>(project.repositories || [])
+  const [languages, setLanguages] = useState(project.languages || '')
+  const [frameworks, setFrameworks] = useState(project.frameworks || '')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState<'info' | 'members'>('info')
+  const [activeTab, setActiveTab] = useState<'info' | 'members' | 'repos'>('info')
 
   const isCreator = user?.uid === project.createdBy
   const canEdit = isCreator
@@ -58,12 +69,40 @@ export default function ProjectEditModal({
     }))
   }
 
+  const handleAddRepo = () => {
+    setRepositories(prev => [
+      ...prev,
+      { url: '', type: 'fullstack' as const, isDefault: prev.length === 0 },
+    ])
+  }
+
+  const handleRemoveRepo = (index: number) => {
+    setRepositories(prev => {
+      const next = prev.filter((_, i) => i !== index)
+      if (prev[index]?.isDefault && next.length > 0) {
+        next[0].isDefault = true
+      }
+      return next
+    })
+  }
+
+  const handleRepoChange = (index: number, field: keyof ProjectRepository, value: any) => {
+    setRepositories(prev => {
+      const next = [...prev]
+      if (field === 'isDefault' && value === true) {
+        next.forEach((r, i) => { r.isDefault = i === index })
+      } else {
+        next[index] = { ...next[index], [field]: value }
+      }
+      return next
+    })
+  }
+
   const handleSave = async () => {
     try {
       setLoading(true)
       setError(null)
 
-      // Validaciones básicas
       if (!formData.name.trim()) {
         setError('El nombre del proyecto es requerido')
         return
@@ -73,12 +112,17 @@ export default function ProjectEditModal({
         return
       }
 
+      const validRepos = repositories.filter(r => r.url.trim())
+
       const updates: Partial<Project> = {
         name: formData.name,
         description: formData.description,
         startDate: formData.startDate,
         endDate: formData.endDate,
         status: formData.status as Project['status'],
+        repositories: validRepos.length > 0 ? validRepos : undefined,
+        languages: languages.trim() || undefined,
+        frameworks: frameworks.trim() || undefined,
       }
 
       await onSave(updates)
@@ -127,6 +171,12 @@ export default function ProjectEditModal({
             onClick={() => setActiveTab('info')}
           >
             Información
+          </button>
+          <button
+            className={`${styles.tab} ${activeTab === 'repos' ? styles.tabActive : ''}`}
+            onClick={() => setActiveTab('repos')}
+          >
+            Repositorios
           </button>
           <button
             className={`${styles.tab} ${activeTab === 'members' ? styles.tabActive : ''}`}
@@ -207,6 +257,117 @@ export default function ProjectEditModal({
           </div>
         )}
 
+        {/* Tab: Repositorios */}
+        {activeTab === 'repos' && (
+          <div className={styles.content}>
+            <div className={styles.formGroup}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-3)' }}>
+                <label style={{ fontWeight: 'var(--font-semibold)', fontSize: 'var(--text-sm)' }}>Repositorios del Proyecto</label>
+                {canEdit && (
+                  <Button type="button" size="sm" variant="secondary" onClick={handleAddRepo} disabled={loading}>
+                    <Plus size={16} /> Añadir
+                  </Button>
+                )}
+              </div>
+              {repositories.map((repo, index) => (
+                <div key={index} className={styles.formRow} style={{ marginBottom: 'var(--spacing-2)' }}>
+                  <Input
+                    placeholder="https://github.com/org/repo"
+                    value={repo.url}
+                    onChange={(e) => handleRepoChange(index, 'url', e.target.value)}
+                    disabled={!canEdit || loading}
+                  />
+                  <div style={{ display: 'flex', gap: 'var(--spacing-2)', alignItems: 'center' }}>
+                    <select
+                      value={repo.type}
+                      onChange={(e) => handleRepoChange(index, 'type', e.target.value)}
+                      disabled={!canEdit || loading}
+                      style={{
+                        padding: '8px 12px',
+                        borderRadius: 'var(--radius-md)',
+                        border: '1px solid var(--border-primary)',
+                        backgroundColor: 'var(--bg-input)',
+                        color: 'var(--text-primary)',
+                        fontSize: 'var(--text-sm)',
+                      }}
+                    >
+                      {repoTypeOptions.map(o => (
+                        <option key={o.value} value={o.value}>{o.label}</option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={() => handleRepoChange(index, 'isDefault', true)}
+                      disabled={!canEdit || loading}
+                      style={{
+                        padding: '8px',
+                        border: '1px solid var(--border-primary)',
+                        borderRadius: 'var(--radius-md)',
+                        background: repo.isDefault ? 'var(--color-primary-50)' : 'transparent',
+                        color: repo.isDefault ? 'var(--color-primary-700)' : 'var(--text-muted)',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <Star size={14} />
+                    </button>
+                    {canEdit && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveRepo(index)}
+                        disabled={loading}
+                        style={{
+                          padding: '8px',
+                          border: 'none',
+                          background: 'none',
+                          color: 'var(--color-red-600)',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        <X size={18} />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+              {repositories.length > 0 && (
+                <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
+                  El repositorio con ★ es el &quot;por defecto&quot; para tareas sin etiqueta asignada.
+                </p>
+              )}
+            </div>
+
+            <div className={styles.formRow}>
+              <div className={styles.formGroup}>
+                <Input
+                  label="Lenguajes"
+                  placeholder="TypeScript, CSS, HTML"
+                  value={languages}
+                  onChange={(e) => setLanguages(e.target.value)}
+                  disabled={!canEdit || loading}
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <Input
+                  label="Frameworks"
+                  placeholder="Next, Tailwind"
+                  value={frameworks}
+                  onChange={(e) => setFrameworks(e.target.value)}
+                  disabled={!canEdit || loading}
+                />
+              </div>
+            </div>
+            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
+              Separados por comas.
+            </p>
+
+            {!canEdit && (
+              <div className={styles.info}>
+                Solo el creador del proyecto puede editar esta información.
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Tab: Miembros */}
         {activeTab === 'members' && (
           <div className={styles.content}>
@@ -233,7 +394,7 @@ export default function ProjectEditModal({
           >
             Cancelar
           </Button>
-          {canEdit && activeTab === 'info' && (
+          {canEdit && (activeTab === 'info' || activeTab === 'repos') && (
             <Button
               variant="primary"
               onClick={handleSave}

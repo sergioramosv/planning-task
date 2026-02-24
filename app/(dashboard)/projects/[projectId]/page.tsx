@@ -177,6 +177,8 @@ export default function ProjectDetailsPage() {
           devPoints: data.devPoints,
           acceptanceCriteria: data.acceptanceCriteria,
           userStory: data.userStory,
+          ...(data.implementationPlan ? { implementationPlan: data.implementationPlan } : {}),
+          ...(data.attachments ? { attachments: data.attachments } : {}),
         })
       } else {
         // Create new task
@@ -193,6 +195,8 @@ export default function ProjectDetailsPage() {
             devPoints: data.devPoints,
             acceptanceCriteria: data.acceptanceCriteria,
             userStory: data.userStory,
+            ...(data.implementationPlan ? { implementationPlan: data.implementationPlan } : {}),
+            ...(data.attachments ? { attachments: data.attachments } : {}),
             projectId,
             createdBy: user.uid,
           },
@@ -609,6 +613,7 @@ export default function ProjectDetailsPage() {
         onCreateSprint={handleCreateSprint}
         initialTab={modalTab}
         currentUser={user}
+        projectId={projectId}
         projectMembers={project ? Object.keys(project.members || {}).map(uid => ({
           uid,
           displayName: developers.find(d => d.id === uid)?.name || 'Usuario'

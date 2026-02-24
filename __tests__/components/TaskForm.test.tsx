@@ -16,6 +16,16 @@ jest.mock('@hookform/resolvers/zod', () => ({
   }),
 }))
 
+jest.mock('@/hooks/useFileUpload', () => ({
+  useFileUpload: () => ({
+    uploading: false,
+    progress: {},
+    error: null,
+    uploadFiles: jest.fn().mockResolvedValue([]),
+    deleteFile: jest.fn().mockResolvedValue(undefined),
+  }),
+}))
+
 const mockSprints = [
   { id: 's1', name: 'Sprint 1', projectId: 'p1', startDate: '2024-01-01', endDate: '2024-01-14', status: 'active' as const, createdAt: Date.now(), createdBy: 'u1' },
 ]
@@ -38,25 +48,23 @@ describe('TaskForm Component', () => {
     jest.clearAllMocks()
   })
 
-  it('should render all section titles', () => {
+  it('should render all 4 tabs', () => {
     render(<TaskForm {...defaultProps} />)
-    expect(screen.getByText('Información Básica')).toBeInTheDocument()
-    expect(screen.getByText('Fechas y Puntos')).toBeInTheDocument()
+    expect(screen.getByText('General')).toBeInTheDocument()
     expect(screen.getByText('User Story')).toBeInTheDocument()
-    expect(screen.getByText('Criterios de Aceptación')).toBeInTheDocument()
+    expect(screen.getByText('Implementación')).toBeInTheDocument()
+    expect(screen.getByText(/Adjuntos/)).toBeInTheDocument()
   })
 
-  it('should render title input', () => {
+  it('should render title input on General tab', () => {
     render(<TaskForm {...defaultProps} />)
     expect(screen.getByText('Título')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('Ej: Implementar autenticación')).toBeInTheDocument()
   })
 
-  it('should render sprint select with options when sprints are provided', () => {
+  it('should render sprint select with options on General tab', () => {
     render(<TaskForm {...defaultProps} />)
-    expect(screen.getByText('Sprint')).toBeInTheDocument()
     expect(screen.getByText('Sprint 1')).toBeInTheDocument()
-    // "Sin asignar" appears in multiple selects (Sprint, Developer)
     expect(screen.getAllByText('Sin asignar').length).toBeGreaterThanOrEqual(1)
   })
 
@@ -66,7 +74,7 @@ describe('TaskForm Component', () => {
     expect(screen.getByText('Crear Sprint')).toBeInTheDocument()
   })
 
-  it('should render developer and co-developer selects', () => {
+  it('should render developer and co-developer selects on General tab', () => {
     render(<TaskForm {...defaultProps} />)
     expect(screen.getByText('Developer')).toBeInTheDocument()
     expect(screen.getByText('Co-Developer')).toBeInTheDocument()
@@ -74,7 +82,7 @@ describe('TaskForm Component', () => {
     expect(screen.getAllByText('Jane')).toHaveLength(2)
   })
 
-  it('should render status select with all 5 options', () => {
+  it('should render status select with all 5 options on General tab', () => {
     render(<TaskForm {...defaultProps} />)
     expect(screen.getByText('Estado')).toBeInTheDocument()
     expect(screen.getByText('To Do')).toBeInTheDocument()
@@ -84,35 +92,40 @@ describe('TaskForm Component', () => {
     expect(screen.getByText('Done')).toBeInTheDocument()
   })
 
-  it('should render date inputs', () => {
+  it('should render date inputs and points on General tab', () => {
     render(<TaskForm {...defaultProps} />)
     expect(screen.getByText('Fecha Inicio')).toBeInTheDocument()
     expect(screen.getByText('Fecha Fin')).toBeInTheDocument()
-  })
-
-  it('should render business and dev points inputs', () => {
-    render(<TaskForm {...defaultProps} />)
     expect(screen.getByText('Puntos Negocio')).toBeInTheDocument()
     expect(screen.getByText('Puntos Dev')).toBeInTheDocument()
   })
 
-  it('should render user story inputs', () => {
+  it('should show User Story fields when User Story tab is clicked', async () => {
     render(<TaskForm {...defaultProps} />)
-    expect(screen.getByText('Quién (Como...)')).toBeInTheDocument()
-    expect(screen.getByText('Qué (quiero...)')).toBeInTheDocument()
-    expect(screen.getByText('Para qué (para...)')).toBeInTheDocument()
+    await userEvent.click(screen.getByText('User Story'))
     expect(screen.getByPlaceholderText('Como usuario')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('quiero poder iniciar sesión')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('para acceder a mis tareas')).toBeInTheDocument()
+    expect(screen.getByText('Criterios de Aceptación')).toBeInTheDocument()
   })
 
-  it('should render acceptance criteria with add button', () => {
+  it('should show Implementation plan fields when Implementación tab is clicked', async () => {
     render(<TaskForm {...defaultProps} />)
-    expect(screen.getByText('Criterios de Aceptación')).toBeInTheDocument()
-    // The add button contains a Plus icon (SVG), find by role
-    const buttons = screen.getAllByRole('button')
-    // There should be at least the add criteria button and the submit button
-    expect(buttons.length).toBeGreaterThanOrEqual(2)
+    await userEvent.click(screen.getByText('Implementación'))
+    expect(screen.getByText('Estado del Plan')).toBeInTheDocument()
+    expect(screen.getByText('Pendiente')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Describe el enfoque técnico para resolver esta tarea')).toBeInTheDocument()
+    expect(screen.getByText('Pasos de implementación')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Campos nuevos, migraciones...')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Endpoints, Cloud Functions...')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Riesgos identificados')).toBeInTheDocument()
+  })
+
+  it('should show Attachments tab content when clicked', async () => {
+    render(<TaskForm {...defaultProps} />)
+    await userEvent.click(screen.getByText(/Adjuntos/))
+    expect(screen.getByText('Haz clic para seleccionar archivos')).toBeInTheDocument()
+    expect(screen.getByText('No hay archivos adjuntos')).toBeInTheDocument()
   })
 
   it('should show "Crear Tarea" button for new task', () => {
@@ -145,7 +158,7 @@ describe('TaskForm Component', () => {
     expect(screen.getByText('Actualizar Tarea')).toBeInTheDocument()
   })
 
-  it('should render initial acceptance criteria field', () => {
+  it('should render acceptance criteria when on User Story tab', async () => {
     const mockTask = {
       id: 't1',
       title: 'Test Task',
@@ -167,6 +180,30 @@ describe('TaskForm Component', () => {
       history: {},
     }
     render(<TaskForm {...defaultProps} task={mockTask} />)
+    await userEvent.click(screen.getByText('User Story'))
     expect(screen.getByPlaceholderText('Criterio 1')).toBeInTheDocument()
+  })
+
+  it('should show attachment badge when task has existing attachments', () => {
+    const mockTask = {
+      id: 't1',
+      title: 'Test Task',
+      projectId: 'p1',
+      acceptanceCriteria: ['Criteria 1'],
+      userStory: { who: 'As a user', what: 'I want to test', why: 'To verify' },
+      bizPoints: 5,
+      devPoints: 3 as const,
+      priority: 1,
+      status: 'to-do' as const,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      createdBy: 'u1',
+      history: {},
+      attachments: [
+        { id: 'a1', name: 'file.pdf', url: 'http://example.com/file.pdf', storagePath: 'tasks/t1/a1', uploadedAt: Date.now(), uploadedBy: 'u1' },
+      ],
+    }
+    render(<TaskForm {...defaultProps} task={mockTask} />)
+    expect(screen.getByText('1')).toBeInTheDocument()
   })
 })
