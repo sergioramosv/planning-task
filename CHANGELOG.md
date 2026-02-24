@@ -12,6 +12,7 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 - TaskForm y ProposalForm ahora usan Select con opciones Fibonacci para bizPoints en lugar de Input numérico libre.
 - Validadores actualizados para restringir bizPoints a valores Fibonacci válidos.
 - Descripción en ChatService actualizada para reflejar el nuevo rango Fibonacci.
+- **Columnas Validated y Done unificadas en Kanban**: La vista Kanban ahora muestra una sola columna "done & validated" que agrupa ambos estados, reduciendo la complejidad visual del board.
 
 ## [1.34.0] - 2026-02-24
 
