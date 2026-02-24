@@ -1,6 +1,6 @@
 {
   "name": "scrum-task-manager",
-  "version": "1.32.0",
+  "version": "1.33.0",
   "description": "Professional Scrum Task Management Application",
   "private": true,
   "scripts": {
@@ -17,6 +17,7 @@
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
+    "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^5.2.2",
     "@types/node": "^25.2.3",
     "@types/react": "^19.2.14",
@@ -27,6 +28,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "firebase": "^12.9.0",
+    "firebase-admin": "^13.6.1",
     "ical-generator": "^10.0.0",
     "lucide-react": "^0.574.0",
     "next": "^14.2.35",

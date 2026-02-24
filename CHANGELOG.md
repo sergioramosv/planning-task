@@ -5,6 +5,17 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.33.0] - 2026-02-24
+
+### Added
+- Sistema de borradores de tareas: al cerrar el modal de creación sin enviar, los datos del formulario se guardan automáticamente en localStorage.
+- DraftPickerModal: al hacer clic en "Agregar Tarea" con borradores pendientes, muestra un diálogo para elegir continuar con un borrador o crear una tarea nueva.
+- Hook `useTaskDrafts` para gestión CRUD de borradores por proyecto (máximo 10 por proyecto).
+- Tipo `TaskDraft` para representar borradores con id, título, datos del formulario y timestamps.
+- TaskForm ahora usa `forwardRef` + `useImperativeHandle` para exponer `getFormValues()` al componente padre.
+- Soporte para `initialFormData` en TaskForm para pre-cargar datos de un borrador.
+- Los borradores se eliminan automáticamente al crear la tarea exitosamente.
+
 ## [1.32.0] - 2026-02-24
 
 ### Added
