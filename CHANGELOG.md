@@ -15,6 +15,7 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 ### Changed
 - Mejorada la UX de eliminación de tareas con confirmación modal consistente en todas las vistas.
 - El botón de eliminar en el header tiene hover effect con fondo rojo suave para mejor feedback visual.
+- **Botones de acciones en tabla ahora son solo iconos**: Los botones de Actividad, Editar y Borrar en la tabla de tareas ahora muestran solo iconos (MessageSquare, Edit2, Trash2) para reducir el ancho de la columna de acciones y hacer la tabla más compacta.
 
 ## [1.36.0] - 2026-02-24
 
