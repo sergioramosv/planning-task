@@ -15,5 +15,5 @@ export const TASK_STATUS_LABELS: Record<TaskStatus, string> = {
   'in-progress': 'in-progress',
   'to-validate': 'to-validate',
   'validated': 'validated',
-  'done': 'done',
+  'done': 'done & validated',
 }

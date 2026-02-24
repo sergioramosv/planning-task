@@ -19,7 +19,7 @@ interface TaskKanbanProps {
   developers?: Array<{ id: string; name: string }>
 }
 
-const KANBAN_COLUMNS: TaskStatus[] = ['to-do', 'in-progress', 'to-validate', 'validated', 'done']
+const KANBAN_COLUMNS: TaskStatus[] = ['to-do', 'in-progress', 'to-validate', 'done']
 
 export default function TaskKanban({
   tasks,
@@ -56,7 +56,12 @@ export default function TaskKanban({
   }
 
   displayTasks.forEach(task => {
-    tasksByStatus[task.status].push(task)
+    // Merge validated into done column
+    if (task.status === 'validated') {
+      tasksByStatus['done'].push(task)
+    } else {
+      tasksByStatus[task.status].push(task)
+    }
   })
 
   const handleDragStart = (e: React.DragEvent, taskId: string) => {
