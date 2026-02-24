@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.30.4] - 2026-02-24
+
+### Fixed
+- Reemplazados todos los `background-color: white` y `background: white` hardcodeados por `var(--bg-elevated)` en 12 archivos CSS modules para soporte de dark mode.
+
 ## [1.30.3] - 2026-02-24
 
 ### Fixed
