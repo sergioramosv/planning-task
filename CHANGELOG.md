@@ -5,6 +5,18 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.30.3] - 2026-02-24
+
+### Fixed
+- Corregidos todos los tests de componentes UI (Badge, Button, Input, Card) que fallaban por usar clases Tailwind en vez de CSS Modules.
+- Actualizados tests de validators y types para reflejar campos opcionales (`developer`, `startDate`, `coDeveloper`).
+- Actualizado test de calculations para manejar tareas sin developer asignado.
+
+### Added
+- Nuevo test suite para componente Select (9 tests).
+- Test para validar tarea sin developer y sin fechas (campos opcionales).
+- Test para `getDeveloperMetrics` con tareas sin developer.
+
 ## [1.30.2] - 2026-02-24
 
 ### Fixed
