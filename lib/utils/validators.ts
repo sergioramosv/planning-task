@@ -65,7 +65,10 @@ export const taskSchema = z.object({
   coDeveloper: z.string().optional(),
   startDate: z.string().optional(),
   endDate: z.string().optional(),
-  bizPoints: z.number().min(1, 'Mínimo 1 punto de negocio').max(100, 'Máximo 100 puntos'),
+  bizPoints: z.enum(['1', '2', '3', '5', '8', '13', '21', '34']).refine(
+    val => ['1', '2', '3', '5', '8', '13', '21', '34'].includes(val),
+    'Debe ser un número Fibonacci válido'
+  ),
   devPoints: z.enum(['1', '2', '3', '5', '8', '13']).refine(
     val => ['1', '2', '3', '5', '8', '13'].includes(val),
     'Debe ser un número Fibonacci válido'

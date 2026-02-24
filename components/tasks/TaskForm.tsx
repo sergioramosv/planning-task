@@ -57,7 +57,7 @@ const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(function TaskForm({
         title: task.title,
         sprint: task.sprintId || '',
         devPoints: String(task.devPoints),
-        bizPoints: task.bizPoints,
+        bizPoints: String(task.bizPoints),
         developer: task.developer,
         coDeveloper: task.coDeveloper || '',
         startDate: task.startDate,
@@ -77,7 +77,7 @@ const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(function TaskForm({
         coDeveloper: initialFormData.coDeveloper || '',
         startDate: initialFormData.startDate || '',
         endDate: initialFormData.endDate || '',
-        bizPoints: initialFormData.bizPoints || undefined,
+        bizPoints: initialFormData.bizPoints ? String(initialFormData.bizPoints) : undefined,
         devPoints: initialFormData.devPoints || undefined,
         acceptanceCriteria: initialFormData.acceptanceCriteria?.length
           ? initialFormData.acceptanceCriteria
@@ -308,15 +308,22 @@ const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(function TaskForm({
                   error={errors.endDate?.message as string}
                   disabled={isLoading}
                 />
-                <Input
+                <Select
                   label="Puntos Negocio"
-                  type="number"
-                  min="1"
-                  max="100"
                   required
-                  {...register('bizPoints', { valueAsNumber: true })}
+                  {...register('bizPoints')}
                   error={errors.bizPoints?.message as string}
                   disabled={isLoading}
+                  options={[
+                    { value: '1', label: FIBONACCI_LABELS[1] },
+                    { value: '2', label: FIBONACCI_LABELS[2] },
+                    { value: '3', label: FIBONACCI_LABELS[3] },
+                    { value: '5', label: FIBONACCI_LABELS[5] },
+                    { value: '8', label: FIBONACCI_LABELS[8] },
+                    { value: '13', label: FIBONACCI_LABELS[13] },
+                    { value: '21', label: '21 — Muy complejo' },
+                    { value: '34', label: '34 — Épico' },
+                  ]}
                 />
                 <Select
                   label="Puntos Dev"

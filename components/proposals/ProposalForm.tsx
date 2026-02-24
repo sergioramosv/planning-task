@@ -28,11 +28,7 @@ const proposalValidationSchema = z.object({
     },
     'La fecha de inicio debe ser hoy o en el futuro'
   ),
-  bizPoints: z.coerce
-    .number()
-    .int('Los puntos deben ser números enteros')
-    .min(1, 'Mínimo 1 punto')
-    .max(100, 'Máximo 100 puntos'),
+  bizPoints: z.enum(['1', '2', '3', '5', '8', '13', '21', '34'] as const),
   devPoints: z.enum(['1', '2', '3', '5', '8', '13'] as const),
 })
 
@@ -59,7 +55,7 @@ export default function ProposalForm({ onSubmit, isLoading = false, initialData 
       userStoryWhy: initialData?.userStory?.why || '',
       acceptanceCriteria: initialData?.acceptanceCriteria || [''],
       startDate: initialData?.startDate || new Date().toISOString().split('T')[0],
-      bizPoints: initialData?.bizPoints || 5,
+      bizPoints: String(initialData?.bizPoints || 5) as any,
       devPoints: String(initialData?.devPoints || 3) as any,
     } as any,
   })
@@ -108,15 +104,22 @@ export default function ProposalForm({ onSubmit, isLoading = false, initialData 
           </div>
 
           <div className={styles.formGrid}>
-            <Input
-              label="Puntos de Negocio (1-100)"
-              type="number"
-              min="1"
-              max="100"
+            <Select
+              label="Puntos de Negocio"
               required
-              {...register('bizPoints', { valueAsNumber: true })}
+              {...register('bizPoints')}
               error={errors.bizPoints?.message as string}
               disabled={isLoading}
+              options={[
+                { value: '1', label: FIBONACCI_LABELS[1] },
+                { value: '2', label: FIBONACCI_LABELS[2] },
+                { value: '3', label: FIBONACCI_LABELS[3] },
+                { value: '5', label: FIBONACCI_LABELS[5] },
+                { value: '8', label: FIBONACCI_LABELS[8] },
+                { value: '13', label: FIBONACCI_LABELS[13] },
+                { value: '21', label: '21 — Muy complejo' },
+                { value: '34', label: '34 — Épico' },
+              ]}
             />
 
             <Select

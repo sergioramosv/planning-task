@@ -131,7 +131,7 @@ const tools = [
           items: { type: SchemaType.STRING },
           description: 'Criterios de aceptacion',
         },
-        bizPoints: { type: SchemaType.NUMBER, description: 'Puntos de negocio 1-100' },
+        bizPoints: { type: SchemaType.NUMBER, description: 'Puntos de negocio (Fibonacci: 1,2,3,5,8,13,21,34)' },
         devPoints: { type: SchemaType.NUMBER, description: 'Puntos desarrollo (Fibonacci: 1,2,3,5,8,13)' },
         developer: { type: SchemaType.STRING, description: 'UID del developer asignado' },
         status: { type: SchemaType.STRING, description: 'Estado inicial (default: to-do)' },
