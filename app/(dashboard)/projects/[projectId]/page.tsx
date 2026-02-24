@@ -310,9 +310,6 @@ export default function ProjectDetailsPage() {
   }
 
   const handleDeleteTask = async (taskId: string) => {
-    if (!confirm('¿Estás seguro de que quieres borrar esta tarea?')) {
-      return
-    }
     try {
       await deleteTask(taskId)
     } catch (error) {
@@ -672,6 +669,7 @@ export default function ProjectDetailsPage() {
         sprints={sprints}
         developers={developers}
         onSubmit={handleTaskSubmit}
+        onDelete={canDeleteTask ? handleDeleteTask : undefined}
         onCreateSprint={handleCreateSprint}
         initialTab={modalTab}
         currentUser={user}

@@ -3,11 +3,14 @@
 import { useState, useEffect, useRef } from 'react'
 import Modal from '@/components/ui/Modal'
 import modalStyles from '@/components/ui/Modal.module.css'
+import ConfirmationModal from '@/components/ui/ConfirmationModal'
+import Button from '@/components/ui/Button'
 import TaskForm, { TaskFormRef } from './TaskForm'
 import SprintForm from '../sprints/SprintForm'
 import TaskActivityPanel from './TaskActivityPanel'
 import { Task, Sprint } from '@/types'
 import { User } from '@/types/user'
+import { Trash2 } from 'lucide-react'
 import styles from './TaskModal.module.css'
 
 interface TaskModalProps {
@@ -17,6 +20,7 @@ interface TaskModalProps {
   sprints: Sprint[]
   developers: Array<{ id: string; name: string }>
   onSubmit: (data: any) => Promise<void>
+  onDelete?: (taskId: string) => Promise<void>
   onCreateSprint?: (data: any) => Promise<void>
   currentUser?: User | null
   projectMembers?: Array<{ uid: string; displayName: string }>
@@ -33,6 +37,7 @@ export default function TaskModal({
   sprints,
   developers,
   onSubmit,
+  onDelete,
   onCreateSprint,
   currentUser,
   projectMembers = [],
@@ -43,6 +48,7 @@ export default function TaskModal({
 }: TaskModalProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isSprintModalOpen, setIsSprintModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<'details' | 'activity'>(initialTab)
   const taskFormRef = useRef<TaskFormRef>(null)
 
@@ -82,6 +88,23 @@ export default function TaskModal({
     }
   }
 
+  const handleDeleteClick = () => {
+    setIsDeleteModalOpen(true)
+  }
+
+  const handleDeleteConfirm = async () => {
+    if (task && onDelete) {
+      setIsLoading(true)
+      try {
+        await onDelete(task.id)
+        setIsDeleteModalOpen(false)
+        onClose()
+      } finally {
+        setIsLoading(false)
+      }
+    }
+  }
+
   return (
     <>
       <Modal
@@ -96,6 +119,19 @@ export default function TaskModal({
         }
         className={modalStyles.contentXl}
       >
+        {task && onDelete && activeTab === 'details' && (
+          <div className={styles.deleteButtonContainer}>
+            <Button
+              variant="danger"
+              onClick={handleDeleteClick}
+              disabled={isLoading}
+              size="sm"
+            >
+              <Trash2 size={16} />
+              Borrar Tarea
+            </Button>
+          </div>
+        )}
         {task ? (
           <>
             {activeTab === 'details' && (
@@ -149,6 +185,17 @@ export default function TaskModal({
           />
         </Modal>
       )}
+
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        title="Eliminar Tarea"
+        message="¿Estás seguro de que deseas eliminar esta tarea? Esta acción no se puede deshacer."
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        variant="danger"
+      />
     </>
   )
 }
