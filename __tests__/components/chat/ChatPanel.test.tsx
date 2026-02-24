@@ -13,6 +13,15 @@ jest.mock('remark-gfm', () => () => {})
 // Mock the useChat hook
 jest.mock('@/hooks/useChat')
 
+// Mock the usePermissions hook
+jest.mock('@/hooks/usePermissions', () => ({
+  usePermissions: () => ({
+    role: 'owner',
+    permissions: {},
+    canEditProject: true,
+  }),
+}))
+
 describe('ChatPanel Component', () => {
   const mockProjectId = 'test-project-123'
   const mockOnClose = jest.fn()

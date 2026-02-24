@@ -741,6 +741,7 @@ export default function ProjectDetailsPage() {
           <div style={{ position: 'fixed', zIndex: 1000 }}>
             <ChatPanel
               projectId={projectId}
+              project={project}
               onClose={() => setIsChatOpen(false)}
             />
           </div>

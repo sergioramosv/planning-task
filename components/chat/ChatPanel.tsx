@@ -3,18 +3,25 @@
 import { useRef, useEffect } from 'react'
 import { X, Trash2, Sparkles } from 'lucide-react'
 import { useChat } from '@/hooks/useChat'
+import { usePermissions } from '@/hooks/usePermissions'
 import ChatMessage from './ChatMessage'
 import ChatInput from './ChatInput'
 import styles from './ChatPanel.module.css'
+import { Project } from '@/types/project'
 
 interface ChatPanelProps {
   projectId: string
+  project?: Project | null
   onClose: () => void
 }
 
-export default function ChatPanel({ projectId, onClose }: ChatPanelProps) {
+export default function ChatPanel({ projectId, project, onClose }: ChatPanelProps) {
   const { messages, isLoading, error, quota, sendMessage, clearChat } = useChat(projectId)
+  const { role } = usePermissions(project)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  // Only show quota bar to owners and admins
+  const canSeeQuota = role === 'owner' || role === 'admin'
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -49,7 +56,7 @@ export default function ChatPanel({ projectId, onClose }: ChatPanelProps) {
         </div>
       </div>
 
-      {quota && (
+      {quota && canSeeQuota && (
         <div className={styles.quotaBar}>
           <div className={styles.quotaItem}>
             <span className={styles.quotaLabel}>Uso/min:</span>

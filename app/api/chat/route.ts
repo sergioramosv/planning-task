@@ -31,10 +31,9 @@ export async function POST(request: NextRequest) {
   // 3. Get available model from pool
   const modelConfig = getAvailableModelConfig()
   if (!modelConfig) {
-    const totalStatus = getTotalQuotaStatus()
     return NextResponse.json(
       {
-        error: `Todos los modelos han alcanzado su límite. ${totalStatus.activeConfigs}/${totalStatus.totalConfigs} configuraciones disponibles. Intenta más tarde.`,
+        error: '¡Vaya! El asistente está muy ocupado ahora mismo 😅. Intenta de nuevo en unos minutos, o vuelve más tarde. Gracias por tu paciencia.',
       },
       { status: 429 }
     )
