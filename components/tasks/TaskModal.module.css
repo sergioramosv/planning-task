@@ -40,10 +40,25 @@
   gap: var(--spacing-4);
 }
 
-.deleteButtonContainer {
+.deleteIconButton {
+  background: none;
+  border: none;
+  color: var(--color-red-500);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  padding: var(--spacing-2);
   display: flex;
-  justify-content: flex-end;
-  padding-bottom: var(--spacing-3);
-  border-bottom: 1px solid var(--border-primary);
-  margin-bottom: var(--spacing-3);
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+}
+
+.deleteIconButton:hover {
+  background-color: var(--color-red-50);
+  color: var(--color-red-600);
+}
+
+.deleteIconButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

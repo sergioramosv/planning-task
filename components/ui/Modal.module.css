@@ -43,6 +43,12 @@
   color: var(--color-neutral-900);
 }
 
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
 .closeButton {
   background: none;
   border: none;

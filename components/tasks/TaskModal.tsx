@@ -118,20 +118,19 @@ export default function TaskModal({
             : 'Crear Nueva Tarea'
         }
         className={modalStyles.contentXl}
-      >
-        {task && onDelete && activeTab === 'details' && (
-          <div className={styles.deleteButtonContainer}>
-            <Button
-              variant="danger"
+        headerActions={
+          task && onDelete && activeTab === 'details' ? (
+            <button
               onClick={handleDeleteClick}
               disabled={isLoading}
-              size="sm"
+              className={styles.deleteIconButton}
+              aria-label="Eliminar tarea"
             >
-              <Trash2 size={16} />
-              Borrar Tarea
-            </Button>
-          </div>
-        )}
+              <Trash2 size={18} />
+            </button>
+          ) : undefined
+        }
+      >
         {task ? (
           <>
             {activeTab === 'details' && (

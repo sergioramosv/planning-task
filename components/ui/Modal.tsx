@@ -11,9 +11,10 @@ interface ModalProps {
   title: string
   children: ReactNode
   className?: string
+  headerActions?: ReactNode
 }
 
-export default function Modal({ isOpen, onClose, title, children, className }: ModalProps) {
+export default function Modal({ isOpen, onClose, title, children, className, headerActions }: ModalProps) {
   if (!isOpen) return null
 
   return (
@@ -26,13 +27,16 @@ export default function Modal({ isOpen, onClose, title, children, className }: M
         >
           <div className={styles.header}>
             <h2 className={styles.title}>{title}</h2>
-            <button
-              onClick={onClose}
-              className={styles.closeButton}
-              aria-label="Close modal"
-            >
-              <X size={20} />
-            </button>
+            <div className={styles.headerActions}>
+              {headerActions}
+              <button
+                onClick={onClose}
+                className={styles.closeButton}
+                aria-label="Close modal"
+              >
+                <X size={20} />
+              </button>
+            </div>
           </div>
           <div className={styles.body}>{children}</div>
         </div>

@@ -50,8 +50,10 @@ export default function ProjectDetailsPage() {
   const [isBugModalOpen, setIsBugModalOpen] = useState(false)
   const [isProposalModalOpen, setIsProposalModalOpen] = useState(false)
   const [isDeleteBugConfirmOpen, setIsDeleteBugConfirmOpen] = useState(false)
+  const [isDeleteTaskConfirmOpen, setIsDeleteTaskConfirmOpen] = useState(false)
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [bugToDelete, setBugToDelete] = useState<string | null>(null)
+  const [taskToDelete, setTaskToDelete] = useState<string | null>(null)
   const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined)
   const [viewMode, setViewMode] = useState<'table' | 'kanban'>('table')
   const [sortColumn, setSortColumn] = useState<'id' | 'title' | 'status' | 'priority' | 'developer' | 'startDate'>('priority')
@@ -309,9 +311,16 @@ export default function ProjectDetailsPage() {
     }
   }
 
+  const handleDeleteTaskClick = (taskId: string) => {
+    setTaskToDelete(taskId)
+    setIsDeleteTaskConfirmOpen(true)
+  }
+
   const handleDeleteTask = async (taskId: string) => {
     try {
       await deleteTask(taskId)
+      setIsDeleteTaskConfirmOpen(false)
+      setTaskToDelete(null)
     } catch (error) {
       console.error('Error deleting task:', error)
     }
@@ -606,7 +615,7 @@ export default function ProjectDetailsPage() {
                             <Button size="sm" variant="secondary" onClick={() => handleEditTask(task)}>Editar</Button>
                           )}
                           {canDeleteTask && (
-                            <Button size="sm" variant="danger" onClick={() => handleDeleteTask(task.id)}>Borrar</Button>
+                            <Button size="sm" variant="danger" onClick={() => handleDeleteTaskClick(task.id)}>Borrar</Button>
                           )}
                         </td>
                       </tr>
@@ -707,6 +716,20 @@ export default function ProjectDetailsPage() {
         onConfirm={handleConfirmDeleteBug}
         title="Eliminar Bug"
         message="¿Estás seguro de que deseas eliminar este bug? Esta acción no se puede deshacer."
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        variant="danger"
+      />
+
+      <ConfirmationModal
+        isOpen={isDeleteTaskConfirmOpen}
+        onClose={() => {
+          setIsDeleteTaskConfirmOpen(false)
+          setTaskToDelete(null)
+        }}
+        onConfirm={() => taskToDelete && handleDeleteTask(taskToDelete)}
+        title="Eliminar Tarea"
+        message="¿Estás seguro de que deseas eliminar esta tarea? Esta acción no se puede deshacer."
         confirmText="Eliminar"
         cancelText="Cancelar"
         variant="danger"
