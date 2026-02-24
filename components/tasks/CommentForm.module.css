@@ -53,7 +53,7 @@
   padding: var(--spacing-3);
   border: 1px solid var(--color-neutral-300);
   border-radius: var(--radius-sm);
-  background-color: white;
+  background-color: var(--bg-elevated);
   font-family: inherit;
   font-size: var(--text-sm);
   color: var(--color-neutral-900);
@@ -83,7 +83,7 @@
   top: 100%;
   left: var(--spacing-3);
   right: var(--spacing-3);
-  background-color: white;
+  background-color: var(--bg-elevated);
   border: 1px solid var(--color-neutral-300);
   border-top: none;
   border-radius: 0 0 var(--radius-sm) var(--radius-sm);

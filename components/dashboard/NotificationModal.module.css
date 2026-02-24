@@ -72,7 +72,7 @@
 }
 
 .notificationRead {
-  background-color: white;
+  background-color: var(--bg-elevated);
   border-color: var(--color-neutral-100);
 }
 

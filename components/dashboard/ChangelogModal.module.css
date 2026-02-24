@@ -85,7 +85,7 @@
   align-items: center;
   gap: var(--spacing-2);
   padding: var(--spacing-2) var(--spacing-3);
-  background-color: white;
+  background-color: var(--bg-elevated);
   border-left: 3px solid var(--color-primary-200);
   border-radius: 4px;
 }

@@ -34,7 +34,7 @@
 }
 
 .card {
-  background-color: white;
+  background-color: var(--bg-elevated);
   padding: var(--spacing-6);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);

@@ -51,7 +51,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-2) var(--spacing-3);
-  background-color: white;
+  background-color: var(--bg-elevated);
   border-radius: var(--radius-md);
   border: 1px solid var(--color-neutral-200);
   transition: all var(--transition-fast);
@@ -145,7 +145,7 @@
   max-height: 250px;
   overflow-y: auto;
   padding: var(--spacing-2);
-  background-color: white;
+  background-color: var(--bg-elevated);
   border: 1px solid var(--color-neutral-200);
   border-radius: var(--radius-md);
 }
