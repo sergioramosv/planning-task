@@ -5,6 +5,13 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.36.0] - 2026-02-24
+
+### Added
+- **Botón de eliminar en tarjetas de Kanban**: Las tarjetas de tareas en la vista Kanban ahora muestran un botón de eliminar (icono de papelera) que aparece al hacer hover sobre la tarjeta.
+- El botón de borrar previene la propagación del evento click para no abrir el modal de edición al eliminar.
+- Diseño mejorado del TaskCard con header separado para mejor organización visual.
+
 ## [1.35.1] - 2026-02-24
 
 ### Changed
