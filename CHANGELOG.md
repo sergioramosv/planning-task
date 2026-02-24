@@ -5,6 +5,14 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.35.0] - 2026-02-24
+
+### Changed
+- **Puntos de negocio ahora usan Fibonacci**: Los bizPoints cambiaron del rango 1-100 a la secuencia Fibonacci (1, 2, 3, 5, 8, 13, 21, 34) para mantener consistencia con los puntos de desarrollo y evitar valores arbitrarios como 10000.
+- TaskForm y ProposalForm ahora usan Select con opciones Fibonacci para bizPoints en lugar de Input numérico libre.
+- Validadores actualizados para restringir bizPoints a valores Fibonacci válidos.
+- Descripción en ChatService actualizada para reflejar el nuevo rango Fibonacci.
+
 ## [1.34.0] - 2026-02-24
 
 ### Added
