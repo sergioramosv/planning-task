@@ -349,7 +349,16 @@ export async function executeFunctionCall(
     case 'get_sprint':
       return AiTools.getSprint(args.sprintId, args.includeTasks)
     case 'create_sprint':
-      return AiTools.createSprint({ ...args, projectId: args.projectId || projectId }, uid)
+      return AiTools.createSprint(
+        {
+          name: args.name,
+          projectId: args.projectId || projectId,
+          startDate: args.startDate,
+          endDate: args.endDate,
+          status: args.status,
+        },
+        uid
+      )
     case 'update_sprint':
       return AiTools.updateSprint(args.sprintId, args)
 
