@@ -12,8 +12,8 @@ import { usePermissions } from '@/hooks/usePermissions'
 import Spinner from '@/components/ui/Spinner'
 import Button from '@/components/ui/Button'
 import { ArrowLeft, Plus, Calendar, MessageSquare } from 'lucide-react'
-import TaskForm from '@/components/tasks/TaskForm'
 import TaskModal from '@/components/tasks/TaskModal'
+import DraftPickerModal from '@/components/tasks/DraftPickerModal'
 import TaskActivityPanel from '@/components/tasks/TaskActivityPanel'
 import TaskKanban from '@/components/tasks/TaskKanban'
 import TaskTableFilters from '@/components/tasks/TaskTableFilters'
@@ -24,7 +24,8 @@ import BugModal from '@/components/bugs/BugModal'
 import BugsList from '@/components/bugs/BugsList'
 import ProposalModal from '@/components/proposals/ProposalModal'
 import ProposalsList from '@/components/proposals/ProposalsList'
-import { Task, TaskStatus } from '@/types'
+import { Task, TaskStatus, TaskDraft } from '@/types'
+import { useTaskDrafts } from '@/hooks/useTaskDrafts'
 import { TASK_STATUS_LABELS, TASK_STATUS_COLORS } from '@/lib/constants/taskStates'
 import { UserService } from '@/lib/services/user.service'
 import styles from './page.module.css'
@@ -55,12 +56,24 @@ export default function ProjectDetailsPage() {
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([])
   const [developers, setDevelopers] = useState<Array<{ id: string; name: string }>>([])
   const [loadingDevelopers, setLoadingDevelopers] = useState(true)
+  const { drafts, saveDraft, deleteDraft, hasDrafts } = useTaskDrafts(projectId)
+  const [isDraftPickerOpen, setIsDraftPickerOpen] = useState(false)
+  const [activeDraft, setActiveDraft] = useState<TaskDraft | null>(null)
   const [filters, setFilters] = useState({
     searchText: '',
     selectedDeveloper: '',
     selectedStatus: '',
     selectedSprint: '',
   })
+
+  // Auto-close draft picker when all drafts are deleted
+  useEffect(() => {
+    if (isDraftPickerOpen && drafts.length === 0) {
+      setIsDraftPickerOpen(false)
+      setActiveDraft(null)
+      setIsModalOpen(true)
+    }
+  }, [drafts.length, isDraftPickerOpen])
 
   // Initialize filtered tasks on load and apply filters
   useEffect(() => {
@@ -206,6 +219,10 @@ export default function ProjectDetailsPage() {
           }
         )
       }
+      if (!selectedTask && activeDraft) {
+        deleteDraft(activeDraft.id)
+        setActiveDraft(null)
+      }
       setIsModalOpen(false)
     } catch (error) {
       console.error('Error saving task:', error)
@@ -237,6 +254,43 @@ export default function ProjectDetailsPage() {
   const handleCloseModal = () => {
     setSelectedTask(undefined)
     setIsModalOpen(false)
+    setActiveDraft(null)
+  }
+
+  const handleAddTaskClick = () => {
+    setSelectedTask(undefined)
+    if (hasDrafts) {
+      setIsDraftPickerOpen(true)
+    } else {
+      setActiveDraft(null)
+      setIsModalOpen(true)
+    }
+  }
+
+  const handleSelectDraft = (draft: TaskDraft) => {
+    setActiveDraft(draft)
+    setIsDraftPickerOpen(false)
+    setIsModalOpen(true)
+  }
+
+  const handleCreateNewFromPicker = () => {
+    setActiveDraft(null)
+    setIsDraftPickerOpen(false)
+    setIsModalOpen(true)
+  }
+
+  const handleDeleteDraftFromPicker = (draftId: string) => {
+    deleteDraft(draftId)
+  }
+
+  const handleDraftSave = (formData: Record<string, any>) => {
+    const hasContent = formData.title?.trim() ||
+      formData.userStory?.who?.trim() ||
+      formData.userStory?.what?.trim() ||
+      formData.acceptanceCriteria?.some((c: string) => c?.trim())
+    if (hasContent) {
+      saveDraft(formData, activeDraft?.id)
+    }
   }
 
   const handleStatusChange = async (taskId: string, newStatus: TaskStatus) => {
@@ -439,7 +493,7 @@ export default function ProjectDetailsPage() {
                   <Calendar size={16} style={{ marginRight: '0.25rem' }} /> Ver Sprints
                 </Button>
                 {canCreateTask && (
-                  <Button size="sm" onClick={() => { setSelectedTask(undefined); setIsModalOpen(true); }}>
+                  <Button size="sm" onClick={handleAddTaskClick}>
                     <Plus size={16} style={{ marginRight: '0.25rem' }} /> Agregar Tarea
                   </Button>
                 )}
@@ -618,6 +672,17 @@ export default function ProjectDetailsPage() {
           uid,
           displayName: developers.find(d => d.id === uid)?.name || 'Usuario'
         })) : []}
+        initialFormData={activeDraft?.formData}
+        onDraftSave={handleDraftSave}
+      />
+
+      <DraftPickerModal
+        isOpen={isDraftPickerOpen}
+        onClose={() => setIsDraftPickerOpen(false)}
+        drafts={drafts}
+        onSelectDraft={handleSelectDraft}
+        onCreateNew={handleCreateNewFromPicker}
+        onDeleteDraft={handleDeleteDraftFromPicker}
       />
 
       <BugModal

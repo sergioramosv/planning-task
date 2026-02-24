@@ -9,11 +9,15 @@ import Select from '@/components/ui/Select'
 import { Task, Sprint, TaskAttachment } from '@/types'
 import { FIBONACCI_LABELS } from '@/lib/constants/fibonacciPoints'
 import { Plus, X, Upload, Paperclip, Download, Trash2 } from 'lucide-react'
-import { useState, useRef } from 'react'
+import { useState, useRef, forwardRef, useImperativeHandle } from 'react'
 import { useFileUpload } from '@/hooks/useFileUpload'
 import styles from './TaskForm.module.css'
 
 type TabId = 'general' | 'userStory' | 'implementation' | 'attachments'
+
+export interface TaskFormRef {
+  getFormValues: () => any
+}
 
 interface TaskFormProps {
   task?: Task
@@ -24,9 +28,10 @@ interface TaskFormProps {
   onCreateSprint?: () => void
   projectId?: string
   currentUserId?: string
+  initialFormData?: Record<string, any>
 }
 
-export default function TaskForm({
+const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(function TaskForm({
   task,
   sprints,
   developers,
@@ -35,7 +40,8 @@ export default function TaskForm({
   onCreateSprint,
   projectId,
   currentUserId,
-}: TaskFormProps) {
+  initialFormData,
+}, ref) {
   const [activeTab, setActiveTab] = useState<TabId>('general')
   const [pendingFiles, setPendingFiles] = useState<File[]>([])
   const [existingAttachments, setExistingAttachments] = useState<TaskAttachment[]>(
@@ -45,35 +51,65 @@ export default function TaskForm({
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { uploading, progress, uploadFiles, deleteFile } = useFileUpload()
 
+  const getDefaultValues = () => {
+    if (task) {
+      return {
+        title: task.title,
+        sprint: task.sprintId || '',
+        devPoints: String(task.devPoints),
+        bizPoints: task.bizPoints,
+        developer: task.developer,
+        coDeveloper: task.coDeveloper || '',
+        startDate: task.startDate,
+        endDate: task.endDate,
+        status: task.status,
+        acceptanceCriteria: task.acceptanceCriteria,
+        userStory: task.userStory,
+        implementationPlan: task.implementationPlan || undefined,
+      }
+    }
+    if (initialFormData) {
+      return {
+        title: initialFormData.title || '',
+        sprint: initialFormData.sprint || '',
+        status: initialFormData.status || 'to-do',
+        developer: initialFormData.developer || '',
+        coDeveloper: initialFormData.coDeveloper || '',
+        startDate: initialFormData.startDate || '',
+        endDate: initialFormData.endDate || '',
+        bizPoints: initialFormData.bizPoints || undefined,
+        devPoints: initialFormData.devPoints || undefined,
+        acceptanceCriteria: initialFormData.acceptanceCriteria?.length
+          ? initialFormData.acceptanceCriteria
+          : [''],
+        userStory: initialFormData.userStory || { who: '', what: '', why: '' },
+        implementationPlan: initialFormData.implementationPlan || undefined,
+      }
+    }
+    return {
+      sprint: '',
+      status: 'to-do',
+      coDeveloper: '',
+      acceptanceCriteria: [''],
+      userStory: { who: '', what: '', why: '' },
+    }
+  }
+
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
     reset,
+    getValues,
   } = useForm<any>({
     resolver: zodResolver(taskSchema),
-    defaultValues: task ? {
-      title: task.title,
-      sprint: task.sprintId || '',
-      devPoints: String(task.devPoints),
-      bizPoints: task.bizPoints,
-      developer: task.developer,
-      coDeveloper: task.coDeveloper || '',
-      startDate: task.startDate,
-      endDate: task.endDate,
-      status: task.status,
-      acceptanceCriteria: task.acceptanceCriteria,
-      userStory: task.userStory,
-      implementationPlan: task.implementationPlan || undefined,
-    } : {
-      sprint: '',
-      status: 'to-do',
-      coDeveloper: '',
-      acceptanceCriteria: [''],
-      userStory: { who: '', what: '', why: '' },
-    },
+    defaultValues: getDefaultValues(),
   })
+
+  useImperativeHandle(ref, () => ({
+    getFormValues: () => getValues(),
+  }))
 
   const { fields: criteriaFields, append: appendCriteria, remove: removeCriteria } = useFieldArray({
     control,
@@ -589,4 +625,6 @@ export default function TaskForm({
       </Button>
     </form>
   )
-}
+})
+
+export default TaskForm

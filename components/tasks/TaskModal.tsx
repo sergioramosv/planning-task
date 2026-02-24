@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Modal from '@/components/ui/Modal'
 import modalStyles from '@/components/ui/Modal.module.css'
-import TaskForm from './TaskForm'
+import TaskForm, { TaskFormRef } from './TaskForm'
 import SprintForm from '../sprints/SprintForm'
 import TaskActivityPanel from './TaskActivityPanel'
 import { Task, Sprint } from '@/types'
@@ -22,6 +22,8 @@ interface TaskModalProps {
   projectMembers?: Array<{ uid: string; displayName: string }>
   initialTab?: 'details' | 'activity'
   projectId?: string
+  initialFormData?: Record<string, any>
+  onDraftSave?: (data: Record<string, any>) => void
 }
 
 export default function TaskModal({
@@ -36,10 +38,13 @@ export default function TaskModal({
   projectMembers = [],
   initialTab = 'details',
   projectId,
+  initialFormData,
+  onDraftSave,
 }: TaskModalProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isSprintModalOpen, setIsSprintModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<'details' | 'activity'>(initialTab)
+  const taskFormRef = useRef<TaskFormRef>(null)
 
   useEffect(() => {
     if (isOpen) {
@@ -58,6 +63,14 @@ export default function TaskModal({
     }
   }
 
+  const handleClose = () => {
+    if (!task && onDraftSave && taskFormRef.current) {
+      const currentValues = taskFormRef.current.getFormValues()
+      onDraftSave(currentValues)
+    }
+    onClose()
+  }
+
   const handleCreateSprint = () => {
     setIsSprintModalOpen(true)
   }
@@ -73,7 +86,7 @@ export default function TaskModal({
     <>
       <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={handleClose}
         title={
           task
             ? activeTab === 'activity'
@@ -110,6 +123,7 @@ export default function TaskModal({
           </>
         ) : (
           <TaskForm
+            ref={taskFormRef}
             sprints={sprints}
             developers={developers}
             onSubmit={handleSubmit}
@@ -117,6 +131,7 @@ export default function TaskModal({
             onCreateSprint={handleCreateSprint}
             projectId={projectId}
             currentUserId={currentUser?.uid}
+            initialFormData={initialFormData}
           />
         )}
       </Modal>
