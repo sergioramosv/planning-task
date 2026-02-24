@@ -3,7 +3,7 @@ import { validateSession } from '@/lib/auth/validateSession'
 import { validateProjectAccess } from '@/lib/auth/validateProjectAccess'
 import { createChatModel, buildSystemPrompt, executeFunctionCall } from '@/lib/services/chat.service'
 import { getProject, listMembers } from '@/lib/services/ai-tools.service'
-import { trackRequest, isRateLimited } from '@/lib/services/quota-tracker'
+import { getAvailableModelConfig, trackModelRequest, getTotalQuotaStatus } from '@/lib/services/model-pool'
 import type { Content } from '@google/generative-ai'
 
 const MAX_FUNCTION_CALLS = 10
@@ -28,12 +28,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Se requiere message y projectId' }, { status: 400 })
   }
 
-  // 3. Check rate limits
-  const rateLimitCheck = isRateLimited()
-  if (rateLimitCheck.limited) {
+  // 3. Get available model from pool
+  const modelConfig = getAvailableModelConfig()
+  if (!modelConfig) {
+    const totalStatus = getTotalQuotaStatus()
     return NextResponse.json(
       {
-        error: `Límite de cuota alcanzado. ${rateLimitCheck.reason}. Intenta de nuevo en ${rateLimitCheck.resetIn} segundos.`,
+        error: `Todos los modelos han alcanzado su límite. ${totalStatus.activeConfigs}/${totalStatus.totalConfigs} configuraciones disponibles. Intenta más tarde.`,
       },
       { status: 429 }
     )
@@ -47,17 +48,21 @@ export async function POST(request: NextRequest) {
 
   try {
     // Track this request
-    const quotaStatus = trackRequest()
-    // 4. Load context
+    const quotaStatus = trackModelRequest(modelConfig.id)
+    if (!quotaStatus) {
+      return NextResponse.json({ error: 'Error tracking quota' }, { status: 500 })
+    }
+
+    // 6. Load context
     const project = await getProject(projectId)
     if (!project) {
       return NextResponse.json({ error: 'Proyecto no encontrado' }, { status: 404 })
     }
     const members = await listMembers(projectId)
 
-    // 5. Build system prompt and model
+    // 7. Build system prompt and model with selected config
     const systemPrompt = buildSystemPrompt(project, sessionUser.displayName, members)
-    const model = createChatModel()
+    const model = createChatModel(modelConfig.apiKey, modelConfig.modelName)
 
     // 6. Build conversation history
     const chatHistory: Content[] = []
@@ -140,17 +145,22 @@ export async function POST(request: NextRequest) {
       },
     })
 
+    // Get total quota status across all configs
+    const totalStatus = getTotalQuotaStatus()
+
     return new Response(stream, {
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',
         'Cache-Control': 'no-cache',
         'Transfer-Encoding': 'chunked',
-        'X-RateLimit-RPM-Remaining': quotaStatus.rpm.remaining.toString(),
-        'X-RateLimit-RPM-Limit': quotaStatus.rpm.limit.toString(),
+        'X-RateLimit-RPM-Remaining': totalStatus.rpm.remaining.toString(),
+        'X-RateLimit-RPM-Limit': totalStatus.rpm.limit.toString(),
         'X-RateLimit-RPM-Reset': quotaStatus.rpm.resetIn.toString(),
-        'X-RateLimit-RPD-Remaining': quotaStatus.rpd.remaining.toString(),
-        'X-RateLimit-RPD-Limit': quotaStatus.rpd.limit.toString(),
+        'X-RateLimit-RPD-Remaining': totalStatus.rpd.remaining.toString(),
+        'X-RateLimit-RPD-Limit': totalStatus.rpd.limit.toString(),
         'X-RateLimit-RPD-Reset': quotaStatus.rpd.resetIn.toString(),
+        'X-Model-Used': quotaStatus.modelName,
+        'X-Model-Config': quotaStatus.configId,
       },
     })
   } catch (error: any) {

@@ -65,12 +65,12 @@ export function useChat(projectId: string) {
         signal: abortRef.current.signal,
       })
 
-      // Capture quota info from headers
+      // Capture quota info from headers (now showing total across all 9 model configs)
       const rpmRemaining = parseInt(response.headers.get('X-RateLimit-RPM-Remaining') || '0')
-      const rpmLimit = parseInt(response.headers.get('X-RateLimit-RPM-Limit') || '10')
+      const rpmLimit = parseInt(response.headers.get('X-RateLimit-RPM-Limit') || '90')
       const rpmReset = parseInt(response.headers.get('X-RateLimit-RPM-Reset') || '0')
       const rpdRemaining = parseInt(response.headers.get('X-RateLimit-RPD-Remaining') || '0')
-      const rpdLimit = parseInt(response.headers.get('X-RateLimit-RPD-Limit') || '250')
+      const rpdLimit = parseInt(response.headers.get('X-RateLimit-RPD-Limit') || '4050')
       const rpdReset = parseInt(response.headers.get('X-RateLimit-RPD-Reset') || '0')
 
       setQuota({

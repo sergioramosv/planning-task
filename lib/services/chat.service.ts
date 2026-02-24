@@ -449,13 +449,16 @@ export async function executeFunctionCall(
 // CREATE CHAT MODEL (Gemini API)
 // ============================================================
 
-export function createChatModel() {
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
+export function createChatModel(apiKey?: string, modelName?: string) {
+  const key = apiKey || process.env.GEMINI_API_KEY || ''
+  const model = modelName || 'gemini-2.5-flash'
 
-  const model = genAI.getGenerativeModel({
-    model: 'gemini-2.5-flash',
+  const genAI = new GoogleGenerativeAI(key)
+
+  const geminiModel = genAI.getGenerativeModel({
+    model,
     tools: [{ functionDeclarations: tools as any }],
   })
 
-  return model
+  return geminiModel
 }
