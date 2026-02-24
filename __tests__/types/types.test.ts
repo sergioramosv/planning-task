@@ -49,13 +49,12 @@ describe('Type Definitions', () => {
   })
 
   describe('Task Type', () => {
-    it('should create a valid task object', () => {
+    it('should create a valid task object with all fields', () => {
       const task: Task = {
         id: 'task1',
         title: 'Test Task',
         projectId: 'proj1',
         sprintId: 'sprint1',
-        epic: 'Features',
         acceptanceCriteria: ['Should work', 'Should be fast'],
         userStory: {
           who: 'As a user',
@@ -63,6 +62,7 @@ describe('Type Definitions', () => {
           why: 'To achieve',
         },
         developer: 'user1',
+        coDeveloper: 'user2',
         startDate: '2024-02-01',
         endDate: '2024-02-05',
         bizPoints: 50,
@@ -77,6 +77,30 @@ describe('Type Definitions', () => {
       expect(task.id).toBe('task1')
       expect(task.title).toBe('Test Task')
       expect(task.priority).toBe(10)
+      expect(task.coDeveloper).toBe('user2')
+    })
+
+    it('should allow optional fields to be undefined', () => {
+      const task: Task = {
+        id: 'task2',
+        title: 'Minimal Task',
+        projectId: 'proj1',
+        acceptanceCriteria: ['Criterion 1'],
+        userStory: { who: 'User', what: 'Action', why: 'Reason' },
+        bizPoints: 10,
+        devPoints: 3,
+        priority: 3.3,
+        status: 'to-do',
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        createdBy: 'user1',
+        history: {},
+      }
+      expect(task.developer).toBeUndefined()
+      expect(task.coDeveloper).toBeUndefined()
+      expect(task.startDate).toBeUndefined()
+      expect(task.endDate).toBeUndefined()
+      expect(task.sprintId).toBeUndefined()
     })
 
     it('should support all task statuses', () => {
@@ -116,13 +140,8 @@ describe('Type Definitions', () => {
         id: 'task1',
         title: 'Test',
         projectId: 'proj1',
-        sprintId: 'sprint1',
-        epic: 'Features',
         acceptanceCriteria: [],
         userStory: { who: '', what: '', why: '' },
-        developer: 'dev1',
-        startDate: '2024-02-01',
-        endDate: '2024-02-05',
         bizPoints: 50,
         devPoints: 5,
         priority: 10,

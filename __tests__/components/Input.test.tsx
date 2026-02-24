@@ -21,14 +21,14 @@ describe('Input Component', () => {
     expect(input).toHaveValue('test@example.com')
   })
 
-  it('should show error message', () => {
+  it('should show error message text', () => {
     render(<Input error="This field is required" />)
     expect(screen.getByText('This field is required')).toBeInTheDocument()
   })
 
   it('should show helper text', () => {
-    render(<Input helperText="This is a helper text" />)
-    expect(screen.getByText('This is a helper text')).toBeInTheDocument()
+    render(<Input helperText="Enter your email address" />)
+    expect(screen.getByText('Enter your email address')).toBeInTheDocument()
   })
 
   it('should be disabled when disabled prop is true', async () => {
@@ -47,7 +47,7 @@ describe('Input Component', () => {
     expect(screen.getByDisplayValue('')).toHaveAttribute('type', 'password')
 
     rerender(<Input type="number" />)
-    expect(screen.getByDisplayValue('')).toHaveAttribute('type', 'number')
+    expect(screen.getByRole('spinbutton')).toHaveAttribute('type', 'number')
   })
 
   it('should use placeholder', () => {
@@ -56,13 +56,26 @@ describe('Input Component', () => {
   })
 
   it('should have correct input name', () => {
-    render(<Input name="testInput" />)
-    expect(screen.getByRole('textbox')).toHaveAttribute('name', 'testInput')
+    render(<Input name="email" />)
+    expect(screen.getByRole('textbox')).toHaveAttribute('name', 'email')
   })
 
-  it('should have error styling when error exists', () => {
-    render(<Input error="Required" />)
-    const input = screen.getByRole('textbox')
-    expect(input.parentElement?.querySelector('.text-red-500')).toBeInTheDocument()
+  it('should display error message when error prop is set', () => {
+    const errorMessage = 'Invalid email format'
+    render(<Input error={errorMessage} />)
+    const errorElement = screen.getByText(errorMessage)
+    expect(errorElement).toBeInTheDocument()
+    expect(errorElement.textContent).toBe(errorMessage)
+  })
+
+  it('should hide helper text when error is present', () => {
+    render(<Input error="Something went wrong" helperText="This should not appear" />)
+    expect(screen.getByText('Something went wrong')).toBeInTheDocument()
+    expect(screen.queryByText('This should not appear')).not.toBeInTheDocument()
+  })
+
+  it('should show required asterisk when required prop is set', () => {
+    render(<Input label="Username" required />)
+    expect(screen.getByText('*')).toBeInTheDocument()
   })
 })

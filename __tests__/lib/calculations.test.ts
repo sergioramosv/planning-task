@@ -111,5 +111,17 @@ describe('Calculations', () => {
       expect(metrics['dev1'].load).toBe(3)
       expect(metrics['dev2'].load).toBe(5)
     })
+
+    it('should skip tasks without developer', () => {
+      const tasks: Task[] = [
+        { developer: 'dev1', status: 'done', devPoints: 5 } as Task,
+        { status: 'to-do', devPoints: 3 } as Task,
+        { developer: undefined, status: 'to-do', devPoints: 8 } as Task,
+      ]
+      const metrics = getDeveloperMetrics(tasks)
+      expect(Object.keys(metrics)).toHaveLength(1)
+      expect(metrics['dev1']).toBeDefined()
+      expect(metrics['dev1'].completed).toBe(1)
+    })
   })
 })

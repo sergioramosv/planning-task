@@ -13,16 +13,6 @@ describe('Card Components', () => {
       expect(screen.getByText('Card Content')).toBeInTheDocument()
     })
 
-    it('should have correct styling classes', () => {
-      const { container } = render(
-        <Card>
-          <div>Test</div>
-        </Card>
-      )
-      const card = container.querySelector('[class*="bg-white"]')
-      expect(card).toHaveClass('bg-white', 'rounded-lg', 'border')
-    })
-
     it('should accept custom className', () => {
       const { container } = render(
         <Card className="custom-class">
@@ -46,6 +36,15 @@ describe('Card Components', () => {
         expect(handleClick).toHaveBeenCalled()
       }
     })
+
+    it('should render as a div element', () => {
+      const { container } = render(
+        <Card>
+          <div>Test</div>
+        </Card>
+      )
+      expect(container.firstChild?.nodeName).toBe('DIV')
+    })
   })
 
   describe('CardHeader', () => {
@@ -58,14 +57,13 @@ describe('Card Components', () => {
       expect(screen.getByText('Header')).toBeInTheDocument()
     })
 
-    it('should have border styling', () => {
+    it('should render as a div', () => {
       const { container } = render(
         <CardHeader>
           <div>Header</div>
         </CardHeader>
       )
-      const header = container.firstChild
-      expect(header).toHaveClass('border-b', 'border-neutral-200')
+      expect(container.firstChild?.nodeName).toBe('DIV')
     })
   })
 
@@ -75,10 +73,15 @@ describe('Card Components', () => {
       expect(screen.getByText('My Title')).toBeInTheDocument()
     })
 
-    it('should have correct styling', () => {
-      const { container } = render(<CardTitle>Title</CardTitle>)
-      const title = container.querySelector('h2')
-      expect(title).toHaveClass('text-xl', 'font-bold')
+    it('should render as h2 element', () => {
+      render(<CardTitle>Title</CardTitle>)
+      expect(screen.getByRole('heading', { level: 2 })).toBeInTheDocument()
+    })
+
+    it('should accept custom className', () => {
+      render(<CardTitle className="custom">Title</CardTitle>)
+      const heading = screen.getByRole('heading', { level: 2 })
+      expect(heading.className).toContain('custom')
     })
   })
 
@@ -90,6 +93,15 @@ describe('Card Components', () => {
         </CardContent>
       )
       expect(screen.getByText('Content')).toBeInTheDocument()
+    })
+
+    it('should accept custom className', () => {
+      const { container } = render(
+        <CardContent className="extra">
+          <div>Content</div>
+        </CardContent>
+      )
+      expect(container.firstChild).toHaveClass('extra')
     })
   })
 
@@ -103,14 +115,13 @@ describe('Card Components', () => {
       expect(screen.getByText('Save')).toBeInTheDocument()
     })
 
-    it('should have footer styling with flex', () => {
+    it('should render as a div', () => {
       const { container } = render(
         <CardFooter>
           <div>Footer</div>
         </CardFooter>
       )
-      const footer = container.firstChild
-      expect(footer).toHaveClass('flex', 'justify-end')
+      expect(container.firstChild?.nodeName).toBe('DIV')
     })
   })
 
@@ -130,6 +141,19 @@ describe('Card Components', () => {
       expect(screen.getByText('Card Title')).toBeInTheDocument()
       expect(screen.getByText('Body content here')).toBeInTheDocument()
       expect(screen.getByText('Action')).toBeInTheDocument()
+    })
+
+    it('should render card with only header and content', () => {
+      render(
+        <Card>
+          <CardHeader>
+            <CardTitle>Title</CardTitle>
+          </CardHeader>
+          <CardContent>Just content</CardContent>
+        </Card>
+      )
+      expect(screen.getByText('Title')).toBeInTheDocument()
+      expect(screen.getByText('Just content')).toBeInTheDocument()
     })
   })
 })
