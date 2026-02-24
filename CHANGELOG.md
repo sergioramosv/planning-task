@@ -5,6 +5,15 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.31.0] - 2026-02-24
+
+### Added
+- Modo oscuro/claro con toggle de Sol/Luna en el Header (a la izquierda de invitaciones).
+- Hook `useTheme` con persistencia en localStorage y respeto a preferencia del sistema.
+- Script de inicialización en layout.tsx para evitar flash de tema incorrecto.
+- Variables CSS semánticas para temas (`--bg-primary`, `--bg-elevated`, `--text-primary`, etc.) con overrides en `[data-theme="dark"]`.
+- Soporte dark mode en todos los CSS modules: colores hardcodeados reemplazados por variables.
+
 ## [1.30.5] - 2026-02-24
 
 ### Fixed
