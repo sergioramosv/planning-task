@@ -5,6 +5,17 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.37.0] - 2026-02-25
+
+### Added
+- **Modal de confirmación para eliminar tareas**: Reemplazado el alert() nativo por un ConfirmationModal profesional tanto en el modal de edición como en la vista de tabla.
+- **Botón de eliminar en header del modal**: El botón de borrar ahora aparece como un icono de papelera en el header del modal de edición, junto al botón de cerrar, en lugar de ocupar espacio en el body.
+- Prop `headerActions` en componente Modal para permitir botones adicionales en el header junto al botón de cerrar.
+
+### Changed
+- Mejorada la UX de eliminación de tareas con confirmación modal consistente en todas las vistas.
+- El botón de eliminar en el header tiene hover effect con fondo rojo suave para mejor feedback visual.
+
 ## [1.36.0] - 2026-02-24
 
 ### Added
