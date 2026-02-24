@@ -120,11 +120,11 @@ export default function CalendarPage() {
 
   // Map to events
   useEffect(() => {
-    const taskEvents: CalendarEvent[] = allTasks.map((task) => ({
+    const taskEvents: CalendarEvent[] = allTasks.filter((task) => task.startDate).map((task) => ({
       id: task.id,
       title: `[Tarea] ${task.title}`,
-      start: new Date(task.startDate),
-      end: task.endDate ? new Date(task.endDate) : new Date(task.startDate),
+      start: new Date(task.startDate!),
+      end: task.endDate ? new Date(task.endDate) : new Date(task.startDate!),
       allDay: true, // Tasks sort of span the whole day usually
       resourceId: task.id,
       type: 'task',

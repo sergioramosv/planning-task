@@ -39,6 +39,7 @@ export const getDeveloperMetrics = (tasks: Task[]) => {
   const developerMap: Record<string, { load: number; completed: number; pending: number }> = {}
 
   tasks.forEach(task => {
+    if (!task.developer) return
     if (!developerMap[task.developer]) {
       developerMap[task.developer] = { load: 0, completed: 0, pending: 0 }
     }

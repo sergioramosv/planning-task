@@ -113,7 +113,7 @@ export default function TaskKanban({
               >
                 <TaskCard
                   task={task}
-                  developerName={getDeveloperName(task.developer)}
+                  developerName={task.developer ? getDeveloperName(task.developer) : undefined}
                   coDeveloperName={task.coDeveloper ? getDeveloperName(task.coDeveloper) : undefined}
                   sprintName={getSprintName(task.sprintId)}
                 />

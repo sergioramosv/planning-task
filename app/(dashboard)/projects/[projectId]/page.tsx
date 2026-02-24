@@ -167,12 +167,12 @@ export default function ProjectDetailsPage() {
         // Update existing task
         await updateTask(selectedTask.id, {
           title: data.title,
-          sprintId: data.sprint || undefined,
-          developer: data.developer,
-          coDeveloper: data.coDeveloper || undefined,
+          ...(data.sprint ? { sprintId: data.sprint } : { sprintId: null }),
+          ...(data.developer ? { developer: data.developer } : { developer: null }),
+          ...(data.coDeveloper ? { coDeveloper: data.coDeveloper } : { coDeveloper: null }),
           status: data.status,
-          startDate: data.startDate,
-          endDate: data.endDate,
+          ...(data.startDate ? { startDate: data.startDate } : { startDate: null }),
+          ...(data.endDate ? { endDate: data.endDate } : { endDate: null }),
           bizPoints: data.bizPoints,
           devPoints: data.devPoints,
           acceptanceCriteria: data.acceptanceCriteria,
@@ -183,12 +183,12 @@ export default function ProjectDetailsPage() {
         await createTask(
           {
             title: data.title,
-            sprintId: data.sprint || undefined,
-            developer: data.developer,
-            coDeveloper: data.coDeveloper || undefined,
+            ...(data.sprint ? { sprintId: data.sprint } : {}),
+            ...(data.developer ? { developer: data.developer } : {}),
+            ...(data.coDeveloper ? { coDeveloper: data.coDeveloper } : {}),
             status: data.status,
-            startDate: data.startDate,
-            endDate: data.endDate,
+            ...(data.startDate ? { startDate: data.startDate } : {}),
+            ...(data.endDate ? { endDate: data.endDate } : {}),
             bizPoints: data.bizPoints,
             devPoints: data.devPoints,
             acceptanceCriteria: data.acceptanceCriteria,
@@ -530,10 +530,10 @@ export default function ProjectDetailsPage() {
                           </span>
                         </td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-primary-600)' }}>{task.priority}</td>
-                        <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{getDeveloperName(task.developer)}</td>
+                        <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{task.developer ? getDeveloperName(task.developer) : '-'}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{task.coDeveloper ? getDeveloperName(task.coDeveloper) : '-'}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{getSprintName(task.sprintId)}</td>
-                        <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{task.startDate}</td>
+                        <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{task.startDate || '-'}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-600)' }}>{task.endDate || '-'}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', textAlign: 'center', display: 'flex', gap: 'var(--spacing-2)', justifyContent: 'center' }}>
                           <Button size="sm" variant="secondary" onClick={() => { setSelectedTask(task); setModalTab('activity'); setIsModalOpen(true); }}>

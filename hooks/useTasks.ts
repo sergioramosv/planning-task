@@ -57,7 +57,7 @@ export function useTasks(projectId: string | null, sprintId?: string | null, fil
 
     if (filters) {
       if (filters.developers.length > 0) {
-        result = result.filter(t => filters.developers.includes(t.developer))
+        result = result.filter(t => t.developer && filters.developers.includes(t.developer))
       }
       if (filters.statuses.length > 0) {
         result = result.filter(t => filters.statuses.includes(t.status))
@@ -93,7 +93,7 @@ export function useTasks(projectId: string | null, sprintId?: string | null, fil
 
         // Send notification to assigned developer
         try {
-          if (options?.projectName && options?.creatorName) {
+          if (options?.projectName && options?.creatorName && taskData.developer) {
             await NotificationService.notifyTaskAssignment(
               taskData.developer,
               taskData.title,

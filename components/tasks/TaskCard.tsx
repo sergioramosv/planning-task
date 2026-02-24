@@ -50,7 +50,7 @@ export default function TaskCard({ task, onClick, isDragging = false, developerN
         <div className={styles.section}>
           <div className={styles.row}>
             <span className={styles.label}>Developer:</span>
-            <span className={styles.value}>{developerName || task.developer}</span>
+            <span className={styles.value}>{developerName || task.developer || '-'}</span>
           </div>
           {(coDeveloperName || task.coDeveloper) && (
             <div className={styles.row}>
@@ -71,7 +71,7 @@ export default function TaskCard({ task, onClick, isDragging = false, developerN
         <div className={styles.section}>
           <div className={styles.row}>
             <span className={styles.label}>Inicio:</span>
-            <span className={styles.value}>{formatDate(task.startDate)}</span>
+            <span className={styles.value}>{task.startDate ? formatDate(task.startDate) : '-'}</span>
           </div>
           {task.endDate && (
             <div className={styles.row}>

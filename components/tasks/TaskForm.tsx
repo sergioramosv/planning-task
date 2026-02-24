@@ -121,12 +121,13 @@ export default function TaskForm({
           <div className={styles.formGrid}>
             <Select
               label="Developer"
-              required
               {...register('developer')}
-              error={errors.developer?.message as string}
               disabled={isLoading}
-              placeholder="Selecciona developer"
-              options={developers.map(d => ({ value: d.id, label: d.name }))}
+              placeholder="Sin asignar"
+              options={[
+                { value: '', label: 'Sin asignar' },
+                ...developers.map(d => ({ value: d.id, label: d.name })),
+              ]}
             />
 
             <Select
@@ -166,9 +167,7 @@ export default function TaskForm({
             <Input
               label="Fecha de Inicio"
               type="date"
-              required
               {...register('startDate')}
-              error={errors.startDate?.message as string}
               disabled={isLoading}
             />
 

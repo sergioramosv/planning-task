@@ -25,9 +25,9 @@ export interface Task {
   sprintId?: string
   acceptanceCriteria: string[]
   userStory: UserStory
-  developer: string
+  developer?: string
   coDeveloper?: string
-  startDate: string
+  startDate?: string
   endDate?: string
   bizPoints: number
   devPoints: FibonacciPoint

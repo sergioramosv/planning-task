@@ -33,9 +33,9 @@ export const taskSchema = z.object({
     what: z.string().min(5, 'Campo "Qué" requerido'),
     why: z.string().min(5, 'Campo "Para qué" requerido'),
   }),
-  developer: z.string().min(1, 'Debe seleccionar un developer'),
+  developer: z.string().optional(),
   coDeveloper: z.string().optional(),
-  startDate: z.string().min(1, 'Fecha de inicio requerida').regex(/^\d{4}-\d{2}-\d{2}$/, 'Formato de fecha inválido'),
+  startDate: z.string().optional(),
   endDate: z.string().optional(),
   bizPoints: z.number().min(1, 'Mínimo 1 punto de negocio').max(100, 'Máximo 100 puntos'),
   devPoints: z.enum(['1', '2', '3', '5', '8', '13']).refine(
