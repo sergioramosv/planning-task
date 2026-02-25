@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.47.2] - 2026-02-25
+
+### Fixed
+- **Corrección definitiva de edición de tareas**: Resueltos problemas con valores `undefined` en campos opcionales (developer, coDeveloper, startDate, endDate, userStory) que impedían que react-hook-form detectara cambios correctamente. Añadido `toast.error` para mostrar errores de validación visibles al usuario en lugar de fallar silenciosamente.
+
 ## [1.47.1] - 2026-02-25
 
 ### Fixed
