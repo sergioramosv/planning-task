@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { useProjects } from '@/hooks/useProjects'
@@ -11,7 +11,7 @@ import { useProposals } from '@/hooks/useProposals'
 import { usePermissions } from '@/hooks/usePermissions'
 import Spinner from '@/components/ui/Spinner'
 import Button from '@/components/ui/Button'
-import { ArrowLeft, Plus, Calendar, MessageSquare, Edit2, Trash2 } from 'lucide-react'
+import { ArrowLeft, Plus, Calendar, MessageSquare, Edit2, Trash2, ChevronDown, FolderOpen } from 'lucide-react'
 import TaskModal from '@/components/tasks/TaskModal'
 import DraftPickerModal from '@/components/tasks/DraftPickerModal'
 import TaskActivityPanel from '@/components/tasks/TaskActivityPanel'
@@ -28,6 +28,8 @@ import ChatPanel from '@/components/chat/ChatPanel'
 import ChatFab from '@/components/chat/ChatFab'
 import { Task, TaskStatus, TaskDraft } from '@/types'
 import { useTaskDrafts } from '@/hooks/useTaskDrafts'
+import { useLocalStorage } from '@/hooks/useLocalStorage'
+import toast, { Toaster } from 'react-hot-toast'
 import { TASK_STATUS_LABELS, TASK_STATUS_COLORS } from '@/lib/constants/taskStates'
 import { UserService } from '@/lib/services/user.service'
 import styles from './page.module.css'
@@ -55,7 +57,7 @@ export default function ProjectDetailsPage() {
   const [bugToDelete, setBugToDelete] = useState<string | null>(null)
   const [taskToDelete, setTaskToDelete] = useState<string | null>(null)
   const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined)
-  const [viewMode, setViewMode] = useState<'table' | 'kanban'>('table')
+  const [viewMode, setViewMode] = useLocalStorage<'table' | 'kanban'>('tasks-view-mode', 'table')
   const [sortColumn, setSortColumn] = useState<'id' | 'title' | 'status' | 'priority' | 'developer' | 'startDate'>('priority')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([])
@@ -64,6 +66,8 @@ export default function ProjectDetailsPage() {
   const { drafts, saveDraft, deleteDraft, hasDrafts } = useTaskDrafts(projectId)
   const [isDraftPickerOpen, setIsDraftPickerOpen] = useState(false)
   const [activeDraft, setActiveDraft] = useState<TaskDraft | null>(null)
+  const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false)
+  const projectDropdownRef = useRef<HTMLDivElement>(null)
   const [filters, setFilters] = useState({
     searchText: '',
     selectedDeveloper: '',
@@ -137,6 +141,19 @@ export default function ProjectDetailsPage() {
     setIsChatOpen(false)
   }, [projectId])
 
+  // Close project dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (projectDropdownRef.current && !projectDropdownRef.current.contains(e.target as Node)) {
+        setIsProjectDropdownOpen(false)
+      }
+    }
+    if (isProjectDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [isProjectDropdownOpen])
+
   if (authLoading || tasksLoading || sprintsLoading || loadingDevelopers || bugsLoading || proposalsLoading) {
     return (
       <div className={styles.loadingContainer}>
@@ -203,6 +220,7 @@ export default function ProjectDetailsPage() {
           ...(data.implementationPlan ? { implementationPlan: data.implementationPlan } : {}),
           ...(data.attachments ? { attachments: data.attachments } : {}),
         })
+        toast.success('Tarea actualizada correctamente')
       } else {
         // Create new task
         await createTask(
@@ -228,6 +246,7 @@ export default function ProjectDetailsPage() {
             creatorName: user.displayName || 'Usuario',
           }
         )
+        toast.success('Tarea creada correctamente')
       }
       if (!selectedTask && activeDraft) {
         deleteDraft(activeDraft.id)
@@ -236,6 +255,7 @@ export default function ProjectDetailsPage() {
       setIsModalOpen(false)
     } catch (error) {
       console.error('Error saving task:', error)
+      toast.error('Error al guardar la tarea')
     }
   }
 
@@ -250,8 +270,10 @@ export default function ProjectDetailsPage() {
         projectId,
         createdBy: user.uid,
       })
+      toast.success('Sprint creado correctamente')
     } catch (error) {
       console.error('Error creating sprint:', error)
+      toast.error('Error al crear el sprint')
     }
   }
 
@@ -306,8 +328,10 @@ export default function ProjectDetailsPage() {
   const handleStatusChange = async (taskId: string, newStatus: TaskStatus) => {
     try {
       await updateTask(taskId, { status: newStatus })
+      toast.success(`Estado cambiado a ${TASK_STATUS_LABELS[newStatus]}`)
     } catch (error) {
       console.error('Error updating task status:', error)
+      toast.error('Error al cambiar el estado')
     }
   }
 
@@ -321,8 +345,10 @@ export default function ProjectDetailsPage() {
       await deleteTask(taskId)
       setIsDeleteTaskConfirmOpen(false)
       setTaskToDelete(null)
+      toast.success('Tarea eliminada correctamente')
     } catch (error) {
       console.error('Error deleting task:', error)
+      toast.error('Error al eliminar la tarea')
     }
   }
 
@@ -372,8 +398,10 @@ export default function ProjectDetailsPage() {
         { projectName: project?.name, creatorName: user.displayName || 'Usuario' }
       )
       setIsBugModalOpen(false)
+      toast.success('Bug reportado correctamente')
     } catch (error) {
       console.error('Error saving bug:', error)
+      toast.error('Error al reportar el bug')
     }
   }
 
@@ -386,8 +414,10 @@ export default function ProjectDetailsPage() {
     if (!bugToDelete) return
     try {
       await deleteBug(bugToDelete)
+      toast.success('Bug eliminado correctamente')
     } catch (error) {
       console.error('Error deleting bug:', error)
+      toast.error('Error al eliminar el bug')
     } finally {
       setBugToDelete(null)
       setIsDeleteBugConfirmOpen(false)
@@ -397,8 +427,10 @@ export default function ProjectDetailsPage() {
   const handleBugStatusChange = async (bugId: string, newStatus: any) => {
     try {
       await updateBug(bugId, { status: newStatus })
+      toast.success('Estado del bug actualizado')
     } catch (error) {
       console.error('Error updating bug status:', error)
+      toast.error('Error al actualizar el estado del bug')
     }
   }
 
@@ -422,8 +454,10 @@ export default function ProjectDetailsPage() {
         createdByName: user.displayName || 'Usuario',
       })
       setIsProposalModalOpen(false)
+      toast.success('Propuesta creada correctamente')
     } catch (error) {
       console.error('Error saving proposal:', error)
+      toast.error('Error al crear la propuesta')
     }
   }
 
@@ -450,26 +484,75 @@ export default function ProjectDetailsPage() {
 
       // Marcar propuesta como aceptada
       await updateProposalStatus(proposalId, 'accepted')
+      toast.success('Propuesta aceptada y tarea creada')
     } catch (error) {
       console.error('Error accepting proposal:', error)
+      toast.error('Error al aceptar la propuesta')
     }
   }
 
   const handleProposalReject = async (proposalId: string) => {
     try {
       await updateProposalStatus(proposalId, 'rejected')
+      toast.success('Propuesta rechazada')
     } catch (error) {
       console.error('Error rejecting proposal:', error)
+      toast.error('Error al rechazar la propuesta')
     }
   }
 
   return (
     <div className={styles.container}>
+      <Toaster position="top-right" />
       <div className={styles.header}>
-        <Button variant="ghost" onClick={() => router.back()}>
+        <Button variant="ghost" onClick={() => router.push('/projects')}>
           <ArrowLeft size={20} />
         </Button>
-        <h1 className={styles.title}>{project?.name}</h1>
+        <div className={styles.projectSwitcher} ref={projectDropdownRef}>
+          <button
+            className={styles.projectSwitcherButton}
+            onClick={() => setIsProjectDropdownOpen(!isProjectDropdownOpen)}
+            title="Cambiar de proyecto"
+          >
+            <h1 className={styles.title}>{project?.name}</h1>
+            <ChevronDown size={16} className={isProjectDropdownOpen ? styles.chevronOpen : ''} />
+          </button>
+
+          {isProjectDropdownOpen && (
+            <div className={styles.projectDropdown}>
+              <div className={styles.projectDropdownHeader}>Mis proyectos</div>
+              {projects
+                .filter(p => p.status === 'active' || p.status === 'planned')
+                .map(p => (
+                <button
+                  key={p.id}
+                  className={`${styles.projectDropdownItem} ${p.id === projectId ? styles.projectDropdownItemActive : ''}`}
+                  onClick={() => {
+                    setIsProjectDropdownOpen(false)
+                    router.push(`/projects/${p.id}`)
+                  }}
+                >
+                  <FolderOpen size={14} />
+                  <div className={styles.projectDropdownItemInfo}>
+                    <span className={styles.projectDropdownItemName}>{p.name}</span>
+                    <span className={styles.projectDropdownItemStatus}>{p.status}</span>
+                  </div>
+                </button>
+              ))}
+              <div className={styles.projectDropdownDivider} />
+              <button
+                className={styles.projectDropdownItem}
+                onClick={() => {
+                  setIsProjectDropdownOpen(false)
+                  router.push('/projects')
+                }}
+              >
+                <FolderOpen size={14} />
+                <span className={styles.projectDropdownItemName}>Ver todos los proyectos</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <TabsBar
@@ -557,7 +640,7 @@ export default function ProjectDetailsPage() {
                         </td>
                       </tr>
                     ) : (
-                      filteredTasks
+                      [...filteredTasks]
                         .sort((a, b) => {
                           let aVal: any = a[sortColumn]
                           let bVal: any = b[sortColumn]
@@ -571,8 +654,8 @@ export default function ProjectDetailsPage() {
                           if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1
                           return 0
                         })
-                        .map(task => (
-                      <tr key={task.id} style={{ borderBottom: '1px solid var(--color-neutral-200)', cursor: 'pointer' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-neutral-50)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>
+                        .map((task, index) => (
+                      <tr key={task.id || index} style={{ borderBottom: '1px solid var(--color-neutral-200)', cursor: 'pointer' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-neutral-50)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-900)' }}>{task.id}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--text-sm)', color: 'var(--color-neutral-900)' }}>{task.title}</td>
                         <td style={{ padding: 'var(--spacing-4) var(--spacing-6)' }}>
@@ -651,6 +734,7 @@ export default function ProjectDetailsPage() {
                 developers={developers}
                 onEdit={handleEditTask}
                 onStatusChange={handleStatusChange}
+                onDelete={canDeleteTask ? handleDeleteTaskClick : undefined}
               />
             )}
               </>
