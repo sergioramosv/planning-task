@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { database } from '@/lib/firebase/config'
 import { ref, push, update, remove, onValue, query, orderByChild, equalTo } from 'firebase/database'
 import { Proposal, ProposalStatus } from '@/types/proposal'
+import { getUserFriendlyError } from '@/lib/utils/errorHandler'
 
 export function useProposals(projectId: string | null) {
   const [proposals, setProposals] = useState<Proposal[]>([])
@@ -37,7 +38,7 @@ export function useProposals(projectId: string | null) {
       },
       (err) => {
         console.error('Error fetching proposals:', err)
-        setError('Error al cargar propuestas')
+        setError(getUserFriendlyError(err, 'useProposals'))
         setLoading(false)
       }
     )
@@ -65,8 +66,7 @@ export function useProposals(projectId: string | null) {
 
         return proposalId!
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Error al crear propuesta'
-        setError(errorMessage)
+        setError(getUserFriendlyError(err, 'useProposals'))
         throw err
       }
     },
@@ -84,8 +84,7 @@ export function useProposals(projectId: string | null) {
           updatedAt: Date.now(),
         })
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Error al actualizar propuesta'
-        setError(errorMessage)
+        setError(getUserFriendlyError(err, 'useProposals'))
         throw err
       }
     },
@@ -100,8 +99,7 @@ export function useProposals(projectId: string | null) {
 
         await remove(ref(database, `proposals/${proposalId}`))
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Error al eliminar propuesta'
-        setError(errorMessage)
+        setError(getUserFriendlyError(err, 'useProposals'))
         throw err
       }
     },

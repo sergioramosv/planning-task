@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { database } from '@/lib/firebase/config'
 import { ref, onValue, push, update, remove } from 'firebase/database'
 import { Sprint } from '@/types'
+import { getUserFriendlyError } from '@/lib/utils/errorHandler'
 
 export function useSprints(projectId: string | null) {
   const [sprints, setSprints] = useState<Sprint[]>([])
@@ -31,13 +32,13 @@ export function useSprints(projectId: string | null) {
           }
           setError(null)
         } catch (err: any) {
-          setError(err.message)
+          setError(getUserFriendlyError(err, 'useSprints'))
         } finally {
           setLoading(false)
         }
       },
       error => {
-        setError(error.message)
+        setError(getUserFriendlyError(error, 'useSprints'))
         setLoading(false)
       }
     )
@@ -64,7 +65,7 @@ export function useSprints(projectId: string | null) {
         })
         return sprintId
       } catch (err: any) {
-        setError(err.message)
+        setError(getUserFriendlyError(err, 'useSprints'))
         throw err
       }
     },
@@ -75,7 +76,7 @@ export function useSprints(projectId: string | null) {
     try {
       await update(ref(database, `sprints/${sprintId}`), updates)
     } catch (err: any) {
-      setError(err.message)
+      setError(getUserFriendlyError(err, 'useSprints'))
       throw err
     }
   }, [])
@@ -84,7 +85,7 @@ export function useSprints(projectId: string | null) {
     try {
       await remove(ref(database, `sprints/${sprintId}`))
     } catch (err: any) {
-      setError(err.message)
+      setError(getUserFriendlyError(err, 'useSprints'))
       throw err
     }
   }, [])

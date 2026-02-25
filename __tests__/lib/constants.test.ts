@@ -43,7 +43,7 @@ describe('Constants', () => {
       expect(TASK_STATUS_LABELS['in-progress']).toBe('in-progress')
       expect(TASK_STATUS_LABELS['to-validate']).toBe('to-validate')
       expect(TASK_STATUS_LABELS['validated']).toBe('validated')
-      expect(TASK_STATUS_LABELS['done']).toBe('done')
+      expect(TASK_STATUS_LABELS['done']).toBe('done & validated')
     })
   })
 

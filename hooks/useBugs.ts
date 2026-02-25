@@ -3,6 +3,7 @@ import { database } from '@/lib/firebase/config'
 import { ref, push, update, remove, onValue, query, orderByChild, equalTo } from 'firebase/database'
 import { Bug, BugStatus, BugSeverity } from '@/types/bug'
 import { NotificationService } from '@/lib/services/notification.service'
+import { getUserFriendlyError } from '@/lib/utils/errorHandler'
 
 export function useBugs(projectId: string | null) {
   const [bugs, setBugs] = useState<Bug[]>([])
@@ -37,7 +38,7 @@ export function useBugs(projectId: string | null) {
       },
       (err) => {
         console.error('Error fetching bugs:', err)
-        setError('Error al cargar bugs')
+        setError(getUserFriendlyError(err, 'useBugs'))
         setLoading(false)
       }
     )
@@ -66,8 +67,7 @@ export function useBugs(projectId: string | null) {
 
         return bugId!
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Error al crear bug'
-        setError(errorMessage)
+        setError(getUserFriendlyError(err, 'useBugs'))
         throw err
       }
     },
@@ -85,8 +85,7 @@ export function useBugs(projectId: string | null) {
           updatedAt: Date.now(),
         })
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Error al actualizar bug'
-        setError(errorMessage)
+        setError(getUserFriendlyError(err, 'useBugs'))
         throw err
       }
     },
@@ -101,8 +100,7 @@ export function useBugs(projectId: string | null) {
 
         await remove(ref(database, `bugs/${bugId}`))
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Error al eliminar bug'
-        setError(errorMessage)
+        setError(getUserFriendlyError(err, 'useBugs'))
         throw err
       }
     },

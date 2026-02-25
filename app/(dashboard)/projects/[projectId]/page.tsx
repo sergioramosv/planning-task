@@ -204,15 +204,19 @@ export default function ProjectDetailsPage() {
       }
 
       if (selectedTask) {
+        if (!selectedTask.id) {
+          toast.error('Error: la tarea no tiene un ID válido')
+          return
+        }
         // Update existing task
         await updateTask(selectedTask.id, {
           title: data.title,
-          ...(data.sprint ? { sprintId: data.sprint } : { sprintId: null }),
-          ...(data.developer ? { developer: data.developer } : { developer: null }),
-          ...(data.coDeveloper ? { coDeveloper: data.coDeveloper } : { coDeveloper: null }),
+          sprintId: data.sprint || null,
+          developer: data.developer || null,
+          coDeveloper: data.coDeveloper || null,
           status: data.status,
-          ...(data.startDate ? { startDate: data.startDate } : { startDate: null }),
-          ...(data.endDate ? { endDate: data.endDate } : { endDate: null }),
+          startDate: data.startDate || null,
+          endDate: data.endDate || null,
           bizPoints: data.bizPoints,
           devPoints: data.devPoints,
           acceptanceCriteria: data.acceptanceCriteria,

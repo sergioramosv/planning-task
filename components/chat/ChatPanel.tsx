@@ -1,11 +1,12 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
-import { X, Trash2, Sparkles } from 'lucide-react'
+import { useRef, useEffect, useState } from 'react'
+import { X, Trash2, Sparkles, History, Plus } from 'lucide-react'
 import { useChat } from '@/hooks/useChat'
 import { usePermissions } from '@/hooks/usePermissions'
 import ChatMessage from './ChatMessage'
 import ChatInput from './ChatInput'
+import ChatHistory from './ChatHistory'
 import styles from './ChatPanel.module.css'
 import { Project } from '@/types/project'
 
@@ -16,96 +17,152 @@ interface ChatPanelProps {
 }
 
 export default function ChatPanel({ projectId, project, onClose }: ChatPanelProps) {
-  const { messages, isLoading, error, quota, sendMessage, clearChat } = useChat(projectId)
+  const {
+    messages,
+    isLoading,
+    error,
+    quota,
+    sendMessage,
+    clearChat,
+    conversationId,
+    conversations,
+    loadingHistory,
+    loadConversations,
+    loadConversation,
+    deleteConversation,
+  } = useChat(projectId)
   const { role } = usePermissions(project)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const [showHistory, setShowHistory] = useState(false)
 
-  // Only show quota bar to owners and admins
   const canSeeQuota = role === 'owner' || role === 'admin'
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
+  const handleNewChat = () => {
+    clearChat()
+    setShowHistory(false)
+  }
+
+  const handleSelectConversation = (convId: string) => {
+    loadConversation(convId)
+    setShowHistory(false)
+  }
+
   return (
     <div className={styles.panel} onClick={(e) => e.stopPropagation()}>
-      <div className={styles.header}>
-        <div className={styles.headerTitle}>
-          <Sparkles size={18} />
-          <span>Asistente IA</span>
-        </div>
-        <div className={styles.headerActions}>
-          {messages.length > 0 && (
-            <button
-              className={styles.headerButton}
-              onClick={clearChat}
-              title="Limpiar chat"
-              aria-label="Limpiar chat"
-            >
-              <Trash2 size={16} />
-            </button>
+      {showHistory ? (
+        <ChatHistory
+          conversations={conversations}
+          loading={loadingHistory}
+          activeConversationId={conversationId}
+          onLoad={loadConversations}
+          onSelect={handleSelectConversation}
+          onDelete={deleteConversation}
+          onNewChat={handleNewChat}
+          onBack={() => setShowHistory(false)}
+        />
+      ) : (
+        <>
+          <div className={styles.header}>
+            <div className={styles.headerTitle}>
+              <Sparkles size={18} />
+              <span>Asistente IA</span>
+            </div>
+            <div className={styles.headerActions}>
+              <button
+                className={styles.headerButton}
+                onClick={() => setShowHistory(true)}
+                title="Historial de conversaciones"
+                aria-label="Historial de conversaciones"
+              >
+                <History size={16} />
+              </button>
+              {messages.length > 0 && (
+                <>
+                  <button
+                    className={styles.headerButton}
+                    onClick={handleNewChat}
+                    title="Nueva conversación"
+                    aria-label="Nueva conversación"
+                  >
+                    <Plus size={16} />
+                  </button>
+                  <button
+                    className={styles.headerButton}
+                    onClick={clearChat}
+                    title="Limpiar chat"
+                    aria-label="Limpiar chat"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </>
+              )}
+              <button
+                className={styles.headerButton}
+                onClick={onClose}
+                title="Cerrar"
+                aria-label="Cerrar chat"
+              >
+                <X size={18} />
+              </button>
+            </div>
+          </div>
+
+          {quota && canSeeQuota && (
+            <div className={styles.quotaBar}>
+              <div className={styles.quotaItem}>
+                <span className={styles.quotaLabel}>Uso/min:</span>
+                <span className={styles.quotaValue}>
+                  {quota.rpm.used}/{quota.rpm.limit}
+                </span>
+                {quota.rpm.remaining <= 3 && (
+                  <span className={styles.quotaWarning}>
+                    (resetea en {quota.rpm.resetIn}s)
+                  </span>
+                )}
+              </div>
+              <div className={styles.quotaItem}>
+                <span className={styles.quotaLabel}>Uso/día:</span>
+                <span className={styles.quotaValue}>
+                  {quota.rpd.used}/{quota.rpd.limit}
+                </span>
+                {quota.rpd.remaining <= 100 && (
+                  <span className={styles.quotaWarning}>
+                    (resetea en {Math.floor(quota.rpd.resetIn / 3600)}h)
+                  </span>
+                )}
+              </div>
+            </div>
           )}
-          <button
-            className={styles.headerButton}
-            onClick={onClose}
-            title="Cerrar"
-            aria-label="Cerrar chat"
-          >
-            <X size={18} />
-          </button>
-        </div>
-      </div>
 
-      {quota && canSeeQuota && (
-        <div className={styles.quotaBar}>
-          <div className={styles.quotaItem}>
-            <span className={styles.quotaLabel}>Uso/min:</span>
-            <span className={styles.quotaValue}>
-              {quota.rpm.used}/{quota.rpm.limit}
-            </span>
-            {quota.rpm.remaining <= 3 && (
-              <span className={styles.quotaWarning}>
-                (resetea en {quota.rpm.resetIn}s)
-              </span>
+          <div className={styles.body}>
+            {error && (
+              <div className={styles.error} role="alert">
+                Error: {error}
+              </div>
             )}
-          </div>
-          <div className={styles.quotaItem}>
-            <span className={styles.quotaLabel}>Uso/día:</span>
-            <span className={styles.quotaValue}>
-              {quota.rpd.used}/{quota.rpd.limit}
-            </span>
-            {quota.rpd.remaining <= 100 && (
-              <span className={styles.quotaWarning}>
-                (resetea en {Math.floor(quota.rpd.resetIn / 3600)}h)
-              </span>
+            {messages.length === 0 ? (
+              <div className={styles.emptyState}>
+                <Sparkles size={32} />
+                <p>Pregúntame sobre tu proyecto</p>
+                <span>Puedo crear tareas, sprints, ver métricas y más</span>
+              </div>
+            ) : (
+              messages.map(msg => (
+                <ChatMessage key={msg.id} message={msg} />
+              ))
             )}
+            <div ref={messagesEndRef} />
           </div>
-        </div>
+
+          <div className={styles.footer}>
+            <ChatInput onSend={sendMessage} disabled={isLoading} />
+          </div>
+        </>
       )}
-
-      <div className={styles.body}>
-        {error && (
-          <div className={styles.error} role="alert">
-            Error: {error}
-          </div>
-        )}
-        {messages.length === 0 ? (
-          <div className={styles.emptyState}>
-            <Sparkles size={32} />
-            <p>Pregúntame sobre tu proyecto</p>
-            <span>Puedo crear tareas, sprints, ver métricas y más</span>
-          </div>
-        ) : (
-          messages.map(msg => (
-            <ChatMessage key={msg.id} message={msg} />
-          ))
-        )}
-        <div ref={messagesEndRef} />
-      </div>
-
-      <div className={styles.footer}>
-        <ChatInput onSend={sendMessage} disabled={isLoading} />
-      </div>
     </div>
   )
 }

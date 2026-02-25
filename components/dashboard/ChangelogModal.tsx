@@ -34,7 +34,7 @@ export default function ChangelogModal({ isOpen, onClose }: ChangelogModalProps)
           <div className={styles.errorContainer}>
             <AlertCircle className={styles.errorIcon} />
             <h3 className={styles.errorTitle}>Error al cargar el changelog</h3>
-            <p className={styles.errorMessage}>{error.message}</p>
+            <p className={styles.errorMessage}>No se pudo cargar el historial de cambios. Inténtalo de nuevo.</p>
           </div>
         ) : !exists || versions.length === 0 ? (
           <div className={styles.emptyState}>

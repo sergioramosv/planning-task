@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { database } from '@/lib/firebase/config'
 import { ref, onValue, push, update, remove, get } from 'firebase/database'
 import { Project } from '@/types'
+import { getUserFriendlyError } from '@/lib/utils/errorHandler'
 
 export function useProjects(userId: string | null) {
   const [projects, setProjects] = useState<Project[]>([])
@@ -31,13 +32,13 @@ export function useProjects(userId: string | null) {
           }
           setError(null)
         } catch (err: any) {
-          setError(err.message)
+          setError(getUserFriendlyError(err, 'useProjects'))
         } finally {
           setLoading(false)
         }
       },
       error => {
-        setError(error.message)
+        setError(getUserFriendlyError(error, 'useProjects'))
         setLoading(false)
       }
     )
@@ -60,7 +61,7 @@ export function useProjects(userId: string | null) {
         })
         return projectId
       } catch (err: any) {
-        setError(err.message)
+        setError(getUserFriendlyError(err, 'useProjects'))
         throw err
       }
     },
@@ -71,7 +72,7 @@ export function useProjects(userId: string | null) {
     try {
       await update(ref(database, `projects/${projectId}`), updates)
     } catch (err: any) {
-      setError(err.message)
+      setError(getUserFriendlyError(err, 'useProjects'))
       throw err
     }
   }, [])
@@ -114,7 +115,7 @@ export function useProjects(userId: string | null) {
       }
 
     } catch (err: any) {
-      setError(err.message)
+      setError(getUserFriendlyError(err, 'useProjects'))
       throw err
     }
   }, [])

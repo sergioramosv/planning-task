@@ -6,6 +6,7 @@ import { ref, onValue, push, update, remove } from 'firebase/database'
 import { Task, Filters } from '@/types'
 import { calculatePriority } from '@/lib/utils/calculations'
 import { NotificationService } from '@/lib/services/notification.service'
+import { getUserFriendlyError } from '@/lib/utils/errorHandler'
 
 export function useTasks(projectId: string | null, sprintId?: string | null, filters?: Filters) {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -26,7 +27,9 @@ export function useTasks(projectId: string | null, sprintId?: string | null, fil
         try {
           const data = snapshot.val()
           if (data) {
-            let projectTasks = Object.values(data).filter((t: any) => t.projectId === projectId)
+            let projectTasks = Object.entries(data)
+              .map(([key, value]: [string, any]) => ({ ...value, id: key }))
+              .filter((t: any) => t.projectId === projectId)
 
             if (sprintId) {
               projectTasks = projectTasks.filter((t: any) => t.sprintId === sprintId)
@@ -38,13 +41,13 @@ export function useTasks(projectId: string | null, sprintId?: string | null, fil
           }
           setError(null)
         } catch (err: any) {
-          setError(err.message)
+          setError(getUserFriendlyError(err, 'useTasks'))
         } finally {
           setLoading(false)
         }
       },
       error => {
-        setError(error.message)
+        setError(getUserFriendlyError(error, 'useTasks'))
         setLoading(false)
       }
     )
@@ -108,7 +111,7 @@ export function useTasks(projectId: string | null, sprintId?: string | null, fil
 
         return taskId
       } catch (err: any) {
-        setError(err.message)
+        setError(getUserFriendlyError(err, 'useTasks'))
         throw err
       }
     },
@@ -116,9 +119,13 @@ export function useTasks(projectId: string | null, sprintId?: string | null, fil
   )
 
   const updateTask = useCallback(async (taskId: string, updates: Partial<Task>) => {
+    if (!taskId) {
+      throw new Error('No se puede actualizar una tarea sin ID válido')
+    }
     try {
-      const updatedData = {
+      const updatedData: any = {
         ...updates,
+        id: taskId,
         updatedAt: Date.now(),
       }
       if (updates.bizPoints || updates.devPoints) {
@@ -130,18 +137,27 @@ export function useTasks(projectId: string | null, sprintId?: string | null, fil
           )
         }
       }
+      // Remove undefined values to prevent Firebase from setting keys to null
+      Object.keys(updatedData).forEach(key => {
+        if (updatedData[key] === undefined) {
+          delete updatedData[key]
+        }
+      })
       await update(ref(database, `tasks/${taskId}`), updatedData)
     } catch (err: any) {
-      setError(err.message)
+      setError(getUserFriendlyError(err, 'useTasks'))
       throw err
     }
   }, [tasks])
 
   const deleteTask = useCallback(async (taskId: string) => {
+    if (!taskId) {
+      throw new Error('No se puede eliminar una tarea sin ID válido')
+    }
     try {
       await remove(ref(database, `tasks/${taskId}`))
     } catch (err: any) {
-      setError(err.message)
+      setError(getUserFriendlyError(err, 'useTasks'))
       throw err
     }
   }, [])
@@ -154,7 +170,7 @@ export function useTasks(projectId: string | null, sprintId?: string | null, fil
           [historyId!]: historyEntry,
         })
       } catch (err: any) {
-        setError(err.message)
+        setError(getUserFriendlyError(err, 'useTasks'))
         throw err
       }
     },

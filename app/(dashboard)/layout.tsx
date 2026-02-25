@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import Spinner from '@/components/ui/Spinner'
 import Header from '@/components/dashboard/Header'
+import NotificationPush from '@/components/dashboard/NotificationPush'
 import UpdateNotification from '@/components/common/UpdateNotification'
 import styles from './layout.module.css'
 
@@ -39,6 +40,7 @@ export default function DashboardLayout({
   return (
     <div className={styles.wrapper}>
       <Header />
+      <NotificationPush />
       <main className={styles.main}>
         {children}
       </main>

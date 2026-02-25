@@ -100,7 +100,7 @@ export default function SprintsPage() {
       setIsSubmitting(false)
     } catch (error: any) {
       console.error('Error saving sprint:', error)
-      setSubmitError(error.message || 'Error al guardar el sprint')
+      setSubmitError('Error al guardar el sprint. Inténtalo de nuevo.')
       setIsSubmitting(false)
     }
   }

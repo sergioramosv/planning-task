@@ -59,6 +59,9 @@ export default function InvitationsModal({
                   <h3 className={styles.projectName}>{invitation.projectName}</h3>
                   <p className={styles.invitedBy}>
                     Invitado por <strong>{invitation.projectCreatorName}</strong>
+                    {invitation.role && invitation.role !== 'member' && (
+                      <> como <strong>{invitation.role === 'admin' ? 'Admin' : invitation.role === 'viewer' ? 'Visor' : invitation.role}</strong></>
+                    )}
                   </p>
                   <p className={styles.timestamp}>
                     {new Date(invitation.createdAt).toLocaleDateString('es-ES', {

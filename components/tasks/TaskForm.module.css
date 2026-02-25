@@ -102,6 +102,16 @@
   gap: var(--spacing-3);
 }
 
+.titleRow {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-2);
+}
+
+.titleInput {
+  flex: 1;
+}
+
 .criteriaContent {
   display: flex;
   flex-direction: column;

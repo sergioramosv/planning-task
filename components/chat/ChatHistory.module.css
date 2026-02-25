@@ -1,0 +1,214 @@
+/* ============================================================
+   CHAT HISTORY - Sidebar de historial
+   ============================================================ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-4);
+  border-bottom: 1px solid var(--border-primary);
+  flex-shrink: 0;
+}
+
+.backButton,
+.newButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.backButton:hover,
+.newButton:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.title {
+  flex: 1;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+}
+
+/* ============================================================
+   SEARCH
+   ============================================================ */
+
+.searchContainer {
+  position: relative;
+  padding: var(--spacing-2) var(--spacing-3);
+  flex-shrink: 0;
+}
+
+.searchIcon {
+  position: absolute;
+  left: calc(var(--spacing-3) + var(--spacing-2));
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  padding: var(--spacing-2);
+  padding-left: 30px;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  font-size: var(--text-xs);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color var(--transition-fast);
+  font-family: var(--font-family);
+}
+
+.searchInput::placeholder {
+  color: var(--text-faint);
+}
+
+.searchInput:focus {
+  border-color: var(--color-primary-500);
+}
+
+/* ============================================================
+   LIST
+   ============================================================ */
+
+.list {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-1) 0;
+}
+
+/* ============================================================
+   CONVERSATION ITEM
+   ============================================================ */
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  border-left: 3px solid transparent;
+}
+
+.item:hover {
+  background: var(--bg-hover);
+}
+
+.itemActive {
+  background: var(--bg-active);
+  border-left-color: var(--color-primary-500);
+}
+
+.itemContent {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.itemTitle {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemPreview {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  margin-top: 2px;
+}
+
+.itemDate {
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+.itemCount {
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+.deleteButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-md);
+  color: var(--text-faint);
+  cursor: pointer;
+  opacity: 0;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.item:hover .deleteButton {
+  opacity: 1;
+}
+
+.deleteButton:hover {
+  background: var(--color-danger-50);
+  color: var(--color-danger-500);
+}
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-8) var(--spacing-4);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.emptyState svg {
+  opacity: 0.4;
+}
+
+.emptyState span {
+  font-size: var(--text-sm);
+}

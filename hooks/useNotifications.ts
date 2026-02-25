@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { database } from '@/lib/firebase/config'
 import { ref, onValue, update, remove, push } from 'firebase/database'
 import { Notification } from '@/types'
+import { getUserFriendlyError } from '@/lib/utils/errorHandler'
 
 export function useNotifications(userId: string | null) {
   const [notifications, setNotifications] = useState<Notification[]>([])
@@ -34,13 +35,13 @@ export function useNotifications(userId: string | null) {
           }
           setError(null)
         } catch (err: any) {
-          setError(err.message)
+          setError(getUserFriendlyError(err, 'useNotifications'))
         } finally {
           setLoading(false)
         }
       },
       error => {
-        setError(error.message)
+        setError(getUserFriendlyError(error, 'useNotifications'))
         setLoading(false)
       }
     )
@@ -56,7 +57,7 @@ export function useNotifications(userId: string | null) {
         read: true,
       })
     } catch (err: any) {
-      setError(err.message)
+      setError(getUserFriendlyError(err, 'useNotifications'))
       throw err
     }
   }, [userId])
@@ -76,7 +77,7 @@ export function useNotifications(userId: string | null) {
         await update(ref(database), updates)
       }
     } catch (err: any) {
-      setError(err.message)
+      setError(getUserFriendlyError(err, 'useNotifications'))
       throw err
     }
   }, [userId, notifications])
@@ -87,7 +88,7 @@ export function useNotifications(userId: string | null) {
     try {
       await remove(ref(database, `notifications/${userId}`))
     } catch (err: any) {
-      setError(err.message)
+      setError(getUserFriendlyError(err, 'useNotifications'))
       throw err
     }
   }, [userId])
@@ -104,7 +105,7 @@ export function useNotifications(userId: string | null) {
         date: Date.now(),
       })
     } catch (err: any) {
-      setError(err.message)
+      setError(getUserFriendlyError(err, 'useNotifications'))
       throw err
     }
   }, [userId])

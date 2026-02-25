@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { database } from '@/lib/firebase/config'
-import { ref, onValue, push, update, remove } from 'firebase/database'
+import { ref, onValue, push, update, get } from 'firebase/database'
 import { Invitation } from '@/types/invitation'
 import { NotificationService } from '@/lib/services/notification.service'
 
@@ -71,7 +71,6 @@ export function useInvitations(userId: string | null) {
           )
         } catch (notifErr) {
           console.error('Error sending notification:', notifErr)
-          // Don't throw, invitation was created successfully
         }
 
         return invitationId
@@ -89,14 +88,26 @@ export function useInvitations(userId: string | null) {
         throw new Error('No user logged in')
       }
 
-      // Actualizar invitación a aceptada
+      // Read invitation to get the assigned role
+      const invSnap = await get(ref(database, `invitations/${invitationId}`))
+      const invitation = invSnap.val() as Invitation | null
+      const role = invitation?.role || 'member'
+
+      // Update invitation to accepted
       await update(ref(database, `invitations/${invitationId}`), {
         status: 'accepted',
         respondedAt: Date.now(),
       })
 
-      // Agregar usuario a miembros del proyecto
-      await update(ref(database, `projects/${projectId}/members`), { [userId]: true })
+      // Add user to project members with role as ProjectMember
+      await update(ref(database, `projects/${projectId}/members`), {
+        [userId]: {
+          userId,
+          role,
+          addedAt: Date.now(),
+          addedBy: invitation?.projectCreatorId || '',
+        },
+      })
     } catch (err: any) {
       setError(err.message)
       throw err

@@ -31,7 +31,7 @@ export async function GET() {
     return Response.json(
       {
         error: 'Failed to read changelog',
-        message: error instanceof Error ? error.message : 'Unknown error',
+        message: 'Error al obtener el changelog',
       },
       { status: 500 }
     )

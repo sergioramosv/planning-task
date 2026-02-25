@@ -17,7 +17,7 @@ export async function GET() {
     return Response.json(
       {
         error: 'Failed to read version',
-        message: error instanceof Error ? error.message : 'Unknown error',
+        message: 'Error al obtener la versión',
         version: '0.0.0',
       },
       { status: 500 }

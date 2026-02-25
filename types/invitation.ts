@@ -1,3 +1,5 @@
+import { ProjectRole } from './project'
+
 export type InvitationStatus = 'pending' | 'accepted' | 'rejected'
 
 export interface Invitation {
@@ -8,6 +10,7 @@ export interface Invitation {
   projectCreatorName: string
   invitedUserId: string
   invitedUserEmail: string
+  role: ProjectRole
   status: InvitationStatus
   createdAt: number
   respondedAt?: number

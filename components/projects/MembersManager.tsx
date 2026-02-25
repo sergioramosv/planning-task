@@ -7,6 +7,7 @@ import Button from '@/components/ui/Button'
 import { useAuth } from '@/hooks/useAuth'
 import { UserService } from '@/lib/services/user.service'
 import { NotificationService } from '@/lib/services/notification.service'
+import { ProjectRole } from '@/types/project'
 import styles from './MembersManager.module.css'
 
 interface Member {
@@ -16,13 +17,22 @@ interface Member {
   photoURL?: string
 }
 
+const ROLE_LABELS: Record<ProjectRole, string> = {
+  owner: 'Owner',
+  admin: 'Admin',
+  member: 'Miembro',
+  viewer: 'Visor',
+}
+
+const ASSIGNABLE_ROLES: ProjectRole[] = ['admin', 'member', 'viewer']
+
 interface MembersManagerProps {
-  members: Record<string, boolean>
+  members: Record<string, boolean | { role?: ProjectRole }>
   projectCreatorId: string
   projectId: string
   projectName: string
   projectCreatorName: string
-  onInviteMember: (uid: string, email: string) => Promise<void>
+  onInviteMember: (uid: string, email: string, role: ProjectRole) => Promise<void>
   onRemoveMember: (uid: string) => Promise<void>
 }
 
@@ -40,9 +50,8 @@ export default function MembersManager({
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [localMembers, setLocalMembers] = useState<Record<string, boolean>>(members)
-
-
+  const [localMembers, setLocalMembers] = useState<Record<string, boolean | { role?: ProjectRole }>>(members)
+  const [selectedRoles, setSelectedRoles] = useState<Record<string, ProjectRole>>({})
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -57,12 +66,21 @@ export default function MembersManager({
     fetchUsers()
   }, [])
 
-  // Sincronizar localMembers cuando cambia el prop members
   useEffect(() => {
     setLocalMembers(members)
   }, [members])
 
-  const membersList = Object.keys(localMembers).filter((uid) => localMembers[uid])
+  const getMemberRole = (memberId: string): ProjectRole => {
+    const memberData = localMembers[memberId]
+    if (memberId === projectCreatorId) return 'owner'
+    if (typeof memberData === 'object' && memberData?.role) return memberData.role
+    return 'member'
+  }
+
+  const membersList = Object.keys(localMembers).filter((uid) => {
+    const val = localMembers[uid]
+    return val === true || (typeof val === 'object' && val !== null)
+  })
 
   const filteredUsers = allUsers.filter(
     (user) =>
@@ -75,8 +93,14 @@ export default function MembersManager({
     try {
       setLoading(true)
       setError(null)
-      await onInviteMember(uid, email)
+      const role = selectedRoles[uid] || 'member'
+      await onInviteMember(uid, email, role)
       setSearchTerm('')
+      setSelectedRoles(prev => {
+        const next = { ...prev }
+        delete next[uid]
+        return next
+      })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al enviar invitación')
     } finally {
@@ -90,13 +114,11 @@ export default function MembersManager({
       setError(null)
 
       await onRemoveMember(uid)
-      // Actualizar localMembers inmediatamente
       setLocalMembers(prev => ({
         ...prev,
         [uid]: false,
       }))
 
-      // Enviar notificación al miembro removido
       try {
         await NotificationService.notifyMemberRemoval(
           uid,
@@ -127,6 +149,7 @@ export default function MembersManager({
           ) : (
             membersList.map((memberId) => {
               const member = allUsers.find(u => u.uid === memberId)
+              const role = getMemberRole(memberId)
               return (
                 <div key={memberId} className={styles.memberItem}>
                   <div className={styles.memberInfo}>
@@ -140,9 +163,9 @@ export default function MembersManager({
                     <div>
                       <div className={styles.memberName}>
                         {member?.displayName || 'Usuario'}
-                        {memberId === projectCreatorId && (
-                          <span className={styles.creatorBadge}>Creador</span>
-                        )}
+                        <span className={styles.roleBadge} data-role={role}>
+                          {ROLE_LABELS[role]}
+                        </span>
                       </div>
                       <div className={styles.memberEmail}>{member?.email}</div>
                     </div>
@@ -202,15 +225,29 @@ export default function MembersManager({
                           <div className={styles.userEmail}>{user.email}</div>
                         </div>
                       </div>
-                      <Button
-                        size="sm"
-                        variant="primary"
-                        onClick={() => handleInviteMember(user.uid, user.email)}
-                        disabled={loading}
-                      >
-                        <Plus size={16} />
-                        Invitar
-                      </Button>
+                      <div className={styles.inviteActions}>
+                        <select
+                          className={styles.roleSelect}
+                          value={selectedRoles[user.uid] || 'member'}
+                          onChange={(e) => setSelectedRoles(prev => ({
+                            ...prev,
+                            [user.uid]: e.target.value as ProjectRole,
+                          }))}
+                        >
+                          {ASSIGNABLE_ROLES.map(r => (
+                            <option key={r} value={r}>{ROLE_LABELS[r]}</option>
+                          ))}
+                        </select>
+                        <Button
+                          size="sm"
+                          variant="primary"
+                          onClick={() => handleInviteMember(user.uid, user.email)}
+                          disabled={loading}
+                        >
+                          <Plus size={16} />
+                          Invitar
+                        </Button>
+                      </div>
                     </div>
                   ))
                 )}

@@ -134,7 +134,7 @@ describe('Validators', () => {
         what: 'I want this',
         why: 'to achieve goal',
       },
-      bizPoints: 50,
+      bizPoints: '5' as const,
       devPoints: '5' as const,
       status: 'to-do' as const,
     }
@@ -187,14 +187,14 @@ describe('Validators', () => {
       expect(result.success).toBe(false)
     })
 
-    it('should fail with invalid bizPoints (over 100)', () => {
-      const invalidData = { ...validTaskData, bizPoints: 150 }
+    it('should fail with invalid bizPoints (not Fibonacci)', () => {
+      const invalidData = { ...validTaskData, bizPoints: '7' }
       const result = taskSchema.safeParse(invalidData)
       expect(result.success).toBe(false)
     })
 
-    it('should fail with invalid bizPoints (under 1)', () => {
-      const invalidData = { ...validTaskData, bizPoints: 0 }
+    it('should fail with numeric bizPoints instead of string', () => {
+      const invalidData = { ...validTaskData, bizPoints: 5 }
       const result = taskSchema.safeParse(invalidData)
       expect(result.success).toBe(false)
     })

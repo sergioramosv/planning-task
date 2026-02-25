@@ -7,7 +7,7 @@ import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select'
 import MembersManager from './MembersManager'
-import { Project, ProjectRepository } from '@/types/project'
+import { Project, ProjectRepository, ProjectRole } from '@/types/project'
 import { useAuth } from '@/hooks/useAuth'
 import { Plus, X, Star } from 'lucide-react'
 import styles from './ProjectEditModal.module.css'
@@ -17,7 +17,7 @@ interface ProjectEditModalProps {
   onClose: () => void
   project: Project
   onSave: (updates: Partial<Project>) => Promise<void>
-  onInviteMember: (projectId: string, uid: string, email: string) => Promise<void>
+  onInviteMember: (projectId: string, uid: string, email: string, role: ProjectRole) => Promise<void>
   onRemoveMember: (projectId: string, uid: string) => Promise<void>
 }
 
@@ -134,10 +134,10 @@ export default function ProjectEditModal({
     }
   }
 
-  const handleInviteMember = async (uid: string, email: string) => {
+  const handleInviteMember = async (uid: string, email: string, role: ProjectRole) => {
     try {
       setLoading(true)
-      await onInviteMember(project.id, uid, email)
+      await onInviteMember(project.id, uid, email, role)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al enviar invitación')
     } finally {

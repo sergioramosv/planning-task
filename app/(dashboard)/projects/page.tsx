@@ -77,7 +77,7 @@ export default function ProjectsPage() {
     }
   }
 
-  const handleInviteMember = async (projectId: string, uid: string, email: string) => {
+  const handleInviteMember = async (projectId: string, uid: string, email: string, role: string = 'member') => {
     try {
       const project = projects.find(p => p.id === projectId)
       if (project && user) {
@@ -88,6 +88,7 @@ export default function ProjectsPage() {
           projectCreatorName: user.displayName || 'Usuario',
           invitedUserId: uid,
           invitedUserEmail: email,
+          role: role as any,
           status: 'pending',
         })
         toast.success('Invitación enviada exitosamente')

@@ -159,7 +159,7 @@ describe('useChat Hook', () => {
       await result.current.sendMessage('Test')
     })
 
-    expect(result.current.error).toBe('Network error')
+    expect(result.current.error).toBe('Error de conexi\u00f3n. Verifica tu conexi\u00f3n a internet e int\u00e9ntalo de nuevo.')
     expect(result.current.isLoading).toBe(false)
   })
 

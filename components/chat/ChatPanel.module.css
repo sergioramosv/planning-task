@@ -193,6 +193,44 @@
   font-size: var(--text-sm);
   line-height: 1.5;
   word-break: break-word;
+  position: relative;
+}
+
+.messageBubble:hover .copyButton {
+  opacity: 1;
+}
+
+.copyButton {
+  position: absolute;
+  bottom: var(--spacing-1);
+  right: var(--spacing-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition: all var(--transition-fast);
+}
+
+.copyButton:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.copyButtonUser {
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.copyButtonUser:hover {
+  background: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
 }
 
 .bubbleUser {

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { database } from '@/lib/firebase/config'
 import { ref, onValue, push, update, remove } from 'firebase/database'
 import { Comment } from '@/types/comment'
+import { getUserFriendlyError } from '@/lib/utils/errorHandler'
 
 export function useComments(taskId: string | null) {
   const [comments, setComments] = useState<Comment[]>([])
@@ -37,13 +38,13 @@ export function useComments(taskId: string | null) {
           }
           setError(null)
         } catch (err: any) {
-          setError(err.message)
+          setError(getUserFriendlyError(err, 'useComments'))
         } finally {
           setLoading(false)
         }
       },
       (error) => {
-        setError(error.message)
+        setError(getUserFriendlyError(error, 'useComments'))
         setLoading(false)
       }
     )
@@ -84,7 +85,7 @@ export function useComments(taskId: string | null) {
         await update(newCommentRef, comment)
         return commentId!
       } catch (err: any) {
-        setError(err.message)
+        setError(getUserFriendlyError(err, 'useComments'))
         throw err
       }
     },
@@ -103,7 +104,7 @@ export function useComments(taskId: string | null) {
           edited: true,
         })
       } catch (err: any) {
-        setError(err.message)
+        setError(getUserFriendlyError(err, 'useComments'))
         throw err
       }
     },
@@ -117,7 +118,7 @@ export function useComments(taskId: string | null) {
       try {
         await remove(ref(database, `comments/${taskId}/${commentId}`))
       } catch (err: any) {
-        setError(err.message)
+        setError(getUserFriendlyError(err, 'useComments'))
         throw err
       }
     },

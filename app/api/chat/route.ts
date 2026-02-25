@@ -165,7 +165,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('Chat API error:', error)
     return NextResponse.json(
-      { error: error.message || 'Error interno del servidor' },
+      { error: 'Ha ocurrido un error procesando tu mensaje. Inténtalo de nuevo.' },
       { status: 500 }
     )
   }

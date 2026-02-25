@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword, updateProfile, updatePassword as firebaseUpdatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth'
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword, updateProfile, updatePassword as firebaseUpdatePassword, reauthenticateWithCredential, EmailAuthProvider, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { auth, database } from '@/lib/firebase/config'
 import { User } from '@/types'
-import { ref, set, update } from 'firebase/database'
+import { ref, set, update, get } from 'firebase/database'
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null)
@@ -76,6 +76,60 @@ export function useAuth() {
     }
   }, [])
 
+  const loginWithGoogle = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const provider = new GoogleAuthProvider()
+      const { user: firebaseUser } = await signInWithPopup(auth, provider)
+
+      // Check if user exists in database, create if not
+      const userRef = ref(database, `users/${firebaseUser.uid}`)
+      const snapshot = await get(userRef)
+
+      if (!snapshot.exists()) {
+        const userData: Record<string, any> = {
+          uid: firebaseUser.uid,
+          email: firebaseUser.email || '',
+          displayName: firebaseUser.displayName || 'Usuario',
+          role: 'developer',
+          createdAt: Date.now(),
+        }
+        if (firebaseUser.photoURL) {
+          userData.photoURL = firebaseUser.photoURL
+        }
+        await set(userRef, userData)
+      } else {
+        // Update displayName and photoURL from Google profile
+        const updates: Record<string, any> = {
+          displayName: firebaseUser.displayName || snapshot.val().displayName,
+        }
+        if (firebaseUser.photoURL) {
+          updates.photoURL = firebaseUser.photoURL
+        }
+        await update(userRef, updates)
+      }
+
+      setAuthUser(firebaseUser)
+      document.cookie = `session=${firebaseUser.uid}; path=/; max-age=604800`
+    } catch (err: any) {
+      if (err.code === 'auth/popup-closed-by-user') {
+        // User closed popup, not an error
+        return
+      }
+      const message =
+        err.code === 'auth/account-exists-with-different-credential'
+          ? 'Ya existe una cuenta con ese email usando otro método de inicio de sesión'
+          : err.code === 'auth/popup-blocked'
+          ? 'El navegador bloqueó la ventana emergente. Permite popups para este sitio'
+          : err.message || 'Error al iniciar sesión con Google'
+      setError(message)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
   const logout = useCallback(async () => {
     setLoading(true)
     setError(null)
@@ -136,6 +190,7 @@ export function useAuth() {
     loading,
     error,
     login,
+    loginWithGoogle,
     register,
     logout,
     resetError,
