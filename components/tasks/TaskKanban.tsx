@@ -107,9 +107,9 @@ export default function TaskKanban({
             onDragOver={handleDragOver}
             onDrop={(e) => handleDrop(e, status)}
           >
-            {tasksByStatus[status].map(task => (
+            {tasksByStatus[status].map((task, index) => (
               <div
-                key={task.id}
+                key={task.id || `${status}-${index}`}
                 draggable
                 onDragStart={(e) => handleDragStart(e, task.id)}
                 onDragEnd={handleDragEnd}

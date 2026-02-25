@@ -9,6 +9,7 @@ import Select from '@/components/ui/Select'
 import { Task, Sprint, TaskAttachment } from '@/types'
 import { FIBONACCI_LABELS } from '@/lib/constants/fibonacciPoints'
 import { Plus, X, Upload, Paperclip, Download, Trash2, Sparkles } from 'lucide-react'
+import toast from 'react-hot-toast'
 import { useState, useRef, forwardRef, useImperativeHandle, useCallback } from 'react'
 import { useFileUpload } from '@/hooks/useFileUpload'
 import styles from './TaskForm.module.css'
@@ -68,13 +69,13 @@ const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(function TaskForm({
         sprint: task.sprintId || '',
         devPoints: toNearestFibonacci(task.devPoints, DEV_FIBONACCI),
         bizPoints: toNearestFibonacci(task.bizPoints, BIZ_FIBONACCI),
-        developer: task.developer,
+        developer: task.developer || '',
         coDeveloper: task.coDeveloper || '',
-        startDate: task.startDate,
-        endDate: task.endDate,
+        startDate: task.startDate || '',
+        endDate: task.endDate || '',
         status: task.status,
-        acceptanceCriteria: task.acceptanceCriteria,
-        userStory: task.userStory,
+        acceptanceCriteria: task.acceptanceCriteria?.length ? task.acceptanceCriteria : [''],
+        userStory: task.userStory || { who: '', what: '', why: '' },
         implementationPlan: task.implementationPlan || undefined,
       }
     }
@@ -247,6 +248,10 @@ const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(function TaskForm({
 
   const onFormError = (errors: any) => {
     console.error('Task form validation errors:', errors)
+    const errorMessages = Object.values(errors)
+      .map((e: any) => e?.message || (e?.who?.message) || (e?.what?.message) || (e?.why?.message))
+      .filter(Boolean)
+    toast.error(errorMessages[0] as string || 'Error de validación en el formulario')
     if (errors.title || errors.sprint || errors.developer || errors.status ||
         errors.startDate || errors.endDate || errors.bizPoints || errors.devPoints) {
       setActiveTab('general')
