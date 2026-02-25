@@ -8,8 +8,8 @@ import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select'
 import { Task, Sprint, TaskAttachment } from '@/types'
 import { FIBONACCI_LABELS } from '@/lib/constants/fibonacciPoints'
-import { Plus, X, Upload, Paperclip, Download, Trash2 } from 'lucide-react'
-import { useState, useRef, forwardRef, useImperativeHandle } from 'react'
+import { Plus, X, Upload, Paperclip, Download, Trash2, Sparkles } from 'lucide-react'
+import { useState, useRef, forwardRef, useImperativeHandle, useCallback } from 'react'
 import { useFileUpload } from '@/hooks/useFileUpload'
 import styles from './TaskForm.module.css'
 
@@ -51,13 +51,23 @@ const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(function TaskForm({
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { uploading, progress, uploadFiles, deleteFile } = useFileUpload()
 
+  const toNearestFibonacci = (value: number, options: number[]): string => {
+    const closest = options.reduce((prev, curr) =>
+      Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev
+    )
+    return String(closest)
+  }
+
+  const BIZ_FIBONACCI = [1, 2, 3, 5, 8, 13, 21, 34]
+  const DEV_FIBONACCI = [1, 2, 3, 5, 8, 13]
+
   const getDefaultValues = () => {
     if (task) {
       return {
         title: task.title,
         sprint: task.sprintId || '',
-        devPoints: String(task.devPoints),
-        bizPoints: String(task.bizPoints),
+        devPoints: toNearestFibonacci(task.devPoints, DEV_FIBONACCI),
+        bizPoints: toNearestFibonacci(task.bizPoints, BIZ_FIBONACCI),
         developer: task.developer,
         coDeveloper: task.coDeveloper || '',
         startDate: task.startDate,
@@ -77,8 +87,8 @@ const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(function TaskForm({
         coDeveloper: initialFormData.coDeveloper || '',
         startDate: initialFormData.startDate || '',
         endDate: initialFormData.endDate || '',
-        bizPoints: initialFormData.bizPoints ? String(initialFormData.bizPoints) : undefined,
-        devPoints: initialFormData.devPoints || undefined,
+        bizPoints: initialFormData.bizPoints ? toNearestFibonacci(Number(initialFormData.bizPoints), BIZ_FIBONACCI) : undefined,
+        devPoints: initialFormData.devPoints ? toNearestFibonacci(Number(initialFormData.devPoints), DEV_FIBONACCI) : undefined,
         acceptanceCriteria: initialFormData.acceptanceCriteria?.length
           ? initialFormData.acceptanceCriteria
           : [''],
@@ -95,6 +105,8 @@ const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(function TaskForm({
     }
   }
 
+  const [aiGenerating, setAiGenerating] = useState(false)
+
   const {
     register,
     handleSubmit,
@@ -102,14 +114,14 @@ const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(function TaskForm({
     formState: { errors },
     reset,
     getValues,
+    setValue,
+    watch,
   } = useForm<any>({
     resolver: zodResolver(taskSchema),
     defaultValues: getDefaultValues(),
   })
 
-  useImperativeHandle(ref, () => ({
-    getFormValues: () => getValues(),
-  }))
+  const titleValue = watch('title')
 
   const { fields: criteriaFields, append: appendCriteria, remove: removeCriteria } = useFieldArray({
     control,
@@ -120,6 +132,55 @@ const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(function TaskForm({
     control,
     name: 'implementationPlan.steps',
   })
+
+  const handleAiGenerate = useCallback(async () => {
+    const title = getValues('title')?.trim()
+    if (!title || !projectId) return
+
+    setAiGenerating(true)
+    try {
+      const res = await fetch('/api/tasks/generate-ai', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, projectId }),
+      })
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err.error || 'Error al generar')
+      }
+
+      const data = await res.json()
+
+      // Populate form fields
+      setValue('userStory.who', data.userStory.who)
+      setValue('userStory.what', data.userStory.what)
+      setValue('userStory.why', data.userStory.why)
+      setValue('bizPoints', String(data.bizPoints))
+      setValue('devPoints', String(data.devPoints))
+
+      // Replace acceptance criteria
+      if (data.acceptanceCriteria?.length > 0) {
+        // Remove all existing criteria first
+        while (criteriaFields.length > 0) {
+          removeCriteria(0)
+        }
+        // Add generated ones
+        data.acceptanceCriteria.forEach((c: string) => appendCriteria(c))
+      }
+
+      // Switch to User Story tab to show results
+      setActiveTab('userStory')
+    } catch (err: any) {
+      console.error('AI generation error:', err)
+    } finally {
+      setAiGenerating(false)
+    }
+  }, [projectId, getValues, setValue, appendCriteria, removeCriteria, criteriaFields.length])
+
+  useImperativeHandle(ref, () => ({
+    getFormValues: () => getValues(),
+  }))
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -222,14 +283,32 @@ const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(function TaskForm({
           <>
             <div className={styles.section}>
               <div className={styles.sectionContent}>
-                <Input
-                  label="Título"
-                  placeholder="Ej: Implementar autenticación"
-                  required
-                  {...register('title')}
-                  error={errors.title?.message as string}
-                  disabled={isLoading}
-                />
+                <div className={styles.titleRow}>
+                  <div className={styles.titleInput}>
+                    <Input
+                      label="Título"
+                      placeholder="Ej: Implementar autenticación"
+                      required
+                      {...register('title')}
+                      error={errors.title?.message as string}
+                      disabled={isLoading}
+                    />
+                  </div>
+                  {!task && (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="secondary"
+                      onClick={handleAiGenerate}
+                      disabled={isLoading || aiGenerating || !titleValue?.trim()}
+                      loading={aiGenerating}
+                      title="Generar User Story, puntos y criterios con IA"
+                    >
+                      <Sparkles size={16} />
+                      {aiGenerating ? 'Generando...' : 'IA'}
+                    </Button>
+                  )}
+                </div>
 
                 <div className={styles.grid3}>
                   {sprints.length > 0 ? (

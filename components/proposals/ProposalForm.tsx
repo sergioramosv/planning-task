@@ -41,6 +41,15 @@ interface ProposalFormProps {
 }
 
 export default function ProposalForm({ onSubmit, isLoading = false, initialData }: ProposalFormProps) {
+  const BIZ_FIBONACCI = [1, 2, 3, 5, 8, 13, 21, 34]
+  const DEV_FIBONACCI = [1, 2, 3, 5, 8, 13]
+  const toNearestFib = (value: number, options: number[]): string => {
+    const closest = options.reduce((prev, curr) =>
+      Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev
+    )
+    return String(closest)
+  }
+
   const {
     register,
     handleSubmit,
@@ -55,8 +64,8 @@ export default function ProposalForm({ onSubmit, isLoading = false, initialData 
       userStoryWhy: initialData?.userStory?.why || '',
       acceptanceCriteria: initialData?.acceptanceCriteria || [''],
       startDate: initialData?.startDate || new Date().toISOString().split('T')[0],
-      bizPoints: String(initialData?.bizPoints || 5) as any,
-      devPoints: String(initialData?.devPoints || 3) as any,
+      bizPoints: toNearestFib(initialData?.bizPoints || 5, BIZ_FIBONACCI) as any,
+      devPoints: toNearestFib(initialData?.devPoints || 3, DEV_FIBONACCI) as any,
     } as any,
   })
 
