@@ -1,6 +1,6 @@
 {
   "name": "scrum-task-manager",
-  "version": "1.37.0",
+  "version": "1.47.1",
   "description": "Professional Scrum Task Management Application",
   "private": true,
   "scripts": {

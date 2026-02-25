@@ -5,6 +5,124 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.47.1] - 2026-02-25
+
+### Fixed
+- **Edición de tareas con bizPoints legacy**: Las tareas creadas antes del cambio a Fibonacci (con valores 1-100) ahora se mapean automáticamente al valor Fibonacci más cercano al abrir el formulario de edición. Esto resolvía que el formulario fallaba silenciosamente la validación y no guardaba ningún cambio (ni developer, ni sprint, ni nada).
+
+## [1.47.0] - 2026-02-25
+
+### Added
+- **Login y registro con Google**: Botón "Continuar con Google" en la página de login usando Firebase Authentication con GoogleAuthProvider y signInWithPopup.
+- Creación automática de usuario en Firebase DB al registrarse con Google por primera vez.
+- Actualización de photoURL y displayName desde el perfil de Google en cada login.
+- Mensajes de error específicos para `account-exists-with-different-credential` y `popup-blocked`.
+- Separador visual "o" entre login con Google y formulario de email/contraseña.
+
+## [1.46.0] - 2026-02-25
+
+### Added
+- **Utilidad errorHandler**: Nuevo módulo `lib/utils/errorHandler.ts` con mapeo de errores técnicos a mensajes amigables en español.
+- Función `getUserFriendlyError()` que convierte errores de Firebase, red, permisos, auth, quota, etc. a mensajes comprensibles para el usuario.
+- Función `getSafeApiError()` para sanitizar errores en respuestas de API sin exponer detalles internos.
+- Integrado en el hook `useChat` para mostrar mensajes amigables en lugar de errores técnicos.
+
+### Added (Tests)
+- Test suite `errorHandler.test.ts` con 34 tests cubriendo todos los patrones de error.
+
+## [1.45.0] - 2026-02-25
+
+### Added
+- **Generación automática de User Story y Puntos con IA**: Botón "Generar con IA" en TaskForm que genera automáticamente User Story (quién/qué/para qué), bizPoints, devPoints y criterios de aceptación a partir del título de la tarea.
+- API Route `/api/tasks/generate-ai` (POST) con validación de sesión, acceso al proyecto y sistema de rotación de modelos.
+- Validación Fibonacci en la respuesta de la IA con fallback a valor 3 para puntos inválidos.
+- Soporte para contexto adicional opcional en la generación.
+- Limpieza automática de bloques markdown en respuestas de la IA.
+
+### Fixed
+- Corregido error de temporal dead zone en TaskForm: `useFieldArray` movido antes del `useCallback` que lo referencia.
+
+### Added (Tests)
+- Test suite `generateAi.test.ts` con 17 tests cubriendo autenticación, validación, generación exitosa, Fibonacci y errores.
+
+## [1.44.0] - 2026-02-25
+
+### Added
+- **Notificaciones push en la interfaz**: Componente `NotificationPush` que muestra toasts en tiempo real para nuevas notificaciones e invitaciones.
+- Integración con `react-hot-toast` para notificaciones visuales con iconos y estilos personalizados.
+- Detección automática de nuevas notificaciones sin necesidad de recargar la página.
+
+### Added (Tests)
+- Test suite `NotificationPush.test.tsx` con tests de renderizado, detección de nuevas notificaciones y integración con toasts.
+
+## [1.43.0] - 2026-02-25
+
+### Added
+- **Invitaciones a proyectos con asignación de rol**: El sistema de invitaciones ahora permite seleccionar el rol del invitado (member, viewer, admin).
+- Mejoras en MembersManager con selector de rol al enviar invitaciones.
+- Gestión de roles diferenciados para los miembros del proyecto.
+
+### Added (Tests)
+- Test suite `useInvitationsRole.test.ts` con tests de asignación de roles y gestión de invitaciones.
+
+## [1.42.0] - 2026-02-25
+
+### Added
+- **Toasts de confirmación para todas las acciones**: Todas las acciones de usuario (crear, actualizar, eliminar tareas/sprints/bugs/propuestas) muestran toasts de confirmación con `react-hot-toast`.
+- Toasts de éxito (verde) y error (rojo) según el resultado de la operación.
+- Posición consistente en esquina superior derecha.
+
+### Added (Tests)
+- Test suite `ProjectToasts.test.ts` con tests de integración de toasts en acciones de proyecto.
+
+## [1.41.0] - 2026-02-25
+
+### Added
+- **Selector de proyectos en la página del proyecto**: El nombre del proyecto junto a la flecha de volver ahora es clickable y abre un dropdown para cambiar de proyecto sin volver al listado.
+- Dropdown con lista de proyectos activos/planificados, indicador del proyecto actual y enlace "Ver todos los proyectos".
+- Animación de entrada y click-outside para cerrar el dropdown.
+
+### Changed
+- **Eliminado selector de proyectos del Header**: El project switcher se ha movido del Header global a la página de detalle del proyecto para una navegación más limpia.
+- Header simplificado: eliminados imports de useProjects, usePathname, useRef, useEffect y iconos de proyecto.
+
+## [1.40.0] - 2026-02-25
+
+### Added
+- **Persistencia de vista Tabla/Kanban**: La selección del tipo de vista de tareas (Tabla o Kanban) se guarda en localStorage y se mantiene al recargar la página.
+- Hook `useLocalStorage` para gestión genérica de estado persistente.
+
+### Added (Tests)
+- Test suite `useLocalStorageViewMode.test.ts` con tests de persistencia, lectura y cambio de modo de vista.
+
+## [1.39.0] - 2026-02-25
+
+### Added
+- **Copiar mensajes del chat IA**: Botón de copiar en cada mensaje del asistente de IA que copia el contenido completo al portapapeles.
+- Feedback visual con cambio de icono (check) al copiar exitosamente.
+
+### Added (Tests)
+- Test suite `ChatMessageCopy.test.tsx` con tests de funcionalidad de copia y feedback visual.
+
+## [1.38.0] - 2026-02-25
+
+### Added
+- **Historial de conversaciones del chat IA**: Componente `ChatHistory` que muestra conversaciones anteriores con búsqueda, fecha y contador de mensajes.
+- API Routes para CRUD de conversaciones: `POST /api/chat/conversations`, `GET /api/chat/conversations`, `PUT /api/chat/conversations/[id]`, `DELETE /api/chat/conversations/[id]`.
+- Guardado automático de conversaciones después de cada respuesta exitosa del asistente.
+- Carga de conversaciones anteriores con restauración completa de mensajes.
+- Eliminación de conversaciones individuales.
+
+### Added (Tests)
+- Test suite `ChatHistory.test.tsx` con tests de renderizado, búsqueda y navegación.
+- Test suite `useChatHistory.test.ts` con tests de carga, guardado, eliminación y búsqueda de conversaciones.
+- Test suite `TaskKanban.test.tsx` con tests de renderizado de columnas y drag-and-drop.
+
+## [1.37.1] - 2026-02-25
+
+### Fixed
+- **Botón de borrar tarea visible para todos los usuarios**: Investigado y corregido el problema de visibilidad del botón de eliminar que se ocultaba a ciertos usuarios por permisos incorrectos.
+
 ## [1.37.0] - 2026-02-25
 
 ### Added
