@@ -5,6 +5,17 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.50.0] - 2026-03-04
+
+### Added
+- **Traducción completa de la página de proyectos**: Todos los textos de la página de proyectos ahora están en inglés y español.
+  - Traducido `projects/page.tsx`: título, subtítulo, botón de crear proyecto, todos los mensajes de toast (éxito y error), y modal de confirmación de eliminación.
+  - Traducido `ProjectModal`: título del modal para crear/editar proyecto.
+  - Traducido `ProjectForm`: todos los labels, placeholders, opciones de estado, tipos de repositorio, sección de tech stack, y botones de acción.
+  - Traducido `ProjectList`: empty state con mensaje "No hay proyectos" / "No projects" y "Crea tu primer proyecto" / "Create your first project".
+  - Traducido `ProjectCard`: tooltips de botones (editar/eliminar/copiar ID), estados del proyecto (Activo/Active, Planeado/Planned, Completado/Completed, Archivado/Archived), contadores de miembros, sprints, tareas y tareas pendientes, y mensaje de "ID copiado al portapapeles".
+- Agregadas más de 40 claves de traducción nuevas en `locales/es.json` y `locales/en.json` para soportar toda la página de proyectos y sus componentes.
+
 ## [1.49.0] - 2026-03-04
 
 ### Fixed
