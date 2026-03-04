@@ -5,6 +5,24 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.48.0] - 2026-03-04
+
+### Added
+- **Soporte de internacionalización (i18n)**: Sistema completo de traducción con soporte para inglés y español.
+- **Selector de idioma**: Componente `LanguageSwitcher` en el Header con banderas para cambiar entre inglés (🇬🇧) y español (🇪🇸).
+- **Persistencia de idioma**: La preferencia de idioma se guarda en localStorage y en el perfil del usuario en Firebase, manteniéndose después de F5 o al volver más tarde.
+- **Archivos de traducción**: `locales/en.json` y `locales/es.json` con todas las traducciones de la aplicación organizadas por secciones (common, nav, dashboard, projects, tasks, bugs, proposals, team, notifications, profile, komodo, auth, validation, confirmations, errors, success).
+- **Contexto de idioma**: `LanguageContext` que gestiona el estado del idioma y sincroniza con i18next, localStorage y Firebase.
+- **Traducción del Header**: Navegación (Dashboard, Calendario, Equipo), notificaciones e invitaciones ahora en ambos idiomas.
+- **Campo `language` en User**: Añadido tipo `'en' | 'es'` opcional al tipo User para almacenar la preferencia de idioma.
+- **Documentación de usuario**: Nuevo archivo `GUIA_USUARIO.md` con guía completa en español (779 líneas) sobre todas las funcionalidades de la aplicación.
+
+### Technical
+- Instaladas dependencias: `i18next` (v24.2.2) y `react-i18next` (v15.2.3).
+- Configuración de i18n en `lib/i18n/config.ts` con español como idioma por defecto.
+- Hook `useLanguage()` que devuelve `{ language, setLanguage, t }` para traducir textos.
+- Componente `Providers` que envuelve la aplicación con `LanguageProvider`.
+
 ## [1.47.2] - 2026-02-25
 
 ### Fixed
