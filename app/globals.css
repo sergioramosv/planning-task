@@ -232,3 +232,135 @@ a {
   background-color: var(--color-primary-500);
   color: white;
 }
+
+/* ── Komodo Agent Avatar Animations ── */
+
+@keyframes agent-breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+@keyframes agent-blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+
+@keyframes agent-walk {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-4px) rotate(-3deg); }
+  50% { transform: translateY(0) rotate(0deg); }
+  75% { transform: translateY(-4px) rotate(3deg); }
+}
+
+@keyframes agent-work-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1px); }
+}
+
+@keyframes agent-typing {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-1px); }
+  75% { transform: translateY(1px); }
+}
+
+@keyframes agent-accessory-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.agent-avatar.agent-idle {
+  animation: agent-breathe 3s ease-in-out infinite;
+}
+
+.agent-avatar.agent-walking {
+  animation: agent-walk 0.5s ease-in-out infinite;
+}
+
+.agent-avatar.agent-working {
+  animation: agent-work-bob 2s ease-in-out infinite;
+}
+
+.agent-avatar.agent-idle .agent-eyes {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: agent-blink 4s ease-in-out infinite;
+}
+
+.agent-avatar.agent-working .agent-arms {
+  transform-box: fill-box;
+  transform-origin: center top;
+  animation: agent-typing 0.8s ease-in-out infinite;
+}
+
+.agent-avatar.agent-working .agent-accessory {
+  animation: agent-accessory-pulse 1.5s ease-in-out infinite;
+}
+
+/* ── Komodo Office Feedback Animations ── */
+
+@keyframes bubble-appear {
+  0% { transform: translateX(-50%) translateY(4px) scale(0.8); opacity: 0; }
+  100% { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; }
+}
+
+.speech-bubble-appear {
+  animation: bubble-appear 0.3s ease-out forwards;
+}
+
+@keyframes typing-dot-bounce {
+  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-1px); }
+}
+
+.typing-dot {
+  animation: typing-dot-bounce 1.2s ease-in-out infinite;
+}
+
+@keyframes confetti-fall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  70% { opacity: 0.8; }
+  100% { transform: translateY(500px) rotate(720deg); opacity: 0; }
+}
+
+.confetti-piece {
+  animation: confetti-fall 3s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes confetti-flash-anim {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.confetti-flash {
+  animation: confetti-flash-anim 0.3s ease-out forwards;
+}
+
+@keyframes verdict-pop {
+  0% { transform: translateX(-50%) scale(0); opacity: 0; }
+  60% { transform: translateX(-50%) scale(1.3); opacity: 1; }
+  80% { transform: translateX(-50%) scale(0.9); }
+  100% { transform: translateX(-50%) scale(1); opacity: 1; }
+}
+
+.verdict-appear {
+  animation: verdict-pop 0.5s ease-out forwards;
+}
+
+@keyframes pr-slide-in {
+  0% { transform: translateX(120%); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+.pr-notification-slide {
+  animation: pr-slide-in 0.4s ease-out forwards;
+}
+
+@keyframes postit-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+  50% { box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.15); }
+}
+
+.postit-pulse {
+  animation: postit-glow 2s ease-in-out infinite;
+}

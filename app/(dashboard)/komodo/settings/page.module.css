@@ -1,0 +1,246 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.statusSaved {
+  font-size: 14px;
+  color: #4ade80;
+}
+
+.statusError {
+  font-size: 14px;
+  color: #f87171;
+}
+
+.saveBtn {
+  border: none;
+  border-radius: 4px;
+  background-color: #2563eb;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.saveBtn:hover {
+  background-color: #1d4ed8;
+}
+
+.saveBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Section card */
+.section {
+  border-radius: 8px;
+  border: 1px solid var(--border-secondary);
+  background-color: var(--bg-elevated);
+  padding: 20px;
+}
+
+.sectionTitle {
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.muted {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* Form elements */
+.fieldGroup {
+  max-width: 448px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.labelSmall {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.select {
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid var(--border-secondary);
+  background-color: var(--bg-secondary);
+  padding: 6px 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.selectSmall {
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid var(--border-secondary);
+  background-color: var(--bg-secondary);
+  padding: 4px 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.input {
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid var(--border-secondary);
+  background-color: var(--bg-secondary);
+  padding: 4px 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.inputConstrained {
+  composes: input;
+  max-width: 320px;
+  padding: 8px 12px;
+}
+
+.hint {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Agent grid */
+.agentGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .agentGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.agentCard {
+  border-radius: 8px;
+  border: 1px solid var(--border-secondary);
+  background-color: var(--bg-elevated);
+  padding: 16px;
+}
+
+.agentName {
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.agentIcon {
+  margin-right: 6px;
+}
+
+.agentFields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Orchestrator grid */
+.orchGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .orchGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.orchFullWidth {
+  grid-column: 1 / -1;
+}
+
+/* Toggle switch */
+.toggleRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toggle {
+  position: relative;
+  display: inline-flex;
+  height: 24px;
+  width: 44px;
+  flex-shrink: 0;
+  cursor: pointer;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  transition: background-color 0.2s;
+}
+
+.toggleOn {
+  background-color: #2563eb;
+}
+
+.toggleOff {
+  background-color: var(--border-secondary);
+}
+
+.toggleThumb {
+  pointer-events: none;
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  border-radius: 9999px;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s;
+}
+
+.toggleThumbOn {
+  transform: translateX(20px);
+}
+
+.toggleThumbOff {
+  transform: translateX(0);
+}
+
+.toggleLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.toggleHint {
+  font-size: 12px;
+  color: var(--text-muted);
+}

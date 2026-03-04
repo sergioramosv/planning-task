@@ -9,6 +9,7 @@ export function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith('/(dashboard)') ||
     request.nextUrl.pathname.startsWith('/dashboard') ||
     request.nextUrl.pathname.startsWith('/projects') ||
+    request.nextUrl.pathname.startsWith('/komodo') ||
     request.nextUrl.pathname.startsWith('/api')
 
   // Redirect logged-in users away from login page

@@ -1,0 +1,172 @@
+.section {
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-secondary);
+  background-color: var(--bg-elevated);
+  padding: 0.875rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 9999px;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.badgeRunning {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: #4ade80;
+}
+
+.badgePaused {
+  background-color: rgba(234, 179, 8, 0.1);
+  color: #facc15;
+}
+
+.badgeStopped {
+  background-color: rgba(115, 115, 115, 0.1);
+  color: var(--text-muted);
+}
+
+.dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+}
+
+.dotRunning {
+  background-color: #22c55e;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.dotPaused {
+  background-color: #eab308;
+}
+
+.dotStopped {
+  background-color: var(--text-muted);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btnBase {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.15s;
+  border: none;
+  cursor: pointer;
+}
+
+.btnBase:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btnPause {
+  background-color: rgba(234, 179, 8, 0.1);
+  color: #facc15;
+}
+
+.btnPause:hover:not(:disabled) {
+  background-color: rgba(234, 179, 8, 0.2);
+}
+
+.btnStop {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+}
+
+.btnStop:hover:not(:disabled) {
+  background-color: rgba(239, 68, 68, 0.2);
+}
+
+.btnConfirm {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+.btnConfirm:hover {
+  background-color: rgba(239, 68, 68, 0.3);
+}
+
+.btnCancel {
+  background-color: var(--bg-secondary);
+  color: var(--text-muted);
+}
+
+.btnCancel:hover {
+  background-color: var(--border-secondary);
+}
+
+.icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.confirmBox {
+  margin-top: 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  background-color: rgba(239, 68, 68, 0.05);
+  padding: 0.75rem;
+}
+
+.confirmText {
+  font-size: 0.875rem;
+  color: #fca5a5;
+}
+
+.confirmActions {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pausedBanner {
+  margin-top: 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  background-color: rgba(234, 179, 8, 0.05);
+  padding: 0.75rem;
+}
+
+.pausedText {
+  font-size: 0.875rem;
+  color: #fde047;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

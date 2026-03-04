@@ -1,0 +1,400 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+/* Clear confirm */
+.clearConfirm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.clearLabel {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.btnDanger {
+  border: none;
+  border-radius: 4px;
+  background-color: #dc2626;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.btnDanger:hover {
+  background-color: #b91c1c;
+}
+
+.btnDanger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btnSecondary {
+  border: none;
+  border-radius: 4px;
+  background-color: #404040;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.btnSecondary:hover {
+  background-color: #525252;
+}
+
+.btnClear {
+  border: none;
+  border-radius: 4px;
+  background-color: #262626;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.btnClear:hover {
+  background-color: #404040;
+}
+
+/* Stats grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .statsGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.statCard {
+  border-radius: 8px;
+  border: 1px solid var(--border-secondary);
+  background-color: var(--bg-elevated);
+  padding: 16px;
+}
+
+.statLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.statValue {
+  margin-top: 4px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.trendImproving {
+  color: #4ade80;
+}
+
+.trendWorsening {
+  color: #f87171;
+}
+
+.trendStable {
+  color: #fbbf24;
+}
+
+.trendNone {
+  color: var(--text-muted);
+}
+
+/* Bar chart section */
+.chartSection {
+  border-radius: 8px;
+  border: 1px solid var(--border-secondary);
+  background-color: var(--bg-elevated);
+  padding: 20px;
+}
+
+.chartTitle {
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.chartList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.barRow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.barMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.barDesc {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 16px;
+  color: var(--text-primary);
+}
+
+.barFreq {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.barTrack {
+  height: 8px;
+  width: 100%;
+  border-radius: 9999px;
+  background-color: var(--bg-secondary);
+}
+
+.barFill {
+  height: 8px;
+  border-radius: 9999px;
+}
+
+.barError {
+  background-color: #ef4444;
+}
+
+.barAntiPattern {
+  background-color: #f97316;
+}
+
+.barStyle {
+  background-color: #3b82f6;
+}
+
+.barPositive {
+  background-color: #22c55e;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filterLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.filterSelect {
+  border-radius: 4px;
+  border: 1px solid #404040;
+  background-color: var(--bg-secondary);
+  padding: 4px 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.filterCount {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* Table */
+.tableWrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border-secondary);
+}
+
+.table {
+  width: 100%;
+  text-align: left;
+  font-size: 14px;
+  border-collapse: collapse;
+}
+
+.thead {
+  border-bottom: 1px solid var(--border-secondary);
+  background-color: var(--bg-elevated);
+}
+
+.th {
+  padding: 12px 16px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+
+
+.tbodyRow {
+  cursor: pointer;
+  background-color: var(--bg-primary);
+  transition: background-color 0.15s;
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.tbodyRow:last-child {
+  border-bottom: none;
+}
+
+.tbodyRow:hover {
+  background-color: var(--bg-hover);
+}
+
+.td {
+  padding: 12px 16px;
+  color: var(--text-primary);
+}
+
+.tdDesc {
+  composes: td;
+  max-width: 448px;
+}
+
+.expandIcon {
+  margin-right: 4px;
+  color: var(--text-muted);
+}
+
+/* Badges */
+.badge {
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badgeError {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+.badgeAntiPattern {
+  background-color: rgba(249, 115, 22, 0.2);
+  color: #fb923c;
+}
+
+.badgeStyle {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+.badgePositive {
+  background-color: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+
+.severityHigh {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+.severityMedium {
+  background-color: rgba(234, 179, 8, 0.2);
+  color: #fbbf24;
+}
+
+.severityLow {
+  background-color: #404040;
+  color: #d4d4d4;
+}
+
+.tdFreq {
+  composes: td;
+  color: var(--text-primary);
+}
+
+.tdDate {
+  composes: td;
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+
+/* Expanded row */
+.expandedRow {
+  background-color: var(--bg-tertiary);
+}
+
+.expandedCell {
+  padding: 12px 16px;
+}
+
+.expandedContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.expandedDesc {
+  color: var(--text-primary);
+}
+
+.expandedResolution {
+  color: var(--text-muted);
+}
+
+.resolutionLabel {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  border-radius: 4px;
+  background-color: var(--bg-secondary);
+  padding: 2px 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.expandedMeta {
+  font-size: 12px;
+  color: var(--text-muted);
+}

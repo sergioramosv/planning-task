@@ -1,0 +1,538 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.waiting {
+  color: var(--text-muted);
+}
+
+.taskInfo {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+/* Main grid */
+.mainGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 1280px) {
+  .mainGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+}
+
+/* Card base */
+.card {
+  border-radius: 8px;
+  border: 1px solid var(--border-secondary);
+  background-color: var(--bg-elevated);
+  padding: 20px;
+}
+
+.cardTitle {
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* Current Task */
+.taskContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.taskName {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.taskStory {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.taskMeta {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.metaBadge {
+  border-radius: 4px;
+  border: 1px solid black;
+  padding: 2px 8px;
+  color: black;
+}
+
+.noTask {
+  color: var(--text-muted);
+}
+
+/* Phase indicator */
+.phaseIdle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.phaseIdleIcon {
+  font-size: 18px;
+  color: #737373;
+}
+
+.phaseIdleText {
+  color: var(--text-muted);
+}
+
+.phaseSteps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.phaseStep {
+  display: flex;
+  align-items: center;
+}
+
+.phaseConnector {
+  margin: 0 4px;
+  height: 1px;
+  width: 8px;
+}
+
+@media (min-width: 640px) {
+  .phaseConnector {
+    width: 16px;
+  }
+}
+
+.phaseConnectorDone {
+  background-color: #22c55e;
+}
+
+.phaseConnectorPending {
+  background-color: #404040;
+}
+
+.phasePill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 9999px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+@media (min-width: 640px) {
+  .phasePill {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+}
+
+.phasePillActive {
+  background-color: var(--bg-secondary);
+  box-shadow: inset 0 0 0 1px var(--border-secondary);
+}
+
+.phasePillDone {
+  color: #22c55e;
+  background-color: rgba(34, 197, 94, 0.1);
+}
+
+.phasePillPending {
+  color: #525252;
+}
+
+.phaseIcon {
+  font-size: 16px;
+}
+
+/* Phase colors */
+.colorPlanning {
+  color: #a78bfa;
+}
+
+.colorCoding {
+  color: #60a5fa;
+}
+
+.colorReviewing {
+  color: #fbbf24;
+}
+
+.colorMerging {
+  color: #4ade80;
+}
+
+/* Agent Activity */
+.agentActivityGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activityCard {
+  border-radius: 8px;
+  border: 1px solid var(--border-secondary);
+  background-color: var(--bg-secondary);
+  padding: 14px;
+}
+
+.logList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 8px;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.logEntry {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.logEntry:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.logTime {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  color: #525252;
+  font-size: 11px;
+}
+
+.logTool {
+  color: #22d3ee;
+  font-family: monospace;
+  font-weight: 500;
+}
+
+.logDetail {
+  color: #737373;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 300px;
+}
+
+.logStatus {
+  color: #fbbf24;
+  font-weight: 500;
+}
+
+.logText {
+  color: #a3a3a3;
+}
+
+.noLogs {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #525252;
+  font-style: italic;
+}
+
+.agentHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.agentDot {
+  display: inline-block;
+  height: 12px;
+  width: 12px;
+  border-radius: 9999px;
+}
+
+.dotIdle {
+  background-color: #525252;
+}
+
+.dotWalking {
+  background-color: #eab308;
+  box-shadow: 0 0 0 4px rgba(234, 179, 8, 0.3);
+}
+
+.dotWorking {
+  background-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.dotDone {
+  background-color: #22c55e;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.3);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.agentName {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.statusBadge {
+  margin-left: auto;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.statusWorking {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+.statusDone {
+  background-color: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+
+.statusDefault {
+  background-color: var(--bg-secondary);
+  color: var(--text-muted);
+}
+
+.agentTask {
+  margin-top: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.agentTime {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Stats grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.statValue {
+  font-size: 24px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.statUnit {
+  margin-left: 4px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #737373;
+}
+
+.statTasks {
+  margin-top: 8px;
+  font-size: 24px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.statTotal {
+  font-size: 14px;
+  font-weight: 400;
+  color: #737373;
+  margin-left: 4px;
+}
+
+.eventCard {
+  border-radius: 8px;
+  border: 1px solid var(--border-secondary);
+  background-color: var(--bg-elevated);
+  padding: 20px;
+  height: 200px;
+}
+
+/* Event timeline */
+.eventList {
+  display: flex;
+  height: 85%;
+  overflow-y: auto;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.noEvents {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.eventRow {
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-size: 14px;
+  transition: background-color 0.15s;
+}
+
+.eventRow:hover {
+  background-color: rgba(38, 38, 38, 0.5);
+}
+
+.eventMain {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.eventTime {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+.eventAgent {
+  flex-shrink: 0;
+  font-weight: 500;
+}
+
+.eventMessage {
+  color: var(--foreground);
+}
+
+/* Event type colors */
+.evtAgentState { color: #60a5fa; }
+.evtTaskStarted { color: #a78bfa; }
+.evtTaskCompleted { color: #4ade80; }
+.evtPrCreated { color: #22d3ee; }
+.evtPrMerged { color: #4ade80; }
+.evtCostUpdated { color: #fbbf24; }
+.evtReviewStart { color: #fb923c; }
+.evtReviewEnd { color: #fb923c; }
+.evtExecState { color: #34d399; }
+.evtBrowserCheck { color: #f472b6; }
+.evtDefault { color: #a3a3a3; }
+
+/* Browser check events */
+.browserErrors {
+  margin-top: 6px;
+  margin-left: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.browserError {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 4px;
+  background-color: rgba(239, 68, 68, 0.1);
+  padding: 2px 8px;
+  font-family: monospace;
+  font-size: 12px;
+  color: #f87171;
+}
+
+.browserMore {
+  font-size: 12px;
+  color: #737373;
+}
+
+.browserScreenshot {
+  margin-top: 6px;
+  margin-left: 32px;
+  display: inline-block;
+}
+
+.screenshotImg {
+  height: 64px;
+  width: 112px;
+  border-radius: 4px;
+  border: 1px solid #404040;
+  object-fit: cover;
+  transition: opacity 0.15s;
+}
+
+.screenshotImg:hover {
+  opacity: 0.8;
+}
+
+/* 3D scene column */
+.sceneColumn {
+  display: flex;
+  flex-direction: column;
+  min-height: 600px;
+  height: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--border-secondary);
+  background-color: var(--bg-elevated);
+  overflow: hidden;
+  position: relative;
+}
+
+
+.sceneOverlay {
+  position: absolute;
+  z-index: 10;
+  padding: 16px;
+  width: 100%;
+  background: linear-gradient(to bottom, rgba(10, 10, 10, 0.8), transparent);
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.sceneTitle {
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.reviewCycleBadge {
+  border-radius: 4px;
+  background-color: rgba(249, 115, 22, 0.2);
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fb923c;
+}

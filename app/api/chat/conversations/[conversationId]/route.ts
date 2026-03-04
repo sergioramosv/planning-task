@@ -5,14 +5,14 @@ import { adminDb } from '@/lib/firebase/admin'
 // GET /api/chat/conversations/[conversationId]
 export async function GET(
   request: NextRequest,
-  { params }: { params: { conversationId: string } }
+  { params }: { params: Promise<{ conversationId: string }> }
 ) {
   const sessionUser = await validateSession(request)
   if (!sessionUser) {
     return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
   }
 
-  const { conversationId } = params
+  const { conversationId } = await params
 
   try {
     const convSnap = await adminDb.ref(`conversations/${conversationId}`).once('value')
@@ -50,14 +50,14 @@ export async function GET(
 // DELETE /api/chat/conversations/[conversationId]
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { conversationId: string } }
+  { params }: { params: Promise<{ conversationId: string }> }
 ) {
   const sessionUser = await validateSession(request)
   if (!sessionUser) {
     return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
   }
 
-  const { conversationId } = params
+  const { conversationId } = await params
 
   try {
     const convSnap = await adminDb.ref(`conversations/${conversationId}`).once('value')
@@ -84,14 +84,14 @@ export async function DELETE(
 // PUT /api/chat/conversations/[conversationId] - Update messages
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { conversationId: string } }
+  { params }: { params: Promise<{ conversationId: string }> }
 ) {
   const sessionUser = await validateSession(request)
   if (!sessionUser) {
     return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
   }
 
-  const { conversationId } = params
+  const { conversationId } = await params
 
   let body: { messages?: any[]; title?: string }
   try {

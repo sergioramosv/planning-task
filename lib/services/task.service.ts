@@ -41,5 +41,21 @@ export const TaskService = {
           console.error('Error fetching tasks by project:', error)
           return []
       }
+  },
+
+  getTaskById: async (taskId: string): Promise<Task | null> => {
+    try {
+      const dbRef = ref(database)
+      const snapshot = await get(child(dbRef, `tasks/${taskId}`))
+
+      if (snapshot.exists()) {
+        return snapshot.val() as Task
+      }
+
+      return null
+    } catch (error) {
+      console.error('Error fetching task by ID:', error)
+      return null
+    }
   }
 }

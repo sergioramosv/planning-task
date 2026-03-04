@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { LayoutDashboard, FolderOpen, LogOut } from 'lucide-react'
+import { LayoutDashboard, FolderOpen, LogOut, Bot } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { useState } from 'react'
 import { cn } from '@/lib/utils/cn'
@@ -31,6 +31,11 @@ export default function Sidebar() {
       label: 'Proyectos',
       href: '/projects',
       icon: FolderOpen,
+    },
+    {
+      label: 'Komodo',
+      href: '/komodo',
+      icon: Bot,
     },
   ]
 

@@ -1,0 +1,21 @@
+.wrapper {
+  height: calc(100vh - 115px); /* Fixed height minus header */
+  overflow: hidden; /* Prevent scrolling on the body */
+  display: flex;
+  flex-direction: column;
+  color: var(--text-primary);
+  padding: 12px 16px; /* Base small padding */
+  overflow-y: auto;
+}
+
+@media (min-width: 640px) {
+  .wrapper {
+    padding: 12px 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .wrapper {
+    padding: 12px 24px;
+  }
+}

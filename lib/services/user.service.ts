@@ -30,5 +30,21 @@ export const UserService = {
       console.error('Error fetching users by ids:', error)
       throw error
     }
+  },
+
+  getUserById: async (id: string): Promise<User> => {
+    try {
+      const dbRef = ref(database)
+      const snapshot = await get(child(dbRef, `users/${id}`))
+
+      if (snapshot.exists()) {
+        return snapshot.val() as User
+      }
+
+      throw new Error('User not found')
+    } catch (error) {
+      console.error('Error fetching user by id:', error)
+      throw error
+    }
   }
 }
