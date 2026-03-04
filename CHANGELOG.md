@@ -5,6 +5,22 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.53.0] - 2026-03-04
+
+### Added
+- **Traducción completa de la página de detalle del proyecto**: Todos los textos de la página de detalle del proyecto (`/projects/[projectId]`) ahora están en inglés y español.
+  - Traducidos todos los mensajes toast: creación, actualización y eliminación de tareas, sprints, bugs y propuestas (éxito y error).
+  - Traducido dropdown de selección de proyecto: "Cambiar de proyecto", "Mis proyectos", "Ver todos los proyectos".
+  - Traducidas pestañas: "Tareas", "Bugs", "Propuestas".
+  - Traducidos botones de vista: "Tabla", "Kanban".
+  - Traducidos botones de acción: "Ver Sprints", "Agregar Tarea", "Reportar Bug", "Nueva Propuesta".
+  - Traducidas cabeceras de tabla: "Título", "Estado", "Prioridad", "Developer", "Co-Dev", "Sprint", "Fecha Inicio", "Fecha Fin", "Acciones".
+  - Traducidos estados vacíos: "No hay tareas aún. Crea una para comenzar.", "No se encontraron tareas con los filtros aplicados".
+  - Traducidos aria-labels de botones de acción: "Ver actividad", "Editar tarea", "Eliminar tarea".
+  - Traducidos modales de confirmación: "Eliminar Bug", "Eliminar Tarea" con sus respectivos mensajes de confirmación.
+  - Traducido fallback de usuario: "Usuario" / "User".
+- Agregada nueva sección `projectDetail` en los archivos de traducción con 51 claves nuevas para soportar toda la funcionalidad de la página de detalle del proyecto.
+
 ## [1.52.0] - 2026-03-04
 
 ### Added
