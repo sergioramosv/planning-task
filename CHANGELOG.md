@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.48.1] - 2026-03-04
+
+### Fixed
+- **Layout shift en selector de idioma**: Los botones del `LanguageSwitcher` ahora tienen ancho mínimo fijo (`min-width: 3.5rem`) y `flex-shrink: 0` para evitar que se muevan de posición al cambiar entre idiomas. El código "EN"/"ES" también tiene ancho fijo para mantener el layout estable.
+
 ## [1.48.0] - 2026-03-04
 
 ### Added
