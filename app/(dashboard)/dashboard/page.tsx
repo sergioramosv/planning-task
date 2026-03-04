@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
+import { useLanguage } from '@/contexts/LanguageContext'
 import Spinner from '@/components/ui/Spinner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import cardStyles from '@/components/ui/Card.module.css'
@@ -33,6 +34,7 @@ import badgeStyles from '@/components/ui/Badge.module.css'
 import { TASK_STATUS_LABELS } from '@/lib/constants/taskStates'
 
 export default function DashboardPage() {
+  const { t } = useLanguage()
   const { user, loading: authLoading } = useAuth()
   const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState({
@@ -140,8 +142,8 @@ export default function DashboardPage() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Bienvenido, {user?.displayName}! 👋</h1>
-        <p className={styles.subtitle}>Gestiona tus proyectos y tareas de forma eficiente</p>
+        <h1 className={styles.title}>{t('dashboard.welcomeMessage', { name: user?.displayName })}</h1>
+        <p className={styles.subtitle}>{t('dashboard.subtitle')}</p>
       </div>
 
       <DashboardKPIs

@@ -34,6 +34,8 @@
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Bienvenido",
+    "welcomeMessage": "Bienvenido, {name}! 👋",
+    "subtitle": "Gestiona tus proyectos y tareas de forma eficiente",
     "projects": "Proyectos",
     "tasks": "Tareas",
     "notifications": "Notificaciones",

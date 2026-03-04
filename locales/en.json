@@ -34,6 +34,8 @@
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome",
+    "welcomeMessage": "Welcome, {name}! 👋",
+    "subtitle": "Manage your projects and tasks efficiently",
     "projects": "Projects",
     "tasks": "Tasks",
     "notifications": "Notifications",
