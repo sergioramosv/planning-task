@@ -81,6 +81,28 @@
   background-color: var(--color-neutral-200);
 }
 
+.glass {
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+}
+
+.glass:hover:not(:disabled) {
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+  border-color: var(--color-primary-200);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-soft);
+}
+
+.glass:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Sizes */
 .sm {
   padding: 6px 12px;

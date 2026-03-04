@@ -83,6 +83,15 @@
   --font-bold: 700;
   --font-black: 900;
 
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.05),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5),
+    inset 0 4px 8px rgba(255, 255, 255, 0.5),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.05);
+
   /* Shadows */
   --shadow-soft: 0 2px 8px var(--shadow-color);
   --shadow-card: 0 1px 3px var(--shadow-color);
@@ -137,6 +146,15 @@
   --color-primary-700: #5eead4;
   --color-primary-800: #99f6e4;
   --color-primary-900: #ccfbf1;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(0, 0, 0, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 4px 8px rgba(255, 255, 255, 0.1),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.2);
 
   /* Semantic colors adjusted for dark */
   --color-green-100: #0d2818;

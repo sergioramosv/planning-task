@@ -16,9 +16,12 @@
 }
 
 .content {
-  background-color: var(--bg-elevated);
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-2xl), var(--glass-shadow);
   max-width: 42rem;
   width: 100%;
   max-height: 90vh;

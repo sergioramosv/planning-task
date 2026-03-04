@@ -60,7 +60,7 @@ export default function Header() {
             <div className={styles.actions}>
               <div title={t('nav.dashboard')}>
                 <Button
-                  variant="secondary"
+                  variant="glass"
                   size="sm"
                   onClick={() => router.push('/dashboard')}
                 >
@@ -71,7 +71,7 @@ export default function Header() {
 
               <div title={t('nav.calendar')}>
                 <Button
-                  variant="secondary"
+                  variant="glass"
                   size="sm"
                   onClick={() => router.push('/calendar')}
                 >
@@ -82,7 +82,7 @@ export default function Header() {
 
               <div title={t('nav.team')}>
                 <Button
-                  variant="secondary"
+                  variant="glass"
                   size="sm"
                   onClick={() => router.push('/team')}
                 >

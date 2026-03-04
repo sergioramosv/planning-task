@@ -1,6 +1,9 @@
 .sidebar {
-  background-color: var(--bg-elevated);
-  border-right: 1px solid var(--border-primary);
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-right: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
   height: 100vh;
   display: flex;
   flex-direction: column;
