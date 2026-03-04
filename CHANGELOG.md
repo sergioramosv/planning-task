@@ -5,6 +5,19 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.52.0] - 2026-03-04
+
+### Added
+- **Traducción completa de la página de equipo (Team)**: Todos los textos de la página de equipo ahora están en inglés y español.
+  - Traducido título de página: "Gestión del Equipo" / "Team Management"
+  - Traducido subtítulo: "Administra los miembros de tu equipo y sus proyectos" / "Manage your team members and their projects"
+  - Traducido mensaje de error de login: "Por favor inicia sesión para ver el equipo" / "Please log in to view the team"
+  - Traducidos contadores: "Proyectos", "miembros", "Miembros del Equipo"
+  - Traducidos estados vacíos: "No tienes proyectos aún", "No hay miembros en tus proyectos"
+  - Traducido badge de rol: "Miembro" / "Member"
+  - Traducido fallback de usuario: "Usuario" / "User"
+- Agregadas 9 claves de traducción nuevas en la sección "team" de los archivos de traducción.
+
 ## [1.51.0] - 2026-03-04
 
 ### Added
