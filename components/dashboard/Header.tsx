@@ -10,9 +10,11 @@ import Button from '@/components/ui/Button'
 import NotificationModal from './NotificationModal'
 import ChangelogModal from './ChangelogModal'
 import InvitationsModal from './InvitationsModal'
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher'
 import Link from 'next/link'
 import { APP_VERSION } from '@/lib/constants/appVersion'
 import { useTheme } from '@/hooks/useTheme'
+import { useLanguage } from '@/contexts/LanguageContext'
 import styles from './Header.module.css'
 
 export default function Header() {
@@ -24,6 +26,7 @@ export default function Header() {
   const [isInvitationsOpen, setIsInvitationsOpen] = useState(false)
   const [isChangelogOpen, setIsChangelogOpen] = useState(false)
   const { theme, toggleTheme } = useTheme()
+  const { t } = useLanguage()
 
   const handleLogout = async () => {
     try {
@@ -55,53 +58,55 @@ export default function Header() {
             </div>
 
             <div className={styles.actions}>
-              <div title="Ir a Dashboard">
+              <div title={t('nav.dashboard')}>
                 <Button
                   variant="secondary"
                   size="sm"
                   onClick={() => router.push('/dashboard')}
                 >
                   <BarChart3 size={16} style={{ marginRight: '0.25rem' }} />
-                  Dashboard
+                  {t('nav.dashboard')}
                 </Button>
               </div>
 
-              <div title="Ver Calendario">
+              <div title={t('nav.calendar')}>
                 <Button
                   variant="secondary"
                   size="sm"
                   onClick={() => router.push('/calendar')}
                 >
                   <Calendar size={16} style={{ marginRight: '0.25rem' }} />
-                  Calendario
+                  {t('nav.calendar')}
                 </Button>
               </div>
 
-              <div title="Gestión del Equipo">
+              <div title={t('nav.team')}>
                 <Button
                   variant="secondary"
                   size="sm"
                   onClick={() => router.push('/team')}
                 >
                   <Users size={16} style={{ marginRight: '0.25rem' }} />
-                  Equipo
+                  {t('nav.team')}
                 </Button>
               </div>
 
               <button
                 onClick={toggleTheme}
                 className={styles.notificationButton}
-                aria-label={theme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro'}
-                title={theme === 'light' ? 'Modo oscuro' : 'Modo claro'}
+                aria-label={theme === 'light' ? t('common.settings') : t('common.settings')}
+                title={theme === 'light' ? 'Dark mode' : 'Light mode'}
               >
                 {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
               </button>
 
+              <LanguageSwitcher />
+
               <button
                 onClick={() => setIsInvitationsOpen(true)}
                 className={styles.notificationButton}
-                aria-label="Invitaciones"
-                title={invitations.length > 0 ? `${invitations.length} invitación${invitations.length > 1 ? 'es' : ''}` : 'Sin invitaciones'}
+                aria-label={t('invitations.title')}
+                title={invitations.length > 0 ? `${invitations.length} ${t('invitations.title').toLowerCase()}` : t('invitations.noInvitations')}
               >
                 <Mail size={20} />
                 {invitations.length > 0 && (
@@ -112,7 +117,7 @@ export default function Header() {
               <button
                 onClick={() => setIsNotificationsOpen(true)}
                 className={styles.notificationButton}
-                aria-label="Notificaciones"
+                aria-label={t('notifications.title')}
               >
                 <Bell size={20} />
                 {unreadCount > 0 && (
@@ -125,7 +130,7 @@ export default function Header() {
               <Link href="/profile" className={styles.profileLink}>
                 <div className={styles.profileInfo}>
                   <span className={styles.profileName}>
-                    {user?.displayName || 'Usuario'}
+                    {user?.displayName || t('common.profile')}
                   </span>
                   <span className={styles.profileEmail}>
                     {user?.email}

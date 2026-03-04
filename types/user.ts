@@ -5,4 +5,5 @@ export interface User {
   photoURL?: string
   role: 'admin' | 'developer'
   createdAt: number
+  language?: 'en' | 'es'
 }

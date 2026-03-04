@@ -8,6 +8,7 @@ import Spinner from '@/components/ui/Spinner'
 import Header from '@/components/dashboard/Header'
 import NotificationPush from '@/components/dashboard/NotificationPush'
 import UpdateNotification from '@/components/common/UpdateNotification'
+import { Providers } from '@/components/Providers'
 import styles from './layout.module.css'
 
 export default function DashboardLayout({
@@ -38,18 +39,20 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className={styles.wrapper}>
-      <Header />
-      <NotificationPush />
-      <main className={styles.main}>
-        {children}
-      </main>
-      <UpdateNotification
-        isOpen={isUpdateAvailable}
-        currentVersion={currentVersion}
-        latestVersion={latestVersion}
-        onUpdate={forceUpdate}
-      />
-    </div>
+    <Providers>
+      <div className={styles.wrapper}>
+        <Header />
+        <NotificationPush />
+        <main className={styles.main}>
+          {children}
+        </main>
+        <UpdateNotification
+          isOpen={isUpdateAvailable}
+          currentVersion={currentVersion}
+          latestVersion={latestVersion}
+          onUpdate={forceUpdate}
+        />
+      </div>
+    </Providers>
   )
 }

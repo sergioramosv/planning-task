@@ -1,0 +1,56 @@
+.container {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.button:hover {
+  background: var(--surface-hover);
+  border-color: var(--primary);
+  color: var(--text-primary);
+}
+
+.button.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.flag {
+  font-size: 1.125rem;
+  line-height: 1;
+}
+
+.code {
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+@media (max-width: 768px) {
+  .button {
+    padding: 0.375rem 0.5rem;
+  }
+
+  .code {
+    display: none;
+  }
+
+  .flag {
+    font-size: 1.25rem;
+  }
+}
