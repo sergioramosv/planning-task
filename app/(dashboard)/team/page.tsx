@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { useProjects } from '@/hooks/useProjects'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { UserService } from '@/lib/services/user.service'
 import { User } from '@/types'
 import Spinner from '@/components/ui/Spinner'
@@ -11,6 +12,7 @@ import styles from './page.module.css'
 import Badge from '@/components/ui/Badge'
 
 export default function TeamPage() {
+  const { t } = useLanguage()
   const { user, loading: authLoading } = useAuth()
   const { projects } = useProjects(user?.uid || null)
   const [teamMembers, setTeamMembers] = useState<User[]>([])
@@ -61,7 +63,7 @@ export default function TeamPage() {
   if (!user) {
     return (
       <div className={styles.container}>
-        <div className={styles.errorMessage}>Por favor inicia sesión para ver el equipo</div>
+        <div className={styles.errorMessage}>{t('team.pleaseLogin')}</div>
       </div>
     )
   }
@@ -69,25 +71,25 @@ export default function TeamPage() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Gestión del Equipo</h1>
+        <h1 className={styles.title}>{t('team.pageTitle')}</h1>
         <p className={styles.subtitle}>
-          Administra los miembros de tu equipo y sus proyectos
+          {t('team.subtitle')}
         </p>
       </div>
 
       <div className={styles.content}>
         <div className={styles.card}>
-          <div className={styles.cardTitle}>Proyectos ({projects.length})</div>
+          <div className={styles.cardTitle}>{t('team.projectsCount', { count: projects.length })}</div>
           <div className={styles.cardContent}>
             <div className={styles.projectsList}>
               {projects.length === 0 ? (
-                <p className={styles.emptyText}>No tienes proyectos aún</p>
+                <p className={styles.emptyText}>{t('team.noProjects')}</p>
               ) : (
                 projects.map((project) => (
                   <div key={project.id} className={styles.projectItem}>
                     <div className={styles.projectName}>{project.name}</div>
                     <div className={styles.projectMembers}>
-                      {project.members ? Object.keys(project.members).length : 0} miembros
+                      {project.members ? Object.keys(project.members).length : 0} {t('team.membersCount')}
                     </div>
                   </div>
                 ))
@@ -97,10 +99,10 @@ export default function TeamPage() {
         </div>
 
         <div className={styles.card}>
-          <div className={styles.cardTitle}>Miembros del Equipo ({teamMembers.length})</div>
+          <div className={styles.cardTitle}>{t('team.teamMembersCount', { count: teamMembers.length })}</div>
           <div className={styles.cardContent}>
              {teamMembers.length === 0 ? (
-                 <p className={styles.emptyText}>No hay miembros en tus proyectos (además de ti mismo si no estás en ellos)</p>
+                 <p className={styles.emptyText}>{t('team.noTeamMembers')}</p>
              ) : (
                  <div className={styles.membersGrid}>
                     {teamMembers.map(member => (
@@ -114,7 +116,7 @@ export default function TeamPage() {
                                     </div>
                                 )}
                                 <div className={styles.memberInfo}>
-                                    <div className={styles.memberName}>{member.displayName || 'Usuario'}</div>
+                                    <div className={styles.memberName}>{member.displayName || t('team.user')}</div>
                                     <div className={styles.memberEmail}>
                                         <Mail size={12} style={{marginRight: 4}} />
                                         {member.email}
@@ -122,7 +124,7 @@ export default function TeamPage() {
                                 </div>
                             </div>
                             <div className={styles.memberRole}>
-                                <Badge variant="secondary" size="sm">Miembro</Badge>
+                                <Badge variant="secondary" size="sm">{t('team.member')}</Badge>
                                 {/* Logic to show "Admin" or project count could go here */}
                             </div>
                         </div>
