@@ -1,6 +1,7 @@
 'use client'
 
 import { Project, Sprint, Task } from '@/types'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Calendar, User, Folder, Trash2, Copy, Edit2, CheckSquare, Clock } from 'lucide-react'
 import { formatDate } from '@/lib/utils/formatters'
@@ -19,13 +20,14 @@ interface ProjectCardProps {
 }
 
 export default function ProjectCard({ project, sprints = [], tasks = [], onEdit, onDelete }: ProjectCardProps) {
+  const { t } = useLanguage()
   const theme = getProjectColor(project.id)
 
   const handleCopyId = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
     navigator.clipboard.writeText(project.id)
-    toast.success('ID copiado al portapapeles')
+    toast.success(t('projects.idCopied'))
   }
 
   const getStatusClass = (status: string) => {
@@ -44,13 +46,13 @@ export default function ProjectCard({ project, sprints = [], tasks = [], onEdit,
   const getStatusLabel = (status: string) => {
     switch (status) {
       case 'active':
-        return 'Activo'
+        return t('projects.active')
       case 'planned':
-        return 'Planeado'
+        return t('projects.planned')
       case 'completed':
-        return 'Completado'
+        return t('projects.completed')
       default:
-        return 'Archivado'
+        return t('projects.archived')
     }
   }
 
@@ -78,7 +80,7 @@ export default function ProjectCard({ project, sprints = [], tasks = [], onEdit,
                 onEdit(project)
               }}
               className={styles.editButton}
-              title="Editar proyecto"
+              title={t('projects.editButton')}
             >
               <Edit2 size={18} />
             </button>
@@ -91,7 +93,7 @@ export default function ProjectCard({ project, sprints = [], tasks = [], onEdit,
                 onDelete(project.id)
               }}
               className={styles.deleteButton}
-              title="Eliminar proyecto"
+              title={t('projects.deleteButton')}
             >
               <Trash2 size={18} />
             </button>
@@ -109,7 +111,7 @@ export default function ProjectCard({ project, sprints = [], tasks = [], onEdit,
                 <button
                   onClick={handleCopyId}
                   className={styles.copyButton}
-                  title="Copiar ID"
+                  title={t('projects.copyIdButton')}
                   style={{ color: theme.text }}
                 >
                   <Copy size={14} />
@@ -131,14 +133,14 @@ export default function ProjectCard({ project, sprints = [], tasks = [], onEdit,
           </div>
           <div className={styles.memberInfo}>
             <User size={16} />
-            <span>{project.members ? Object.keys(project.members).length : 0} miembro(s)</span>
+            <span>{project.members ? Object.keys(project.members).length : 0} {t('projects.membersCount')}</span>
           </div>
 
           <div className={styles.statsContainer}>
             <div className={styles.statItem}>
               <Clock size={16} style={{ color: theme.icon }} />
               <div className={styles.statContent}>
-                <span className={styles.statLabel}>Sprints</span>
+                <span className={styles.statLabel}>{t('projects.sprints')}</span>
                 <span className={styles.statValue}>{totalSprints}</span>
               </div>
             </div>
@@ -147,7 +149,7 @@ export default function ProjectCard({ project, sprints = [], tasks = [], onEdit,
               <div className={styles.statItem}>
                 <CheckSquare size={16} style={{ color: theme.icon }} />
                 <div className={styles.statContent}>
-                  <span className={styles.statLabel}>Sprint Actual</span>
+                  <span className={styles.statLabel}>{t('projects.currentSprint')}</span>
                   <span className={styles.statValue}>{currentSprint.name}</span>
                 </div>
               </div>
@@ -156,7 +158,7 @@ export default function ProjectCard({ project, sprints = [], tasks = [], onEdit,
             <div className={styles.statItem}>
               <CheckSquare size={16} style={{ color: theme.icon }} />
               <div className={styles.statContent}>
-                <span className={styles.statLabel}>Tareas</span>
+                <span className={styles.statLabel}>{t('projects.tasks')}</span>
                 <span className={styles.statValue}>{totalTasks}</span>
               </div>
             </div>
@@ -164,7 +166,7 @@ export default function ProjectCard({ project, sprints = [], tasks = [], onEdit,
             <div className={styles.statItem}>
               <Clock size={16} style={{ color: '#EF4444' }} />
               <div className={styles.statContent}>
-                <span className={styles.statLabel}>Pendientes</span>
+                <span className={styles.statLabel}>{t('projects.pending')}</span>
                 <span className={styles.statValue} style={{ color: '#EF4444' }}>{incompleteTasks}</span>
               </div>
             </div>

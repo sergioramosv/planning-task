@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { useProjects } from '@/hooks/useProjects'
 import { useInvitations } from '@/hooks/useInvitations'
+import { useLanguage } from '@/contexts/LanguageContext'
 import Button from '@/components/ui/Button'
 import ProjectList from '@/components/projects/ProjectList'
 import ProjectModal from '@/components/projects/ProjectModal'
@@ -16,6 +17,7 @@ import ConfirmationModal from '@/components/ui/ConfirmationModal'
 import styles from './page.module.css'
 
 export default function ProjectsPage() {
+  const { t } = useLanguage()
   const { user, loading: authLoading } = useAuth()
   const { projects, loading, error, createProject, updateProject, deleteProject } = useProjects(user?.uid || null)
   const { sendInvitation } = useInvitations(user?.uid || null)
@@ -42,10 +44,10 @@ export default function ProjectsPage() {
         createdBy: user!.uid,
         members: { [user!.uid]: true },
       })
-      toast.success('Proyecto creado exitosamente')
+      toast.success(t('projects.successCreated'))
       setIsModalOpen(false)
     } catch (err) {
-      toast.error('Error al crear el proyecto')
+      toast.error(t('projects.errorCreate'))
     } finally {
       setIsLoading(false)
     }
@@ -67,11 +69,11 @@ export default function ProjectsPage() {
     setIsLoading(true)
     try {
       await updateProject(projectToEdit.id, updates)
-      toast.success('Proyecto actualizado exitosamente')
+      toast.success(t('projects.successUpdated'))
       setIsEditModalOpen(false)
       setProjectToEdit(null)
     } catch (err) {
-      toast.error('Error al actualizar el proyecto')
+      toast.error(t('projects.errorUpdate'))
     } finally {
       setIsLoading(false)
     }
@@ -91,10 +93,10 @@ export default function ProjectsPage() {
           role: role as any,
           status: 'pending',
         })
-        toast.success('Invitación enviada exitosamente')
+        toast.success(t('projects.successInvitationSent'))
       }
     } catch (err) {
-      toast.error('Error al enviar invitación')
+      toast.error(t('projects.errorInvitation'))
     }
   }
 
@@ -107,10 +109,10 @@ export default function ProjectsPage() {
         await updateProject(projectId, {
           members: newMembers,
         })
-        toast.success('Miembro removido exitosamente')
+        toast.success(t('projects.successMemberRemoved'))
       }
     } catch (err) {
-      toast.error('Error al remover miembro')
+      toast.error(t('projects.errorMemberRemove'))
     }
   }
 
@@ -119,7 +121,7 @@ export default function ProjectsPage() {
 
     try {
       await deleteProject(projectToDelete)
-      toast.success('Proyecto eliminado correctamente', {
+      toast.success(t('projects.successDeleted'), {
         style: {
           background: '#10B981',
           color: '#fff',
@@ -130,7 +132,7 @@ export default function ProjectsPage() {
         },
       })
     } catch (err) {
-      toast.error('Error al eliminar el proyecto')
+      toast.error(t('projects.errorDelete'))
     } finally {
       setIsDeleteModalOpen(false)
       setProjectToDelete(null)
@@ -143,10 +145,10 @@ export default function ProjectsPage() {
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.headerContent}>
-            <h1 className={styles.title}>Proyectos</h1>
-            <p className={styles.subtitle}>Gestiona todos tus proyectos en un solo lugar</p>
+            <h1 className={styles.title}>{t('projects.title')}</h1>
+            <p className={styles.subtitle}>{t('projects.subtitle')}</p>
           </div>
-          <Button onClick={() => setIsModalOpen(true)}>+ Crear Proyecto</Button>
+          <Button onClick={() => setIsModalOpen(true)}>{t('projects.createProject')}</Button>
         </div>
 
         {error && (
@@ -187,12 +189,12 @@ export default function ProjectsPage() {
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleDeleteProject}
-        title="Eliminar Proyecto"
-        message={`¿Estás seguro de que deseas eliminar el proyecto "${projects.find(p => p.id === projectToDelete)?.name}"? Esta acción no se puede deshacer y borrará permanentemente todas las tareas y sprints asociados.`}
-        confirmText="Eliminar Proyecto"
+        title={t('projects.deleteConfirmTitle')}
+        message={t('projects.deleteConfirmMessage', { name: projects.find(p => p.id === projectToDelete)?.name || '' })}
+        confirmText={t('projects.deleteConfirmButton')}
         variant="danger"
         confirmInput={projects.find(p => p.id === projectToDelete)?.name}
-        inputLabel="Escribe el nombre del proyecto para confirmar:"
+        inputLabel={t('projects.deleteConfirmInputLabel')}
         inputPlaceholder={projects.find(p => p.id === projectToDelete)?.name}
       />
     </>

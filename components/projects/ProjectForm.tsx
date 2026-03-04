@@ -2,6 +2,7 @@
 
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { projectSchema, type ProjectFormData } from '@/lib/utils/validators'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
@@ -17,6 +18,7 @@ interface ProjectFormProps {
 }
 
 export default function ProjectForm({ project, onSubmit, isLoading = false }: ProjectFormProps) {
+  const { t } = useLanguage()
   const {
     register,
     handleSubmit,
@@ -76,16 +78,16 @@ export default function ProjectForm({ project, onSubmit, isLoading = false }: Pr
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className={styles.form}>
       <Input
-        label="Nombre del Proyecto"
-        placeholder="Ej: Plataforma E-commerce"
+        label={t('projects.projectName')}
+        placeholder={t('projects.projectNamePlaceholder')}
         {...register('name')}
         error={errors.name?.message}
         disabled={isLoading}
       />
 
       <Input
-        label="Descripción"
-        placeholder="Describe el propósito del proyecto"
+        label={t('projects.description')}
+        placeholder={t('projects.descriptionPlaceholder')}
         {...register('description')}
         error={errors.description?.message}
         disabled={isLoading}
@@ -93,7 +95,7 @@ export default function ProjectForm({ project, onSubmit, isLoading = false }: Pr
 
       <div className={styles.dateGrid}>
         <Input
-          label="Fecha de Inicio"
+          label={t('projects.startDate')}
           type="date"
           {...register('startDate')}
           error={errors.startDate?.message}
@@ -101,7 +103,7 @@ export default function ProjectForm({ project, onSubmit, isLoading = false }: Pr
         />
 
         <Input
-          label="Fecha de Fin"
+          label={t('projects.endDate')}
           type="date"
           {...register('endDate')}
           error={errors.endDate?.message}
@@ -110,24 +112,24 @@ export default function ProjectForm({ project, onSubmit, isLoading = false }: Pr
       </div>
 
       <Select
-        label="Estado"
+        label={t('projects.status')}
         {...register('status')}
         error={errors.status?.message}
         disabled={isLoading}
         options={[
-          { value: 'planned', label: 'Planeado' },
-          { value: 'active', label: 'Activo' },
-          { value: 'completed', label: 'Completado' },
-          { value: 'archived', label: 'Archivado' },
+          { value: 'planned', label: t('projects.planned') },
+          { value: 'active', label: t('projects.active') },
+          { value: 'completed', label: t('projects.completed') },
+          { value: 'archived', label: t('projects.archived') },
         ]}
       />
 
       {/* Repositorios */}
       <div className={styles.section}>
         <div className={styles.sectionHeader}>
-          <span className={styles.sectionTitle}>Repositorios (Opcional)</span>
+          <span className={styles.sectionTitle}>{t('projects.repositoriesOptional')}</span>
           <Button type="button" size="sm" variant="secondary" onClick={handleAddRepo} disabled={isLoading}>
-            <Plus size={16} /> Añadir repositorio
+            <Plus size={16} /> {t('projects.addRepository')}
           </Button>
         </div>
         {fields.length > 0 && (
@@ -135,7 +137,7 @@ export default function ProjectForm({ project, onSubmit, isLoading = false }: Pr
             {fields.map((field, index) => (
               <div key={field.id} className={styles.repoRow}>
                 <Input
-                  placeholder="https://github.com/org/repo"
+                  placeholder={t('projects.repoPlaceholder')}
                   {...register(`repositories.${index}.url` as any)}
                   error={(errors.repositories as any)?.[index]?.url?.message}
                   disabled={isLoading}
@@ -144,10 +146,10 @@ export default function ProjectForm({ project, onSubmit, isLoading = false }: Pr
                   {...register(`repositories.${index}.type` as any)}
                   disabled={isLoading}
                   options={[
-                    { value: 'front', label: 'Frontend' },
-                    { value: 'back', label: 'Backend' },
-                    { value: 'api', label: 'API' },
-                    { value: 'fullstack', label: 'Full Stack' },
+                    { value: 'front', label: t('projects.repoTypeFront') },
+                    { value: 'back', label: t('projects.repoTypeBack') },
+                    { value: 'api', label: t('projects.repoTypeApi') },
+                    { value: 'fullstack', label: t('projects.repoTypeFullstack') },
                   ]}
                 />
                 <button
@@ -169,7 +171,7 @@ export default function ProjectForm({ project, onSubmit, isLoading = false }: Pr
               </div>
             ))}
             <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
-              El repositorio con ★ es el &quot;por defecto&quot; para tareas sin etiqueta asignada.
+              {t('projects.repoDefaultHelp')}
             </p>
           </div>
         )}
@@ -177,28 +179,28 @@ export default function ProjectForm({ project, onSubmit, isLoading = false }: Pr
 
       {/* Tech Stack */}
       <div className={styles.section}>
-        <span className={styles.sectionTitle}>Tech Stack (Opcional)</span>
+        <span className={styles.sectionTitle}>{t('projects.techStack')}</span>
         <div className={styles.techStackGrid} style={{ marginTop: 'var(--spacing-3)' }}>
           <Input
-            label="Lenguajes"
-            placeholder="TypeScript, CSS, HTML"
+            label={t('projects.languages')}
+            placeholder={t('projects.languagesPlaceholder')}
             {...register('languages')}
             disabled={isLoading}
           />
           <Input
-            label="Frameworks"
-            placeholder="Next, Tailwind"
+            label={t('projects.frameworks')}
+            placeholder={t('projects.frameworksPlaceholder')}
             {...register('frameworks')}
             disabled={isLoading}
           />
         </div>
         <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', marginTop: 'var(--spacing-1)' }}>
-          Separados por comas.
+          {t('projects.commaSeparated')}
         </p>
       </div>
 
       <Button type="submit" fullWidth loading={isLoading} disabled={isLoading}>
-        {project ? 'Actualizar Proyecto' : 'Crear Proyecto'}
+        {project ? t('projects.updateProject') : t('projects.newProject')}
       </Button>
     </form>
   )

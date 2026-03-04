@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useLanguage } from '@/contexts/LanguageContext'
 import Modal from '@/components/ui/Modal'
 import ProjectForm from './ProjectForm'
 import { Project } from '@/types'
@@ -19,6 +20,7 @@ export default function ProjectModal({
   project,
   onSubmit,
 }: ProjectModalProps) {
+  const { t } = useLanguage()
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async (data: ProjectFormData) => {
@@ -35,7 +37,7 @@ export default function ProjectModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={project ? 'Editar Proyecto' : 'Crear Nuevo Proyecto'}
+      title={project ? t('projects.editProject') : t('projects.createNewProject')}
     >
       <ProjectForm
         project={project}

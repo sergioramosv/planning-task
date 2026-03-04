@@ -1,6 +1,7 @@
 'use client'
 
 import { Project, Sprint, Task } from '@/types'
+import { useLanguage } from '@/contexts/LanguageContext'
 import ProjectCard from './ProjectCard'
 import Spinner from '@/components/ui/Spinner'
 import styles from './ProjectList.module.css'
@@ -22,6 +23,7 @@ export default function ProjectList({
   onEdit,
   onDelete,
 }: ProjectListProps) {
+  const { t } = useLanguage()
   const [allSprints, setAllSprints] = useState<Sprint[]>([])
   const [allTasks, setAllTasks] = useState<Task[]>([])
   const [dataLoading, setDataLoading] = useState(true)
@@ -57,8 +59,8 @@ export default function ProjectList({
     return (
       <div className={styles.emptyState}>
         <Folder className={styles.emptyIcon} size={48} />
-        <h3 className={styles.emptyTitle}>No hay proyectos</h3>
-        <p className={styles.emptyMessage}>Crea tu primer proyecto para comenzar</p>
+        <h3 className={styles.emptyTitle}>{t('projects.noProjects')}</h3>
+        <p className={styles.emptyMessage}>{t('projects.createFirstProject')}</p>
       </div>
     )
   }
