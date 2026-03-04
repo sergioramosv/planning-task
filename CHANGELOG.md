@@ -5,6 +5,18 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.49.0] - 2026-03-04
+
+### Fixed
+- **i18n no funcionaba con Next.js App Router**: Añadido `react: { useSuspense: false }` en configuración de i18n y check de `isInitialized` para evitar doble inicialización. Ahora las traducciones funcionan correctamente en todos los componentes.
+- **Traducciones no se actualizaban**: Añadido listener de evento `languageChanged` en `LanguageContext` para sincronizar estado cuando i18n cambia. Inicialización de i18n con idioma guardado inmediatamente.
+
+### Changed
+- **Rediseño del selector de idioma**: Cambiado de dos botones a un único botón toggle que muestra el idioma actual (🇪🇸 ES o 🇬🇧 EN). Al hacer clic, cambia automáticamente al otro idioma.
+- **Soporte completo para modo oscuro/claro**: Estilos específicos para cada tema usando `[data-theme='dark']` y `[data-theme='light']`.
+- **Animaciones mejoradas**: Efecto de escala al hover/click y rotación de bandera (12°) al pasar el cursor.
+- **Orden de idiomas**: EN primero, ES después (estándar internacional).
+
 ## [1.48.2] - 2026-03-04
 
 ### Fixed
