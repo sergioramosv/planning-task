@@ -5,6 +5,14 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.51.0] - 2026-03-04
+
+### Added
+- **Traducción de página principal del dashboard**: El título de bienvenida y subtítulo ahora están en inglés y español.
+  - Traducido mensaje de bienvenida: "Bienvenido, {nombre}! 👋" / "Welcome, {name}! 👋"
+  - Traducido subtítulo: "Gestiona tus proyectos y tareas de forma eficiente" / "Manage your projects and tasks efficiently"
+- Agregadas claves `welcomeMessage` y `subtitle` en la sección dashboard de los archivos de traducción.
+
 ## [1.50.0] - 2026-03-04
 
 ### Added
