@@ -4,16 +4,12 @@ import { useLanguage, Language } from '@/contexts/LanguageContext';
 import styles from './LanguageSwitcher.module.css';
 
 const LANGUAGES = [
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
   { code: 'en', name: 'English', flag: '🇬🇧' },
+  { code: 'es', name: 'Español', flag: '🇪🇸' },
 ];
 
 export function LanguageSwitcher() {
   const { language, setLanguage } = useLanguage();
-
-  const handleLanguageChange = async (lang: Language) => {
-    await setLanguage(lang);
-  };
 
   return (
     <div className={styles.container}>
@@ -21,7 +17,7 @@ export function LanguageSwitcher() {
         <button
           key={lang.code}
           className={`${styles.button} ${language === lang.code ? styles.active : ''}`}
-          onClick={() => handleLanguageChange(lang.code as Language)}
+          onClick={() => setLanguage(lang.code as Language)}
           title={lang.name}
         >
           <span className={styles.flag}>{lang.flag}</span>
