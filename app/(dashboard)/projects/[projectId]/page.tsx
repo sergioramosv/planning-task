@@ -9,6 +9,7 @@ import { useSprints } from '@/hooks/useSprints'
 import { useBugs } from '@/hooks/useBugs'
 import { useProposals } from '@/hooks/useProposals'
 import { usePermissions } from '@/hooks/usePermissions'
+import { useLanguage } from '@/contexts/LanguageContext'
 import Spinner from '@/components/ui/Spinner'
 import Button from '@/components/ui/Button'
 import { ArrowLeft, Plus, Calendar, MessageSquare, Edit2, Trash2, ChevronDown, FolderOpen } from 'lucide-react'
@@ -35,6 +36,7 @@ import { UserService } from '@/lib/services/user.service'
 import styles from './page.module.css'
 
 export default function ProjectDetailsPage() {
+  const { t } = useLanguage()
   const params = useParams()
   const projectId = params.projectId as string
   const router = useRouter()
@@ -205,7 +207,7 @@ export default function ProjectDetailsPage() {
 
       if (selectedTask) {
         if (!selectedTask.id) {
-          toast.error('Error: la tarea no tiene un ID válido')
+          toast.error(t('projectDetail.taskInvalidId'))
           return
         }
         // Update existing task
@@ -224,7 +226,7 @@ export default function ProjectDetailsPage() {
           ...(data.implementationPlan ? { implementationPlan: data.implementationPlan } : {}),
           ...(data.attachments ? { attachments: data.attachments } : {}),
         })
-        toast.success('Tarea actualizada correctamente')
+        toast.success(t('projectDetail.taskUpdatedSuccess'))
       } else {
         // Create new task
         await createTask(
@@ -247,10 +249,10 @@ export default function ProjectDetailsPage() {
           },
           {
             projectName: project?.name,
-            creatorName: user.displayName || 'Usuario',
+            creatorName: user.displayName || t('projectDetail.user'),
           }
         )
-        toast.success('Tarea creada correctamente')
+        toast.success(t('projectDetail.taskCreatedSuccess'))
       }
       if (!selectedTask && activeDraft) {
         deleteDraft(activeDraft.id)
@@ -259,7 +261,7 @@ export default function ProjectDetailsPage() {
       setIsModalOpen(false)
     } catch (error) {
       console.error('Error saving task:', error)
-      toast.error('Error al guardar la tarea')
+      toast.error(t('projectDetail.taskSaveError'))
     }
   }
 
@@ -274,10 +276,10 @@ export default function ProjectDetailsPage() {
         projectId,
         createdBy: user.uid,
       })
-      toast.success('Sprint creado correctamente')
+      toast.success(t('projectDetail.sprintCreatedSuccess'))
     } catch (error) {
       console.error('Error creating sprint:', error)
-      toast.error('Error al crear el sprint')
+      toast.error(t('projectDetail.sprintCreateError'))
     }
   }
 
@@ -332,10 +334,10 @@ export default function ProjectDetailsPage() {
   const handleStatusChange = async (taskId: string, newStatus: TaskStatus) => {
     try {
       await updateTask(taskId, { status: newStatus })
-      toast.success(`Estado cambiado a ${TASK_STATUS_LABELS[newStatus]}`)
+      toast.success(`${t('projectDetail.statusChangedTo')} ${TASK_STATUS_LABELS[newStatus]}`)
     } catch (error) {
       console.error('Error updating task status:', error)
-      toast.error('Error al cambiar el estado')
+      toast.error(t('projectDetail.statusChangeError'))
     }
   }
 
@@ -349,10 +351,10 @@ export default function ProjectDetailsPage() {
       await deleteTask(taskId)
       setIsDeleteTaskConfirmOpen(false)
       setTaskToDelete(null)
-      toast.success('Tarea eliminada correctamente')
+      toast.success(t('projectDetail.taskDeletedSuccess'))
     } catch (error) {
       console.error('Error deleting task:', error)
-      toast.error('Error al eliminar la tarea')
+      toast.error(t('projectDetail.taskDeleteError'))
     }
   }
 
@@ -397,15 +399,15 @@ export default function ProjectDetailsPage() {
           attachments: [],
           status: 'open',
           createdBy: user.uid,
-          createdByName: user.displayName || 'Usuario',
+          createdByName: user.displayName || t('projectDetail.user'),
         },
-        { projectName: project?.name, creatorName: user.displayName || 'Usuario' }
+        { projectName: project?.name, creatorName: user.displayName || t('projectDetail.user') }
       )
       setIsBugModalOpen(false)
-      toast.success('Bug reportado correctamente')
+      toast.success(t('projectDetail.bugReportedSuccess'))
     } catch (error) {
       console.error('Error saving bug:', error)
-      toast.error('Error al reportar el bug')
+      toast.error(t('projectDetail.bugReportError'))
     }
   }
 
@@ -418,10 +420,10 @@ export default function ProjectDetailsPage() {
     if (!bugToDelete) return
     try {
       await deleteBug(bugToDelete)
-      toast.success('Bug eliminado correctamente')
+      toast.success(t('projectDetail.bugDeletedSuccess'))
     } catch (error) {
       console.error('Error deleting bug:', error)
-      toast.error('Error al eliminar el bug')
+      toast.error(t('projectDetail.bugDeleteError'))
     } finally {
       setBugToDelete(null)
       setIsDeleteBugConfirmOpen(false)
@@ -431,10 +433,10 @@ export default function ProjectDetailsPage() {
   const handleBugStatusChange = async (bugId: string, newStatus: any) => {
     try {
       await updateBug(bugId, { status: newStatus })
-      toast.success('Estado del bug actualizado')
+      toast.success(t('projectDetail.bugStatusUpdated'))
     } catch (error) {
       console.error('Error updating bug status:', error)
-      toast.error('Error al actualizar el estado del bug')
+      toast.error(t('projectDetail.bugStatusUpdateError'))
     }
   }
 
@@ -455,13 +457,13 @@ export default function ProjectDetailsPage() {
         devPoints: data.devPoints,
         status: 'pending',
         createdBy: user.uid,
-        createdByName: user.displayName || 'Usuario',
+        createdByName: user.displayName || t('projectDetail.user'),
       })
       setIsProposalModalOpen(false)
-      toast.success('Propuesta creada correctamente')
+      toast.success(t('projectDetail.proposalCreatedSuccess'))
     } catch (error) {
       console.error('Error saving proposal:', error)
-      toast.error('Error al crear la propuesta')
+      toast.error(t('projectDetail.proposalCreateError'))
     }
   }
 
@@ -488,20 +490,20 @@ export default function ProjectDetailsPage() {
 
       // Marcar propuesta como aceptada
       await updateProposalStatus(proposalId, 'accepted')
-      toast.success('Propuesta aceptada y tarea creada')
+      toast.success(t('projectDetail.proposalAccepted'))
     } catch (error) {
       console.error('Error accepting proposal:', error)
-      toast.error('Error al aceptar la propuesta')
+      toast.error(t('projectDetail.proposalAcceptError'))
     }
   }
 
   const handleProposalReject = async (proposalId: string) => {
     try {
       await updateProposalStatus(proposalId, 'rejected')
-      toast.success('Propuesta rechazada')
+      toast.success(t('projectDetail.proposalRejected'))
     } catch (error) {
       console.error('Error rejecting proposal:', error)
-      toast.error('Error al rechazar la propuesta')
+      toast.error(t('projectDetail.proposalRejectError'))
     }
   }
 
@@ -516,7 +518,7 @@ export default function ProjectDetailsPage() {
           <button
             className={styles.projectSwitcherButton}
             onClick={() => setIsProjectDropdownOpen(!isProjectDropdownOpen)}
-            title="Cambiar de proyecto"
+            title={t('projectDetail.changeProject')}
           >
             <h1 className={styles.title}>{project?.name}</h1>
             <ChevronDown size={16} className={isProjectDropdownOpen ? styles.chevronOpen : ''} />
@@ -524,7 +526,7 @@ export default function ProjectDetailsPage() {
 
           {isProjectDropdownOpen && (
             <div className={styles.projectDropdown}>
-              <div className={styles.projectDropdownHeader}>Mis proyectos</div>
+              <div className={styles.projectDropdownHeader}>{t('projectDetail.myProjects')}</div>
               {projects
                 .filter(p => p.status === 'active' || p.status === 'planned')
                 .map(p => (
@@ -552,7 +554,7 @@ export default function ProjectDetailsPage() {
                 }}
               >
                 <FolderOpen size={14} />
-                <span className={styles.projectDropdownItemName}>Ver todos los proyectos</span>
+                <span className={styles.projectDropdownItemName}>{t('projectDetail.viewAllProjects')}</span>
               </button>
             </div>
           )}
@@ -561,9 +563,9 @@ export default function ProjectDetailsPage() {
 
       <TabsBar
         tabs={[
-          { id: 'tasks', label: 'Tareas', badge: tasks.length },
-          { id: 'bugs', label: 'Bugs', badge: bugs.length },
-          { id: 'proposals', label: 'Propuestas', badge: proposals.length },
+          { id: 'tasks', label: t('projects.tasks'), badge: tasks.length },
+          { id: 'bugs', label: t('projects.bugs'), badge: bugs.length },
+          { id: 'proposals', label: t('projects.proposals'), badge: proposals.length },
         ]}
         activeTab={activeTab}
         onTabChange={(tabId) => setActiveTab(tabId as 'tasks' | 'bugs' | 'proposals')}
@@ -579,23 +581,23 @@ export default function ProjectDetailsPage() {
                   size="sm"
                   onClick={() => setViewMode('table')}
                 >
-                  Tabla
+                  {t('projectDetail.table')}
                 </Button>
                 <Button
                   variant={viewMode === 'kanban' ? 'primary' : 'secondary'}
                   size="sm"
                   onClick={() => setViewMode('kanban')}
                 >
-                  Kanban
+                  {t('projectDetail.kanban')}
                 </Button>
               </div>
               <div style={{ display: 'flex', gap: 'var(--spacing-2)' }}>
                 <Button size="sm" onClick={() => router.push(`/projects/${projectId}/sprints`)}>
-                  <Calendar size={16} style={{ marginRight: '0.25rem' }} /> Ver Sprints
+                  <Calendar size={16} style={{ marginRight: '0.25rem' }} /> {t('projectDetail.viewSprints')}
                 </Button>
                 {canCreateTask && (
                   <Button size="sm" onClick={handleAddTaskClick}>
-                    <Plus size={16} style={{ marginRight: '0.25rem' }} /> Agregar Tarea
+                    <Plus size={16} style={{ marginRight: '0.25rem' }} /> {t('projectDetail.addTask')}
                   </Button>
                 )}
               </div>
@@ -603,7 +605,7 @@ export default function ProjectDetailsPage() {
 
             {tasks.length === 0 ? (
               <div style={{ textAlign: 'center', padding: 'var(--spacing-8) 0', color: 'var(--color-neutral-600)' }}>
-                <p>No hay tareas aún. Crea una para comenzar.</p>
+                <p>{t('projectDetail.noTasksYet')}</p>
               </div>
             ) : (
               <>
@@ -625,22 +627,22 @@ export default function ProjectDetailsPage() {
                   <thead>
                     <tr style={{ borderBottom: '1px solid var(--color-neutral-200)', backgroundColor: 'var(--color-neutral-50)' }}>
                       <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)', cursor: 'pointer' }} onClick={() => handleSort('id')}>ID {sortColumn === 'id' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
-                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)', cursor: 'pointer' }} onClick={() => handleSort('title')}>Título {sortColumn === 'title' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
-                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)', cursor: 'pointer' }} onClick={() => handleSort('status')}>Estado {sortColumn === 'status' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
-                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)', cursor: 'pointer' }} onClick={() => handleSort('priority')}>Prioridad {sortColumn === 'priority' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
-                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)', cursor: 'pointer' }} onClick={() => handleSort('developer')}>Developer {sortColumn === 'developer' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
-                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)' }}>Co-Dev</th>
-                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)' }}>Sprint</th>
-                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)', cursor: 'pointer' }} onClick={() => handleSort('startDate')}>Fecha Inicio {sortColumn === 'startDate' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
-                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)' }}>Fecha Fin</th>
-                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'center', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)' }}>Acciones</th>
+                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)', cursor: 'pointer' }} onClick={() => handleSort('title')}>{t('projectDetail.title')} {sortColumn === 'title' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
+                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)', cursor: 'pointer' }} onClick={() => handleSort('status')}>{t('projectDetail.status')} {sortColumn === 'status' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
+                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)', cursor: 'pointer' }} onClick={() => handleSort('priority')}>{t('projectDetail.priority')} {sortColumn === 'priority' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
+                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)', cursor: 'pointer' }} onClick={() => handleSort('developer')}>{t('projectDetail.developer')} {sortColumn === 'developer' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
+                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)' }}>{t('projectDetail.coDev')}</th>
+                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)' }}>{t('projectDetail.sprint')}</th>
+                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)', cursor: 'pointer' }} onClick={() => handleSort('startDate')}>{t('projectDetail.dateStart')} {sortColumn === 'startDate' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
+                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)' }}>{t('projectDetail.dateEnd')}</th>
+                      <th style={{ padding: 'var(--spacing-3) var(--spacing-6)', textAlign: 'center', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--color-neutral-900)' }}>{t('projectDetail.actions')}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredTasks.length === 0 ? (
                       <tr>
                         <td colSpan={10} style={{ padding: 'var(--spacing-4)', textAlign: 'center', color: 'var(--color-neutral-600)', fontSize: 'var(--text-sm)' }}>
-                          No se encontraron tareas con los filtros aplicados
+                          {t('projectDetail.noTasksFiltered')}
                         </td>
                       </tr>
                     ) : (
@@ -699,7 +701,7 @@ export default function ProjectDetailsPage() {
                             size="sm"
                             variant="secondary"
                             onClick={() => { setSelectedTask(task); setModalTab('activity'); setIsModalOpen(true); }}
-                            aria-label="Ver actividad"
+                            aria-label={t('projectDetail.viewActivity')}
                           >
                             <MessageSquare size={16} />
                           </Button>
@@ -708,7 +710,7 @@ export default function ProjectDetailsPage() {
                               size="sm"
                               variant="secondary"
                               onClick={() => handleEditTask(task)}
-                              aria-label="Editar tarea"
+                              aria-label={t('projectDetail.editTask')}
                             >
                               <Edit2 size={16} />
                             </Button>
@@ -718,7 +720,7 @@ export default function ProjectDetailsPage() {
                               size="sm"
                               variant="danger"
                               onClick={() => handleDeleteTaskClick(task.id)}
-                              aria-label="Eliminar tarea"
+                              aria-label={t('projectDetail.deleteTask')}
                             >
                               <Trash2 size={16} />
                             </Button>
@@ -753,7 +755,7 @@ export default function ProjectDetailsPage() {
             actionButton={
               canCreateBug && (
                 <Button size="sm" onClick={() => setIsBugModalOpen(true)}>
-                  <Plus size={16} style={{ marginRight: '0.25rem' }} /> Reportar Bug
+                  <Plus size={16} style={{ marginRight: '0.25rem' }} /> {t('projectDetail.reportBug')}
                 </Button>
               )
             }
@@ -763,7 +765,7 @@ export default function ProjectDetailsPage() {
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 'var(--spacing-4)' }}>
               {canCreateProposal && (
                 <Button size="sm" onClick={() => setIsProposalModalOpen(true)}>
-                  <Plus size={16} style={{ marginRight: '0.25rem' }} /> Nueva Propuesta
+                  <Plus size={16} style={{ marginRight: '0.25rem' }} /> {t('projectDetail.newProposal')}
                 </Button>
               )}
             </div>
@@ -792,7 +794,7 @@ export default function ProjectDetailsPage() {
         projectId={projectId}
         projectMembers={project ? Object.keys(project.members || {}).map(uid => ({
           uid,
-          displayName: developers.find(d => d.id === uid)?.name || 'Usuario'
+          displayName: developers.find(d => d.id === uid)?.name || t('projectDetail.user')
         })) : []}
         initialFormData={activeDraft?.formData}
         onDraftSave={handleDraftSave}
@@ -821,10 +823,10 @@ export default function ProjectDetailsPage() {
           setBugToDelete(null)
         }}
         onConfirm={handleConfirmDeleteBug}
-        title="Eliminar Bug"
-        message="¿Estás seguro de que deseas eliminar este bug? Esta acción no se puede deshacer."
-        confirmText="Eliminar"
-        cancelText="Cancelar"
+        title={t('projectDetail.deleteBugTitle')}
+        message={t('projectDetail.deleteBugMessage')}
+        confirmText={t('common.delete')}
+        cancelText={t('common.cancel')}
         variant="danger"
       />
 
@@ -835,10 +837,10 @@ export default function ProjectDetailsPage() {
           setTaskToDelete(null)
         }}
         onConfirm={() => taskToDelete && handleDeleteTask(taskToDelete)}
-        title="Eliminar Tarea"
-        message="¿Estás seguro de que deseas eliminar esta tarea? Esta acción no se puede deshacer."
-        confirmText="Eliminar"
-        cancelText="Cancelar"
+        title={t('projectDetail.deleteTaskTitle')}
+        message={t('projectDetail.deleteTaskMessage')}
+        confirmText={t('common.delete')}
+        cancelText={t('common.cancel')}
         variant="danger"
       />
 
