@@ -20,34 +20,47 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 const LANGUAGE_STORAGE_KEY = 'planning-task-language';
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const { t } = useTranslation();
+  const { t, i18n: i18nInstance } = useTranslation();
   const { user } = useAuth();
   const [language, setLanguageState] = useState<Language>(() => {
     // Initialize from localStorage immediately
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(LANGUAGE_STORAGE_KEY) as Language | null;
-      return saved && (saved === 'en' || saved === 'es') ? saved : 'es';
+      if (saved && (saved === 'en' || saved === 'es')) {
+        // Set i18n language immediately
+        i18n.changeLanguage(saved);
+        return saved;
+      }
     }
     return 'es';
   });
 
-  // Sync with i18n on mount
+  // Sync language state with i18n language changes
   useEffect(() => {
-    i18n.changeLanguage(language);
-  }, []);
+    const handleLanguageChanged = (lng: string) => {
+      if (lng === 'en' || lng === 'es') {
+        setLanguageState(lng as Language);
+      }
+    };
+
+    i18nInstance.on('languageChanged', handleLanguageChanged);
+    return () => {
+      i18nInstance.off('languageChanged', handleLanguageChanged);
+    };
+  }, [i18nInstance]);
 
   // Load language preference from user profile
   useEffect(() => {
     if (user?.language && user.language !== language) {
       setLanguage(user.language as Language);
     }
-  }, [user?.language]);
+  }, [user?.language, language]);
 
   const setLanguage = (lang: Language) => {
     // 1. Update i18next immediately
     i18n.changeLanguage(lang);
 
-    // 2. Update local state
+    // 2. Update local state (will also be updated by languageChanged event)
     setLanguageState(lang);
 
     // 3. Save to localStorage

@@ -8,15 +8,22 @@ const resources = {
   es: { translation: es },
 };
 
-i18n
-  .use(initReactI18next)
-  .init({
-    resources,
-    lng: 'es', // Default language
-    fallbackLng: 'es',
-    interpolation: {
-      escapeValue: false, // React already escapes
-    },
-  });
+// Only initialize if not already initialized (prevents double initialization)
+if (!i18n.isInitialized) {
+  i18n
+    .use(initReactI18next)
+    .init({
+      resources,
+      lng: 'es', // Default language
+      fallbackLng: 'es',
+      debug: false,
+      interpolation: {
+        escapeValue: false, // React already escapes
+      },
+      react: {
+        useSuspense: false, // Important for Next.js App Router
+      },
+    });
+}
 
 export default i18n;
