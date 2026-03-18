@@ -1,8 +1,9 @@
 'use client'
 
-import { Task, Sprint } from '@/types'
+import { Task, Sprint, SavedView, SavedViewFilters } from '@/types'
 import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select'
+import SavedViewsPicker from './SavedViewsPicker'
 import { X } from 'lucide-react'
 import styles from './TaskTableFilters.module.css'
 
@@ -16,6 +17,10 @@ export default function TaskTableFilters({
   onStatusChange,
   onSprintChange,
   onClearFilters,
+  savedViews = [],
+  onSaveView,
+  onDeleteView,
+  onLoadView,
 }: {
   tasks: Task[]
   sprints: Sprint[]
@@ -31,56 +36,75 @@ export default function TaskTableFilters({
   onStatusChange: (value: string) => void
   onSprintChange: (value: string) => void
   onClearFilters: () => void
+  savedViews?: SavedView[]
+  onSaveView?: (name: string, shared: boolean) => void
+  onDeleteView?: (viewId: string) => void
+  onLoadView?: (filters: SavedViewFilters) => void
 }) {
   // Guard against undefined filters
   if (!filters) {
     return null
   }
 
+  const hasActiveFilters = !!(filters.searchText || filters.selectedDeveloper || filters.selectedStatus || filters.selectedSprint)
+
   return (
     <div className={styles.container}>
-      <div className={styles.filtersGrid}>
-        <Input
-          type="text"
-          placeholder="Buscar por nombre..."
-          value={filters.searchText || ''}
-          onChange={(e: any) => onSearchChange(e.target.value)}
-        />
+      <div className={styles.filtersRow}>
+        <div className={styles.filtersGrid}>
+          <Input
+            type="text"
+            placeholder="Buscar por nombre..."
+            value={filters.searchText || ''}
+            onChange={(e: any) => onSearchChange(e.target.value)}
+          />
 
-        <Select
-          placeholder="Filtrar por Developer"
-          value={filters.selectedDeveloper || ''}
-          onChange={(e: any) => onDeveloperChange(e.target.value)}
-          options={[
-            { value: '', label: 'Todos los developers' },
-            ...developers.map(d => ({ value: d.id, label: d.name }))
-          ]}
-        />
+          <Select
+            placeholder="Filtrar por Developer"
+            value={filters.selectedDeveloper || ''}
+            onChange={(e: any) => onDeveloperChange(e.target.value)}
+            options={[
+              { value: '', label: 'Todos los developers' },
+              ...developers.map(d => ({ value: d.id, label: d.name }))
+            ]}
+          />
 
-        <Select
-          value={filters.selectedStatus || ''}
-          onChange={(e: any) => onStatusChange(e.target.value)}
-          options={[
-            { value: '', label: 'Todos los estados' },
-            { value: 'to-do', label: 'to-do' },
-            { value: 'in-progress', label: 'in-progress' },
-            { value: 'to-validate', label: 'to-validate' },
-            { value: 'validated', label: 'validated' },
-            { value: 'done', label: 'done' },
-          ]}
-        />
+          <Select
+            value={filters.selectedStatus || ''}
+            onChange={(e: any) => onStatusChange(e.target.value)}
+            options={[
+              { value: '', label: 'Todos los estados' },
+              { value: 'to-do', label: 'to-do' },
+              { value: 'in-progress', label: 'in-progress' },
+              { value: 'to-validate', label: 'to-validate' },
+              { value: 'validated', label: 'validated' },
+              { value: 'done', label: 'done' },
+            ]}
+          />
 
-        <Select
-          value={filters.selectedSprint || ''}
-          onChange={(e: any) => onSprintChange(e.target.value)}
-          options={[
-            { value: '', label: 'Todos los sprints' },
-            ...sprints.map(s => ({ value: s.id, label: s.name }))
-          ]}
-        />
+          <Select
+            value={filters.selectedSprint || ''}
+            onChange={(e: any) => onSprintChange(e.target.value)}
+            options={[
+              { value: '', label: 'Todos los sprints' },
+              ...sprints.map(s => ({ value: s.id, label: s.name }))
+            ]}
+          />
+        </div>
+
+        {onSaveView && onDeleteView && onLoadView && (
+          <SavedViewsPicker
+            views={savedViews}
+            currentFilters={filters}
+            onLoadView={onLoadView}
+            onSaveView={onSaveView}
+            onDeleteView={onDeleteView}
+            hasActiveFilters={hasActiveFilters}
+          />
+        )}
       </div>
 
-      {(filters.searchText || filters.selectedDeveloper || filters.selectedStatus || filters.selectedSprint) && (
+      {hasActiveFilters && (
         <button className={styles.clearButton} onClick={onClearFilters}>
           <X size={16} />
           Limpiar filtros

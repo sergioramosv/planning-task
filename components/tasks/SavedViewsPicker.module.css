@@ -1,0 +1,211 @@
+.container {
+  position: relative;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  color: var(--color-neutral-700);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.trigger:hover {
+  border-color: var(--color-primary-400);
+  color: var(--color-primary-600);
+}
+
+.badge {
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 260px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  z-index: 50;
+  overflow: hidden;
+}
+
+.viewsList {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.viewItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: var(--radius-md);
+}
+
+.viewItem:hover {
+  background: var(--color-neutral-50);
+}
+
+.viewButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--text-sm);
+  color: var(--color-neutral-700);
+  text-align: left;
+}
+
+.viewButton:hover {
+  color: var(--color-primary-600);
+}
+
+.viewName {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.deleteButton {
+  padding: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-neutral-400);
+  border-radius: var(--radius-sm);
+  opacity: 0;
+  transition: all 0.15s ease;
+}
+
+.viewItem:hover .deleteButton {
+  opacity: 1;
+}
+
+.deleteButton:hover {
+  color: var(--color-red-500);
+  background: var(--color-red-50);
+}
+
+.emptyState {
+  padding: 16px;
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--color-neutral-500);
+}
+
+.saveButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  border-top: 1px solid var(--color-neutral-200);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  color: var(--color-primary-600);
+  font-weight: 500;
+  transition: background 0.15s ease;
+}
+
+.saveButton:hover {
+  background: var(--color-primary-50);
+}
+
+.saveForm {
+  padding: 10px;
+  border-top: 1px solid var(--color-neutral-200);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.saveInput {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  background: var(--color-bg);
+  color: var(--color-neutral-900);
+}
+
+.saveInput:focus {
+  outline: none;
+  border-color: var(--color-primary-400);
+  box-shadow: 0 0 0 2px var(--color-primary-100);
+}
+
+.sharedLabel {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--color-neutral-600);
+  cursor: pointer;
+}
+
+.sharedLabel input {
+  cursor: pointer;
+}
+
+.saveActions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.cancelBtn {
+  padding: 4px 10px;
+  background: none;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--color-neutral-600);
+}
+
+.confirmBtn {
+  padding: 4px 10px;
+  background: var(--color-primary-500);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  cursor: pointer;
+  color: white;
+  font-weight: 500;
+}
+
+.confirmBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.confirmBtn:not(:disabled):hover {
+  background: var(--color-primary-600);
+}

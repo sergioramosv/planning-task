@@ -27,9 +27,10 @@ import ProposalModal from '@/components/proposals/ProposalModal'
 import ProposalsList from '@/components/proposals/ProposalsList'
 import ChatPanel from '@/components/chat/ChatPanel'
 import ChatFab from '@/components/chat/ChatFab'
-import { Task, TaskStatus, TaskDraft } from '@/types'
+import { Task, TaskStatus, TaskDraft, SavedViewFilters } from '@/types'
 import { useTaskDrafts } from '@/hooks/useTaskDrafts'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
+import { useSavedViews } from '@/hooks/useSavedViews'
 import toast, { Toaster } from 'react-hot-toast'
 import { TASK_STATUS_LABELS, TASK_STATUS_COLORS } from '@/lib/constants/taskStates'
 import { UserService } from '@/lib/services/user.service'
@@ -71,6 +72,7 @@ export default function ProjectDetailsPage() {
   const [activeDraft, setActiveDraft] = useState<TaskDraft | null>(null)
   const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false)
   const projectDropdownRef = useRef<HTMLDivElement>(null)
+  const { views: savedViews, saveView, deleteView: deleteSavedView } = useSavedViews(projectId, user?.uid)
   const [filters, setFilters] = useState({
     searchText: '',
     selectedDeveloper: '',
@@ -399,6 +401,20 @@ export default function ProjectDetailsPage() {
     })
   }
 
+  const handleSaveView = async (name: string, shared: boolean) => {
+    await saveView(name, filters, shared)
+    toast.success('Vista guardada')
+  }
+
+  const handleDeleteSavedView = async (viewId: string) => {
+    await deleteSavedView(viewId)
+    toast.success('Vista eliminada')
+  }
+
+  const handleLoadView = (viewFilters: SavedViewFilters) => {
+    setFilters(viewFilters)
+  }
+
   const handleBugSubmit = async (data: any, attachments: File[]) => {
     try {
       if (!user) {
@@ -635,6 +651,10 @@ export default function ProjectDetailsPage() {
               onStatusChange={handleStatusFilterChange}
               onSprintChange={handleSprintChange}
               onClearFilters={handleClearFilters}
+              savedViews={savedViews}
+              onSaveView={handleSaveView}
+              onDeleteView={handleDeleteSavedView}
+              onLoadView={handleLoadView}
             />
 
             {viewMode === 'table' ? (
