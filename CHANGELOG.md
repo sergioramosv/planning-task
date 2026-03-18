@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.58.0] - 2026-03-18
+
+### Added
+- **Subtareas (Task Decomposition)**: Componente SubtaskList dentro de TaskModal con CRUD de subtareas, barra de progreso en TaskCard para tareas con subtareas, validacion que impide cerrar tarea padre con subtareas pendientes, navegacion breadcrumb entre padre e hijos, subtareas excluidas de la vista principal y herencia de sprint. Soporte i18n en/es.
+
 ## [1.57.0] - 2026-03-18
 
 ### Added
