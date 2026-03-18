@@ -87,6 +87,29 @@
   max-width: 100%;
 }
 
+.subtaskBar {
+  position: relative;
+  height: 4px;
+  background: var(--color-neutral-200);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.subtaskBarFill {
+  height: 100%;
+  background: var(--color-primary-500);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.subtaskCount {
+  position: absolute;
+  right: 0;
+  top: -14px;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
 .footer {
   display: flex;
   align-items: center;

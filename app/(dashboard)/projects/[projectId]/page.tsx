@@ -108,7 +108,8 @@ export default function ProjectDetailsPage() {
 
   // Initialize filtered tasks on load and apply filters
   useEffect(() => {
-    let filtered = [...tasks]
+    // Exclude subtasks from main task list (they show inside their parent)
+    let filtered = tasks.filter(t => !t.parentTaskId)
 
     // Apply search filter
     if (filters.searchText) {
@@ -353,6 +354,17 @@ export default function ProjectDetailsPage() {
 
   const handleStatusChange = async (taskId: string, newStatus: TaskStatus) => {
     try {
+      // Prevent closing parent task if subtasks are not all done
+      if (newStatus === 'done' || newStatus === 'validated') {
+        const subtasks = getSubtasksForTask(taskId)
+        if (subtasks.length > 0) {
+          const allDone = subtasks.every(s => s.status === 'done' || s.status === 'validated')
+          if (!allDone) {
+            toast.error(t('projectDetail.subtasksPendingError'))
+            return
+          }
+        }
+      }
       await updateTask(taskId, { status: newStatus })
       toast.success(`${t('projectDetail.statusChangedTo')} ${TASK_STATUS_LABELS[newStatus]}`)
     } catch (error) {
@@ -428,6 +440,64 @@ export default function ProjectDetailsPage() {
         setIsModalOpen(true)
       }, 50)
     }, 0)
+  }
+
+  // Subtask handlers
+  const getSubtasksForTask = (taskId: string) => {
+    return tasks.filter(t => t.parentTaskId === taskId)
+  }
+
+  const handleCreateSubtask = async (title: string) => {
+    if (!selectedTask || !user) return
+    try {
+      const subtaskId = await createTask(
+        {
+          title,
+          projectId,
+          sprintId: selectedTask.sprintId,
+          status: 'to-do' as TaskStatus,
+          bizPoints: 1,
+          devPoints: 1,
+          acceptanceCriteria: [],
+          userStory: { who: '', what: '', why: '' },
+          parentTaskId: selectedTask.id,
+          createdBy: user.uid,
+        }
+      )
+      // Update parent's subtaskIds
+      if (subtaskId) {
+        const currentIds = selectedTask.subtaskIds || []
+        await updateTask(selectedTask.id, { subtaskIds: [...currentIds, subtaskId] })
+      }
+      toast.success(t('projectDetail.subtaskCreated'))
+    } catch (error) {
+      console.error('Error creating subtask:', error)
+      toast.error(t('projectDetail.subtaskCreateError'))
+    }
+  }
+
+  const handleSubtaskStatusChange = async (taskId: string, newStatus: TaskStatus) => {
+    await updateTask(taskId, { status: newStatus })
+  }
+
+  const handleSubtaskClick = (subtask: Task) => {
+    setSelectedTask(subtask)
+    setModalTab('details')
+  }
+
+  const handleGoToParent = () => {
+    if (!selectedTask?.parentTaskId) return
+    const parent = tasks.find(t => t.id === selectedTask.parentTaskId)
+    if (parent) {
+      setSelectedTask(parent)
+      setModalTab('details')
+    }
+  }
+
+  const getParentTaskTitle = () => {
+    if (!selectedTask?.parentTaskId) return undefined
+    const parent = tasks.find(t => t.id === selectedTask.parentTaskId)
+    return parent?.title
   }
 
   const handleSaveAsTemplate = async (name: string) => {
@@ -867,6 +937,12 @@ export default function ProjectDetailsPage() {
         templates={templates}
         onApplyTemplate={handleApplyTemplate}
         onSaveAsTemplate={handleSaveAsTemplate}
+        subtasks={selectedTask ? getSubtasksForTask(selectedTask.id) : []}
+        onCreateSubtask={handleCreateSubtask}
+        onSubtaskStatusChange={handleSubtaskStatusChange}
+        onSubtaskClick={handleSubtaskClick}
+        parentTaskTitle={getParentTaskTitle()}
+        onGoToParent={handleGoToParent}
       />
 
       <DraftPickerModal

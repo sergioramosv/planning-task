@@ -8,9 +8,10 @@ import Button from '@/components/ui/Button'
 import TaskForm, { TaskFormRef } from './TaskForm'
 import SprintForm from '../sprints/SprintForm'
 import TaskActivityPanel from './TaskActivityPanel'
-import { Task, Sprint, TaskTemplate } from '@/types'
+import SubtaskList from './SubtaskList'
+import { Task, Sprint, TaskTemplate, TaskStatus } from '@/types'
 import { User } from '@/types/user'
-import { Trash2, FileText, Save } from 'lucide-react'
+import { Trash2, FileText, Save, ArrowLeft } from 'lucide-react'
 import styles from './TaskModal.module.css'
 
 interface TaskModalProps {
@@ -31,6 +32,12 @@ interface TaskModalProps {
   templates?: TaskTemplate[]
   onApplyTemplate?: (template: TaskTemplate) => void
   onSaveAsTemplate?: (name: string) => void
+  subtasks?: Task[]
+  onCreateSubtask?: (title: string) => void
+  onSubtaskStatusChange?: (taskId: string, status: TaskStatus) => void
+  onSubtaskClick?: (task: Task) => void
+  parentTaskTitle?: string
+  onGoToParent?: () => void
 }
 
 export default function TaskModal({
@@ -51,6 +58,12 @@ export default function TaskModal({
   templates = [],
   onApplyTemplate,
   onSaveAsTemplate,
+  subtasks = [],
+  onCreateSubtask,
+  onSubtaskStatusChange,
+  onSubtaskClick,
+  parentTaskTitle,
+  onGoToParent,
 }: TaskModalProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isSprintModalOpen, setIsSprintModalOpen] = useState(false)
@@ -189,16 +202,33 @@ export default function TaskModal({
         {task ? (
           <>
             {activeTab === 'details' && (
-              <TaskForm
-                task={task}
-                sprints={sprints}
-                developers={developers}
-                onSubmit={handleSubmit}
-                isLoading={isLoading}
-                onCreateSprint={handleCreateSprint}
-                projectId={projectId}
-                currentUserId={currentUser?.uid}
-              />
+              <>
+                {task.parentTaskId && parentTaskTitle && onGoToParent && (
+                  <button className={styles.parentBreadcrumb} onClick={onGoToParent}>
+                    <ArrowLeft size={14} />
+                    <span>{parentTaskTitle}</span>
+                  </button>
+                )}
+                <TaskForm
+                  task={task}
+                  sprints={sprints}
+                  developers={developers}
+                  onSubmit={handleSubmit}
+                  isLoading={isLoading}
+                  onCreateSprint={handleCreateSprint}
+                  projectId={projectId}
+                  currentUserId={currentUser?.uid}
+                />
+                {onCreateSubtask && onSubtaskStatusChange && onSubtaskClick && (
+                  <SubtaskList
+                    parentTask={task}
+                    subtasks={subtasks}
+                    onCreateSubtask={onCreateSubtask}
+                    onStatusChange={onSubtaskStatusChange}
+                    onSubtaskClick={onSubtaskClick}
+                  />
+                )}
+              </>
             )}
 
             {activeTab === 'activity' && currentUser && (

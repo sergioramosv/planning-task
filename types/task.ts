@@ -60,4 +60,6 @@ export interface Task {
   history: Record<string, TaskHistory>
   implementationPlan?: ImplementationPlan
   attachments?: TaskAttachment[]
+  parentTaskId?: string
+  subtaskIds?: string[]
 }

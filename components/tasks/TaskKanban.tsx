@@ -47,6 +47,13 @@ export default function TaskKanban({
   // Use filteredTasks if provided, otherwise use all tasks
   const displayTasks = filteredTasks || tasks
 
+  const getSubtaskProgress = (taskId: string) => {
+    const subtasks = tasks.filter(t => t.parentTaskId === taskId)
+    if (subtasks.length === 0) return undefined
+    const completed = subtasks.filter(s => s.status === 'done' || s.status === 'validated').length
+    return { completed, total: subtasks.length }
+  }
+
   const tasksByStatus: Record<TaskStatus, Task[]> = {
     'to-do': [],
     'in-progress': [],
@@ -122,6 +129,7 @@ export default function TaskKanban({
                   developerName={task.developer ? getDeveloperName(task.developer) : undefined}
                   coDeveloperName={task.coDeveloper ? getDeveloperName(task.coDeveloper) : undefined}
                   sprintName={getSprintName(task.sprintId)}
+                  subtaskProgress={getSubtaskProgress(task.id)}
                 />
               </div>
             ))}

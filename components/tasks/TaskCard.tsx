@@ -14,9 +14,10 @@ interface TaskCardProps {
   developerName?: string
   coDeveloperName?: string
   sprintName?: string
+  subtaskProgress?: { completed: number; total: number }
 }
 
-export default function TaskCard({ task, onClick, onDelete, isDragging = false, developerName, coDeveloperName, sprintName }: TaskCardProps) {
+export default function TaskCard({ task, onClick, onDelete, isDragging = false, developerName, coDeveloperName, sprintName, subtaskProgress }: TaskCardProps) {
   const priority = calculatePriority(task.bizPoints, task.devPoints)
 
   const handleDelete = (e: React.MouseEvent) => {
@@ -50,6 +51,13 @@ export default function TaskCard({ task, onClick, onDelete, isDragging = false, 
           <span className={styles.tagSprint}>{sprintName}</span>
         )}
       </div>
+
+      {subtaskProgress && subtaskProgress.total > 0 && (
+        <div className={styles.subtaskBar}>
+          <div className={styles.subtaskBarFill} style={{ width: `${Math.round((subtaskProgress.completed / subtaskProgress.total) * 100)}%` }} />
+          <span className={styles.subtaskCount}>{subtaskProgress.completed}/{subtaskProgress.total}</span>
+        </div>
+      )}
 
       <div className={styles.footer}>
         <span className={styles.priority}>P{priority}</span>
