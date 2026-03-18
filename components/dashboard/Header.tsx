@@ -92,7 +92,7 @@ export default function Header() {
               </div>
 
               <button
-                onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true }))}
+                onClick={() => window.dispatchEvent(new CustomEvent('open-command-palette'))}
                 className={styles.notificationButton}
                 aria-label={t('commandPalette.search')}
                 title={`${t('commandPalette.search')} (Ctrl+K)`}

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { useProjects } from '@/hooks/useProjects'
 import { useTasks } from '@/hooks/useTasks'
@@ -40,6 +40,7 @@ export default function ProjectDetailsPage() {
   const params = useParams()
   const projectId = params.projectId as string
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { user, loading: authLoading } = useAuth()
   const { tasks, loading: tasksLoading, createTask, updateTask, deleteTask } = useTasks(projectId)
   const { sprints, loading: sprintsLoading, createSprint } = useSprints(projectId)
@@ -76,6 +77,21 @@ export default function ProjectDetailsPage() {
     selectedStatus: '',
     selectedSprint: '',
   })
+
+  // Open task from URL query param (e.g. from Command Palette search)
+  useEffect(() => {
+    const taskId = searchParams.get('task')
+    if (taskId && tasks.length > 0) {
+      const task = tasks.find(t => t.id === taskId)
+      if (task) {
+        setSelectedTask(task)
+        setModalTab('details')
+        setIsModalOpen(true)
+        // Clean up the URL query param
+        router.replace(`/projects/${projectId}`, { scroll: false })
+      }
+    }
+  }, [searchParams, tasks, projectId, router])
 
   // Auto-close draft picker when all drafts are deleted
   useEffect(() => {

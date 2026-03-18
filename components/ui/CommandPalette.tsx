@@ -11,7 +11,7 @@ import { BugService } from '@/lib/services/bug.service'
 import { Task } from '@/types'
 import styles from './CommandPalette.module.css'
 
-interface Bug {
+interface BugItem {
   id: string
   title: string
   projectId: string
@@ -37,21 +37,29 @@ export default function CommandPalette() {
   const [query, setQuery] = useState('')
   const [activeIndex, setActiveIndex] = useState(0)
   const [allTasks, setAllTasks] = useState<Task[]>([])
-  const [allBugs, setAllBugs] = useState<Bug[]>([])
+  const [allBugs, setAllBugs] = useState<BugItem[]>([])
   const [dataLoaded, setDataLoaded] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const resultsRef = useRef<HTMLDivElement>(null)
 
-  // Global keyboard shortcut
+  // Global keyboard shortcut - use capture to prevent Chrome from hijacking Ctrl+K
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault()
+        e.stopPropagation()
         setIsOpen(prev => !prev)
       }
     }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
+    window.addEventListener('keydown', handleKeyDown, { capture: true })
+    return () => window.removeEventListener('keydown', handleKeyDown, { capture: true })
+  }, [])
+
+  // Listen for custom event from Header search button
+  useEffect(() => {
+    const handleOpen = () => setIsOpen(true)
+    window.addEventListener('open-command-palette', handleOpen)
+    return () => window.removeEventListener('open-command-palette', handleOpen)
   }, [])
 
   // Focus input when opened
@@ -124,7 +132,7 @@ export default function CommandPalette() {
           title: t.title,
           meta: projectName,
           status: t.status,
-          url: `/projects/${t.projectId}`,
+          url: `/projects/${t.projectId}?task=${t.id}`,
         })
       })
 
@@ -159,8 +167,14 @@ export default function CommandPalette() {
 
   const flatResults = results
 
-  // Keyboard navigation
+  // Keyboard navigation - handles all keys including Escape on the input
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      e.stopPropagation()
+      setIsOpen(false)
+      return
+    }
     if (e.key === 'ArrowDown') {
       e.preventDefault()
       setActiveIndex(prev => Math.min(prev + 1, flatResults.length - 1))
@@ -170,8 +184,6 @@ export default function CommandPalette() {
     } else if (e.key === 'Enter' && flatResults[activeIndex]) {
       e.preventDefault()
       router.push(flatResults[activeIndex].url)
-      setIsOpen(false)
-    } else if (e.key === 'Escape') {
       setIsOpen(false)
     }
   }, [flatResults, activeIndex, router])
@@ -228,7 +240,7 @@ export default function CommandPalette() {
     <>
       <div className={styles.backdrop} onClick={() => setIsOpen(false)} />
       <div className={styles.container}>
-        <div className={styles.palette} onKeyDown={handleKeyDown}>
+        <div className={styles.palette}>
           <div className={styles.inputWrapper}>
             <Search size={20} className={styles.searchIcon} />
             <input
@@ -238,6 +250,7 @@ export default function CommandPalette() {
               placeholder={t('commandPalette.placeholder')}
               value={query}
               onChange={e => setQuery(e.target.value)}
+              onKeyDown={handleKeyDown}
               autoComplete="off"
               spellCheck={false}
             />
