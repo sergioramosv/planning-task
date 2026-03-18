@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.68.0] - 2026-03-18
+
+### Added
+- **Gamificacion y sistema de logros**: Modelo Achievement con 14 logros en 4 categorias (Productividad, Calidad, Colaboracion, Constancia). Evaluacion automatica al completar tareas (done) y cerrar bugs (closed). Componente AchievementBadges con grid de badges, filtro por categoria, barra de progreso y indicador de logros nuevos. Componente Leaderboard con ranking mensual/trimestral/total basado en puntos (devPoints + bugs*3 + logros*5). Toast de notificacion al desbloquear un logro. Notificacion persistente via NotificationService. Hook useAchievements con listener realtime de Firebase. Datos almacenados en userAchievements/{userId} en Firebase RTDB.
+
 ## [1.67.0] - 2026-03-18
 
 ### Added
