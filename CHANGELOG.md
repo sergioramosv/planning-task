@@ -5,6 +5,15 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.68.1] - 2026-03-18
+
+### Fixed
+- **Epic creation bug**: Corregido patron de Firebase `update()` en `useEpics.ts` que impedia crear epics. Ahora usa `update(ref(database), { ['epics/${id}']: data })` consistente con el resto del codigo.
+- **Boton volver en Sprints**: Cambiado `router.back()` por `router.push('/projects/${projectId}')` para navegar al padre logico en vez de al historial del navegador.
+
+### Changed
+- **README actualizado**: Documentacion completa con todas las features nuevas (epics, gamificacion, offline mode, workflows, templates, vistas guardadas, time tracking, standup, retrospectivas).
+
 ## [1.68.0] - 2026-03-18
 
 ### Added
