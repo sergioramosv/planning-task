@@ -366,6 +366,17 @@ export default function ProjectDetailsPage() {
           }
         }
       }
+      // Prevent starting a blocked task
+      if (newStatus === 'in-progress' && task?.blockedBy && task.blockedBy.length > 0) {
+        const hasUnresolved = task.blockedBy.some(id => {
+          const blocker = tasks.find(t => t.id === id)
+          return blocker && blocker.status !== 'done' && blocker.status !== 'validated'
+        })
+        if (hasUnresolved) {
+          toast.error(t('projectDetail.taskBlockedError'))
+          return
+        }
+      }
       // Prevent moving to validated if review checklist is incomplete
       if (newStatus === 'validated' && task?.reviewChecklist && task.reviewChecklist.length > 0) {
         const allChecked = task.reviewChecklist.every(item => item.checked)
@@ -507,6 +518,34 @@ export default function ProjectDetailsPage() {
     if (!selectedTask?.parentTaskId) return undefined
     const parent = tasks.find(t => t.id === selectedTask.parentTaskId)
     return parent?.title
+  }
+
+  const handleDependencyUpdate = async (blockedBy: string[], blocks: string[]) => {
+    if (!selectedTask) return
+    try {
+      await updateTask(selectedTask.id, { blockedBy, blocks })
+      // Also update the reverse side on linked tasks
+      for (const id of blockedBy) {
+        const other = tasks.find(t => t.id === id)
+        if (other) {
+          const otherBlocks = other.blocks || []
+          if (!otherBlocks.includes(selectedTask.id)) {
+            await updateTask(id, { blocks: [...otherBlocks, selectedTask.id] })
+          }
+        }
+      }
+      for (const id of blocks) {
+        const other = tasks.find(t => t.id === id)
+        if (other) {
+          const otherBlockedBy = other.blockedBy || []
+          if (!otherBlockedBy.includes(selectedTask.id)) {
+            await updateTask(id, { blockedBy: [...otherBlockedBy, selectedTask.id] })
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error updating dependencies:', error)
+    }
   }
 
   const handleReviewChecklistChange = async (checklist: import('@/types').ReviewChecklistItem[]) => {
@@ -965,6 +1004,8 @@ export default function ProjectDetailsPage() {
         parentTaskTitle={getParentTaskTitle()}
         onGoToParent={handleGoToParent}
         onReviewChecklistChange={handleReviewChecklistChange}
+        allTasks={tasks}
+        onDependencyUpdate={handleDependencyUpdate}
       />
 
       <DraftPickerModal

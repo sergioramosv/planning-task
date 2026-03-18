@@ -163,6 +163,7 @@
     "subtaskCreateError": "Error al crear la subtarea",
     "subtasksPendingError": "No se puede cerrar: hay subtareas pendientes",
     "checklistIncompleteError": "No se puede validar: la checklist de review no esta completa",
+    "taskBlockedError": "No se puede iniciar: tiene dependencias sin completar",
     "taskDeletedSuccess": "Tarea eliminada correctamente",
     "taskDeleteError": "Error al eliminar la tarea",
     "bugReportedSuccess": "Bug reportado correctamente",

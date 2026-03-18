@@ -10,6 +10,7 @@ import SprintForm from '../sprints/SprintForm'
 import TaskActivityPanel from './TaskActivityPanel'
 import SubtaskList from './SubtaskList'
 import ReviewChecklist from './ReviewChecklist'
+import DependencySelector from './DependencySelector'
 import { Task, Sprint, TaskTemplate, TaskStatus, ReviewChecklistItem } from '@/types'
 import { User } from '@/types/user'
 import { Trash2, FileText, Save, ArrowLeft } from 'lucide-react'
@@ -40,6 +41,8 @@ interface TaskModalProps {
   parentTaskTitle?: string
   onGoToParent?: () => void
   onReviewChecklistChange?: (checklist: ReviewChecklistItem[]) => void
+  allTasks?: Task[]
+  onDependencyUpdate?: (blockedBy: string[], blocks: string[]) => void
 }
 
 export default function TaskModal({
@@ -67,6 +70,8 @@ export default function TaskModal({
   parentTaskTitle,
   onGoToParent,
   onReviewChecklistChange,
+  allTasks = [],
+  onDependencyUpdate,
 }: TaskModalProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isSprintModalOpen, setIsSprintModalOpen] = useState(false)
@@ -229,6 +234,13 @@ export default function TaskModal({
                     onCreateSubtask={onCreateSubtask}
                     onStatusChange={onSubtaskStatusChange}
                     onSubtaskClick={onSubtaskClick}
+                  />
+                )}
+                {onDependencyUpdate && allTasks.length > 0 && (
+                  <DependencySelector
+                    task={task}
+                    allTasks={allTasks}
+                    onUpdate={onDependencyUpdate}
                   />
                 )}
                 {onReviewChecklistChange && currentUser &&

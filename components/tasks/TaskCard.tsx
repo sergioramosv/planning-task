@@ -3,7 +3,7 @@
 import { Task } from '@/types'
 import { calculatePriority } from '@/lib/utils/calculations'
 import { cn } from '@/lib/utils/cn'
-import { Trash2 } from 'lucide-react'
+import { Trash2, AlertTriangle } from 'lucide-react'
 import styles from './TaskCard.module.css'
 
 interface TaskCardProps {
@@ -15,9 +15,10 @@ interface TaskCardProps {
   coDeveloperName?: string
   sprintName?: string
   subtaskProgress?: { completed: number; total: number }
+  isBlocked?: boolean
 }
 
-export default function TaskCard({ task, onClick, onDelete, isDragging = false, developerName, coDeveloperName, sprintName, subtaskProgress }: TaskCardProps) {
+export default function TaskCard({ task, onClick, onDelete, isDragging = false, developerName, coDeveloperName, sprintName, subtaskProgress, isBlocked }: TaskCardProps) {
   const priority = calculatePriority(task.bizPoints, task.devPoints)
 
   const handleDelete = (e: React.MouseEvent) => {
@@ -31,7 +32,10 @@ export default function TaskCard({ task, onClick, onDelete, isDragging = false, 
       onClick={onClick}
     >
       <div className={styles.cardHeader}>
-        <div className={styles.title}>{task.title}</div>
+        <div className={styles.title}>
+          {isBlocked && <AlertTriangle size={13} className={styles.blockedIcon} />}
+          {task.title}
+        </div>
         {onDelete && (
           <button
             onClick={handleDelete}

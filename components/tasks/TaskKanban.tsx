@@ -54,6 +54,14 @@ export default function TaskKanban({
     return { completed, total: subtasks.length }
   }
 
+  const isTaskBlocked = (task: Task) => {
+    if (!task.blockedBy || task.blockedBy.length === 0) return false
+    return task.blockedBy.some(id => {
+      const blocker = tasks.find(t => t.id === id)
+      return blocker && blocker.status !== 'done' && blocker.status !== 'validated'
+    })
+  }
+
   const tasksByStatus: Record<TaskStatus, Task[]> = {
     'to-do': [],
     'in-progress': [],
@@ -130,6 +138,7 @@ export default function TaskKanban({
                   coDeveloperName={task.coDeveloper ? getDeveloperName(task.coDeveloper) : undefined}
                   sprintName={getSprintName(task.sprintId)}
                   subtaskProgress={getSubtaskProgress(task.id)}
+                  isBlocked={isTaskBlocked(task)}
                 />
               </div>
             ))}
