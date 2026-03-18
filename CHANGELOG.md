@@ -5,6 +5,15 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.54.1] - 2026-03-18
+
+### Fixed
+- **Ctrl+K conflicto con Chrome**: Se usa `capture: true` y `stopPropagation()` para que Ctrl+K siempre abra la paleta sin activar la barra de direcciones de Chrome.
+- **Escape no funcionaba tras hacer click en el input**: El handler de teclado ahora esta directamente en el input, garantizando que Escape siempre cierra la paleta.
+- **Click en tarea no abria la tarea**: Al seleccionar una tarea en la paleta, ahora navega con `?task=taskId` y la pagina del proyecto lee este parametro para abrir automaticamente el modal de la tarea.
+- **Boton de busqueda del Header**: Cambiado de `KeyboardEvent` sintetico a `CustomEvent` para mayor fiabilidad.
+- **Estilos visuales del Command Palette**: Mejorado con sombras mas sutiles, mejor espaciado, scrollbar personalizado, separadores entre grupos, footer con fondo, soporte responsive y mejor tema oscuro.
+
 ## [1.54.0] - 2026-03-18
 
 ### Added
