@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.55.0] - 2026-03-18
+
+### Added
+- **Vistas guardadas de filtros**: Los usuarios pueden guardar combinaciones de filtros con nombre personalizado, cargarlas desde un dropdown junto a los filtros, eliminarlas y compartirlas a nivel de proyecto. Se persisten en Firebase bajo /saved-views/.
+
 ## [1.54.3] - 2026-03-18
 
 ### Fixed
