@@ -5,6 +5,21 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.54.0] - 2026-03-18
+
+### Added
+- **Busqueda global con Ctrl+K**: Command Palette que permite buscar proyectos, tareas y bugs desde cualquier pagina.
+  - Se abre con `Ctrl+K` (o `Cmd+K` en Mac) y con el boton de busqueda en el Header.
+  - Busqueda instantanea en proyectos, tareas y bugs de todos los proyectos del usuario.
+  - Resultados agrupados por tipo con iconos y colores diferenciados.
+  - Navegacion con teclado: flechas arriba/abajo para navegar, Enter para abrir, Escape para cerrar.
+  - Redireccion directa al proyecto/tarea/bug seleccionado.
+  - Soporte completo i18n (ES/EN).
+  - Diseño glass morphism consistente con el resto de la UI.
+- Boton de busqueda en el Header con icono de lupa y tooltip "Buscar (Ctrl+K)".
+- Nuevas claves de traduccion `commandPalette.*` en ambos idiomas.
+- Documento MEJORAS_V2.md con 20 propuestas adicionales de mejora.
+
 ## [1.53.1] - 2026-03-18
 
 ### Documentation
