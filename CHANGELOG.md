@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.65.0] - 2026-03-18
+
+### Added
+- **Workflow automatizado**: Motor de reglas con triggers (cambio de estado, creacion de tarea, asignacion, bugs), condiciones configurables (campo/operador/valor) y acciones automaticas (cambiar estado, asignar developer, enviar notificacion, mover a sprint). Pagina de configuracion en /projects/[id]/workflows con editor visual de reglas, toggle on/off, y historial de ejecuciones. Integracion con eventos de tareas y bugs en tiempo real. Boton de acceso rapido desde la pagina del proyecto.
+
 ## [1.64.1] - 2026-03-18
 
 ### Fixed
