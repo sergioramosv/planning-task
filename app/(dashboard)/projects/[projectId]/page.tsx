@@ -27,10 +27,11 @@ import ProposalModal from '@/components/proposals/ProposalModal'
 import ProposalsList from '@/components/proposals/ProposalsList'
 import ChatPanel from '@/components/chat/ChatPanel'
 import ChatFab from '@/components/chat/ChatFab'
-import { Task, TaskStatus, TaskDraft, SavedViewFilters } from '@/types'
+import { Task, TaskStatus, TaskDraft, SavedViewFilters, TaskTemplate } from '@/types'
 import { useTaskDrafts } from '@/hooks/useTaskDrafts'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { useSavedViews } from '@/hooks/useSavedViews'
+import { useTaskTemplates } from '@/hooks/useTaskTemplates'
 import toast, { Toaster } from 'react-hot-toast'
 import { TASK_STATUS_LABELS, TASK_STATUS_COLORS } from '@/lib/constants/taskStates'
 import { UserService } from '@/lib/services/user.service'
@@ -73,6 +74,7 @@ export default function ProjectDetailsPage() {
   const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false)
   const projectDropdownRef = useRef<HTMLDivElement>(null)
   const { views: savedViews, saveView, deleteView: deleteSavedView } = useSavedViews(projectId, user?.uid)
+  const { templates, createTemplate, deleteTemplate } = useTaskTemplates(projectId)
   const [filters, setFilters] = useState({
     searchText: '',
     selectedDeveloper: '',
@@ -413,6 +415,34 @@ export default function ProjectDetailsPage() {
 
   const handleLoadView = (viewFilters: SavedViewFilters) => {
     setFilters(viewFilters)
+  }
+
+  const handleApplyTemplate = (template: TaskTemplate) => {
+    setActiveDraft(null)
+    setSelectedTask(undefined)
+    setIsModalOpen(true)
+    // Use initialFormData to pre-fill form from template
+    setTimeout(() => {
+      setIsModalOpen(false)
+      setTimeout(() => {
+        setIsModalOpen(true)
+      }, 50)
+    }, 0)
+  }
+
+  const handleSaveAsTemplate = async (name: string) => {
+    if (!selectedTask || !user) return
+    await createTemplate({
+      name,
+      projectId,
+      titlePattern: selectedTask.title,
+      userStory: selectedTask.userStory,
+      acceptanceCriteria: selectedTask.acceptanceCriteria,
+      bizPoints: selectedTask.bizPoints,
+      devPoints: selectedTask.devPoints,
+      createdBy: user.uid,
+    })
+    toast.success('Template guardado')
   }
 
   const handleBugSubmit = async (data: any, attachments: File[]) => {
@@ -834,6 +864,9 @@ export default function ProjectDetailsPage() {
         })) : []}
         initialFormData={activeDraft?.formData}
         onDraftSave={handleDraftSave}
+        templates={templates}
+        onApplyTemplate={handleApplyTemplate}
+        onSaveAsTemplate={handleSaveAsTemplate}
       />
 
       <DraftPickerModal

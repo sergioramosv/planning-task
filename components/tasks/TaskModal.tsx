@@ -8,9 +8,9 @@ import Button from '@/components/ui/Button'
 import TaskForm, { TaskFormRef } from './TaskForm'
 import SprintForm from '../sprints/SprintForm'
 import TaskActivityPanel from './TaskActivityPanel'
-import { Task, Sprint } from '@/types'
+import { Task, Sprint, TaskTemplate } from '@/types'
 import { User } from '@/types/user'
-import { Trash2 } from 'lucide-react'
+import { Trash2, FileText, Save } from 'lucide-react'
 import styles from './TaskModal.module.css'
 
 interface TaskModalProps {
@@ -28,6 +28,9 @@ interface TaskModalProps {
   projectId?: string
   initialFormData?: Record<string, any>
   onDraftSave?: (data: Record<string, any>) => void
+  templates?: TaskTemplate[]
+  onApplyTemplate?: (template: TaskTemplate) => void
+  onSaveAsTemplate?: (name: string) => void
 }
 
 export default function TaskModal({
@@ -45,11 +48,17 @@ export default function TaskModal({
   projectId,
   initialFormData,
   onDraftSave,
+  templates = [],
+  onApplyTemplate,
+  onSaveAsTemplate,
 }: TaskModalProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isSprintModalOpen, setIsSprintModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<'details' | 'activity'>(initialTab)
+  const [showTemplatePicker, setShowTemplatePicker] = useState(false)
+  const [saveTemplateName, setSaveTemplateName] = useState('')
+  const [showSaveTemplate, setShowSaveTemplate] = useState(false)
   const taskFormRef = useRef<TaskFormRef>(null)
 
   useEffect(() => {
@@ -119,15 +128,61 @@ export default function TaskModal({
         }
         className={modalStyles.contentXl}
         headerActions={
-          task && onDelete && activeTab === 'details' ? (
-            <button
-              onClick={handleDeleteClick}
-              disabled={isLoading}
-              className={styles.deleteIconButton}
-              aria-label="Eliminar tarea"
-            >
-              <Trash2 size={18} />
-            </button>
+          activeTab === 'details' ? (
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              {task && onSaveAsTemplate && !showSaveTemplate && (
+                <button
+                  onClick={() => setShowSaveTemplate(true)}
+                  className={styles.saveTemplateButton}
+                  title="Guardar como template"
+                >
+                  <Save size={16} />
+                </button>
+              )}
+              {showSaveTemplate && onSaveAsTemplate && (
+                <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+                  <input
+                    type="text"
+                    placeholder="Nombre del template..."
+                    value={saveTemplateName}
+                    onChange={e => setSaveTemplateName(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' && saveTemplateName.trim()) {
+                        onSaveAsTemplate(saveTemplateName.trim())
+                        setSaveTemplateName('')
+                        setShowSaveTemplate(false)
+                      }
+                      if (e.key === 'Escape') setShowSaveTemplate(false)
+                    }}
+                    className={styles.templateNameInput}
+                    autoFocus
+                  />
+                  <button
+                    onClick={() => {
+                      if (saveTemplateName.trim()) {
+                        onSaveAsTemplate(saveTemplateName.trim())
+                        setSaveTemplateName('')
+                        setShowSaveTemplate(false)
+                      }
+                    }}
+                    className={styles.saveTemplateConfirm}
+                    disabled={!saveTemplateName.trim()}
+                  >
+                    OK
+                  </button>
+                </div>
+              )}
+              {task && onDelete && (
+                <button
+                  onClick={handleDeleteClick}
+                  disabled={isLoading}
+                  className={styles.deleteIconButton}
+                  aria-label="Eliminar tarea"
+                >
+                  <Trash2 size={18} />
+                </button>
+              )}
+            </div>
           ) : undefined
         }
       >
@@ -157,17 +212,48 @@ export default function TaskModal({
             )}
           </>
         ) : (
-          <TaskForm
-            ref={taskFormRef}
-            sprints={sprints}
-            developers={developers}
-            onSubmit={handleSubmit}
-            isLoading={isLoading}
-            onCreateSprint={handleCreateSprint}
-            projectId={projectId}
-            currentUserId={currentUser?.uid}
-            initialFormData={initialFormData}
-          />
+          <>
+            {templates.length > 0 && onApplyTemplate && !showTemplatePicker && (
+              <button className={styles.templateToggle} onClick={() => setShowTemplatePicker(true)}>
+                <FileText size={14} /> Usar template
+              </button>
+            )}
+            {showTemplatePicker && (
+              <div className={styles.templatePicker}>
+                <div className={styles.templatePickerHeader}>
+                  <span>Seleccionar template</span>
+                  <button onClick={() => setShowTemplatePicker(false)} className={styles.templatePickerClose}>&times;</button>
+                </div>
+                {templates.map(tmpl => (
+                  <button
+                    key={tmpl.id}
+                    className={styles.templateItem}
+                    onClick={() => {
+                      onApplyTemplate?.(tmpl)
+                      setShowTemplatePicker(false)
+                    }}
+                  >
+                    <FileText size={14} />
+                    <div>
+                      <span className={styles.templateName}>{tmpl.name}</span>
+                      <span className={styles.templateMeta}>{tmpl.titlePattern}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+            <TaskForm
+              ref={taskFormRef}
+              sprints={sprints}
+              developers={developers}
+              onSubmit={handleSubmit}
+              isLoading={isLoading}
+              onCreateSprint={handleCreateSprint}
+              projectId={projectId}
+              currentUserId={currentUser?.uid}
+              initialFormData={initialFormData}
+            />
+          </>
         )}
       </Modal>
 
