@@ -46,6 +46,18 @@ export interface TimeEntry {
   userName?: string
 }
 
+export interface LinkedPR {
+  id: string
+  number: number
+  repo: string
+  url: string
+  title?: string
+  status: 'open' | 'merged' | 'closed'
+  branch?: string
+  linkedAt: number
+  linkedBy: string
+}
+
 export interface Task {
   id: string
   title: string
@@ -74,6 +86,7 @@ export interface Task {
   blocks?: string[]
   reviewChecklist?: ReviewChecklistItem[]
   timeEntries?: TimeEntry[]
+  linkedPRs?: LinkedPR[]
 }
 
 export interface ReviewChecklistItem {

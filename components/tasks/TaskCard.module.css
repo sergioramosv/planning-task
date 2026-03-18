@@ -96,6 +96,23 @@
   max-width: 100%;
 }
 
+.tagPR {
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-green-50, #f0fdf4);
+  color: var(--color-green-700, #15803d);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.tagPRMerged {
+  background-color: #f3e8ff;
+  color: #7c3aed;
+}
+
 .subtaskBar {
   position: relative;
   height: 4px;

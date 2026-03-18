@@ -12,7 +12,8 @@ import SubtaskList from './SubtaskList'
 import ReviewChecklist from './ReviewChecklist'
 import DependencySelector from './DependencySelector'
 import TimeTracker from './TimeTracker'
-import { Task, Sprint, TaskTemplate, TaskStatus, ReviewChecklistItem, TimeEntry } from '@/types'
+import GitHubLink from './GitHubLink'
+import { Task, Sprint, TaskTemplate, TaskStatus, ReviewChecklistItem, TimeEntry, LinkedPR } from '@/types'
 import { User } from '@/types/user'
 import { Trash2, FileText, Save, ArrowLeft } from 'lucide-react'
 import styles from './TaskModal.module.css'
@@ -46,6 +47,9 @@ interface TaskModalProps {
   onDependencyUpdate?: (blockedBy: string[], blocks: string[]) => void
   onTimeEntrySave?: (entry: Omit<TimeEntry, 'id'>) => void
   onTimeEntryDelete?: (entryId: string) => void
+  onAddPR?: (pr: Omit<LinkedPR, 'id'>) => void
+  onRemovePR?: (prId: string) => void
+  onUpdatePRStatus?: (prId: string, status: LinkedPR['status']) => void
 }
 
 export default function TaskModal({
@@ -77,6 +81,9 @@ export default function TaskModal({
   onDependencyUpdate,
   onTimeEntrySave,
   onTimeEntryDelete,
+  onAddPR,
+  onRemovePR,
+  onUpdatePRStatus,
 }: TaskModalProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isSprintModalOpen, setIsSprintModalOpen] = useState(false)
@@ -258,6 +265,15 @@ export default function TaskModal({
                     timeEntries={task.timeEntries || []}
                     onSaveEntry={onTimeEntrySave}
                     onDeleteEntry={onTimeEntryDelete}
+                  />
+                )}
+                {onAddPR && onRemovePR && onUpdatePRStatus && currentUser && (
+                  <GitHubLink
+                    linkedPRs={task.linkedPRs || []}
+                    onAddPR={onAddPR}
+                    onRemovePR={onRemovePR}
+                    onUpdatePRStatus={onUpdatePRStatus}
+                    userId={currentUser.uid}
                   />
                 )}
                 {onReviewChecklistChange && currentUser &&

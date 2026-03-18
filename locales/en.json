@@ -485,5 +485,16 @@
     "total": "Total",
     "showEntries": "Show entries",
     "hideEntries": "Hide entries"
+  },
+  "github": {
+    "title": "Pull Requests",
+    "linkPR": "Link PR",
+    "link": "Link",
+    "openInGitHub": "Open in GitHub",
+    "prPlaceholder": "owner/repo#123 or PR URL",
+    "titlePlaceholder": "PR title (optional)",
+    "branchPlaceholder": "Branch name (optional)",
+    "invalidFormat": "Invalid format. Use owner/repo#123 or the PR URL",
+    "alreadyLinked": "This PR is already linked"
   }
 }

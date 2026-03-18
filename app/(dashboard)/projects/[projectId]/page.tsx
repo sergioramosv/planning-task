@@ -569,6 +569,39 @@ export default function ProjectDetailsPage() {
     }
   }
 
+  const handleAddPR = async (pr: Omit<import('@/types').LinkedPR, 'id'>) => {
+    if (!selectedTask) return
+    try {
+      const prs = selectedTask.linkedPRs || []
+      const newPR = { ...pr, id: `pr-${Date.now()}` }
+      await updateTask(selectedTask.id, { linkedPRs: [...prs, newPR] })
+    } catch (error) {
+      console.error('Error adding PR:', error)
+    }
+  }
+
+  const handleRemovePR = async (prId: string) => {
+    if (!selectedTask) return
+    try {
+      const prs = (selectedTask.linkedPRs || []).filter(p => p.id !== prId)
+      await updateTask(selectedTask.id, { linkedPRs: prs })
+    } catch (error) {
+      console.error('Error removing PR:', error)
+    }
+  }
+
+  const handleUpdatePRStatus = async (prId: string, status: import('@/types').LinkedPR['status']) => {
+    if (!selectedTask) return
+    try {
+      const prs = (selectedTask.linkedPRs || []).map(p =>
+        p.id === prId ? { ...p, status } : p
+      )
+      await updateTask(selectedTask.id, { linkedPRs: prs })
+    } catch (error) {
+      console.error('Error updating PR status:', error)
+    }
+  }
+
   const handleReviewChecklistChange = async (checklist: import('@/types').ReviewChecklistItem[]) => {
     if (!selectedTask) return
     try {
@@ -1029,6 +1062,9 @@ export default function ProjectDetailsPage() {
         onDependencyUpdate={handleDependencyUpdate}
         onTimeEntrySave={handleTimeEntrySave}
         onTimeEntryDelete={handleTimeEntryDelete}
+        onAddPR={handleAddPR}
+        onRemovePR={handleRemovePR}
+        onUpdatePRStatus={handleUpdatePRStatus}
       />
 
       <DraftPickerModal

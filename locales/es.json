@@ -485,5 +485,16 @@
     "total": "Total",
     "showEntries": "Ver registros",
     "hideEntries": "Ocultar registros"
+  },
+  "github": {
+    "title": "Pull Requests",
+    "linkPR": "Vincular PR",
+    "link": "Vincular",
+    "openInGitHub": "Abrir en GitHub",
+    "prPlaceholder": "owner/repo#123 o URL del PR",
+    "titlePlaceholder": "Titulo del PR (opcional)",
+    "branchPlaceholder": "Nombre del branch (opcional)",
+    "invalidFormat": "Formato invalido. Usa owner/repo#123 o la URL del PR",
+    "alreadyLinked": "Este PR ya esta vinculado"
   }
 }

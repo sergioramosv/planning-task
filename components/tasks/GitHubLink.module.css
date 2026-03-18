@@ -1,0 +1,242 @@
+.container {
+  margin-top: var(--spacing-4);
+  padding: var(--spacing-4);
+  background: var(--color-neutral-50);
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-lg);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: var(--spacing-3);
+}
+
+.icon {
+  color: var(--color-neutral-700);
+}
+
+.headerTitle {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+}
+
+.count {
+  font-size: 11px;
+  background: var(--color-neutral-200);
+  color: var(--text-secondary);
+  padding: 0 6px;
+  border-radius: var(--radius-full);
+  font-weight: var(--font-medium);
+}
+
+.prList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: var(--spacing-3);
+}
+
+.prItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  gap: 8px;
+}
+
+.prInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.statusOpen {
+  color: var(--color-green-600);
+  flex-shrink: 0;
+}
+
+.statusMerged {
+  color: var(--color-purple-600, #7c3aed);
+  flex-shrink: 0;
+}
+
+.statusClosed {
+  color: var(--color-red-500);
+  flex-shrink: 0;
+}
+
+.prLink {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  text-decoration: none;
+  color: var(--color-primary-600);
+  font-weight: var(--font-medium);
+  white-space: nowrap;
+}
+
+.prLink:hover {
+  text-decoration: underline;
+}
+
+.prRepo {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.prNumber {
+  font-weight: var(--font-semibold);
+}
+
+.prTitle {
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+}
+
+.prBranch {
+  font-family: monospace;
+  font-size: 11px;
+  padding: 0 4px;
+  background: var(--color-neutral-100);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+}
+
+.prActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.statusSelect {
+  font-size: 11px;
+  padding: 1px 4px;
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.externalLink {
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+  padding: 2px;
+}
+
+.externalLink:hover {
+  color: var(--color-primary-500);
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.prItem:hover .removeBtn {
+  opacity: 1;
+}
+
+.removeBtn:hover {
+  color: var(--color-red-500);
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: none;
+  border: 1px dashed var(--color-neutral-300);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  width: 100%;
+}
+
+.addButton:hover {
+  border-color: var(--color-primary-400);
+  color: var(--color-primary-600);
+  background: var(--color-primary-50);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input {
+  padding: 6px 8px;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary-400);
+}
+
+.error {
+  font-size: 12px;
+  color: var(--color-red-500);
+}
+
+.formActions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.cancelBtn {
+  padding: 4px 10px;
+  background: none;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.confirmBtn {
+  padding: 4px 10px;
+  background: var(--color-primary-500);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.confirmBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

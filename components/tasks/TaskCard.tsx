@@ -3,7 +3,7 @@
 import { Task } from '@/types'
 import { calculatePriority } from '@/lib/utils/calculations'
 import { cn } from '@/lib/utils/cn'
-import { Trash2, AlertTriangle, Clock } from 'lucide-react'
+import { Trash2, AlertTriangle, Clock, GitPullRequest, GitMerge } from 'lucide-react'
 import styles from './TaskCard.module.css'
 
 interface TaskCardProps {
@@ -55,6 +55,12 @@ export default function TaskCard({ task, onClick, onDelete, isDragging = false, 
         )}
         {sprintName && (
           <span className={styles.tagSprint}>{sprintName}</span>
+        )}
+        {task.linkedPRs && task.linkedPRs.length > 0 && (
+          <span className={`${styles.tagPR} ${task.linkedPRs.some(pr => pr.status === 'merged') ? styles.tagPRMerged : ''}`}>
+            {task.linkedPRs.some(pr => pr.status === 'merged') ? <GitMerge size={10} /> : <GitPullRequest size={10} />}
+            PR
+          </span>
         )}
       </div>
 
