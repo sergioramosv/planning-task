@@ -11,14 +11,17 @@ import NotificationModal from './NotificationModal'
 import ChangelogModal from './ChangelogModal'
 import InvitationsModal from './InvitationsModal'
 import ActiveTimerWidget from './ActiveTimerWidget'
+import OfflineIndicator from './OfflineIndicator'
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher'
 import Link from 'next/link'
 import { APP_VERSION } from '@/lib/constants/appVersion'
 import { useTheme } from '@/hooks/useTheme'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useServiceWorker } from '@/hooks/useServiceWorker'
 import styles from './Header.module.css'
 
 export default function Header() {
+  useServiceWorker()
   const router = useRouter()
   const { user, logout } = useAuth()
   const { unreadCount, notifications } = useNotifications(user?.uid || null)
@@ -104,6 +107,8 @@ export default function Header() {
               </div>
 
               <ActiveTimerWidget />
+
+              <OfflineIndicator />
 
               <button
                 onClick={() => window.dispatchEvent(new CustomEvent('open-command-palette'))}

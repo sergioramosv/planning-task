@@ -17,6 +17,11 @@ const firebaseConfig = {
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp()
 
 export const auth = getAuth(app)
+
+// Firebase Realtime Database - offline persistence is enabled by default.
+// Writes are queued locally when offline and synced automatically on reconnection.
+// Use .info/connected to monitor connection state.
 export const database = getDatabase(app)
+
 export const storage = getStorage(app)
 export default app
