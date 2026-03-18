@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.63.0] - 2026-03-18
+
+### Added
+- **Time tracking por tarea**: Componente TimeTracker en TaskModal con boton Play/Pause, registros de tiempo con duracion, usuario y timestamps. TimerProvider global para un unico timer activo. Widget ActiveTimerWidget en Header mostrando timer activo con nombre de tarea y boton stop. Indicador de tiempo en TaskCard con icono Clock animado. Solo un timer activo a la vez por usuario, persistido en localStorage. Soporte i18n en/es.
+
 ## [1.62.0] - 2026-03-18
 
 ### Added
