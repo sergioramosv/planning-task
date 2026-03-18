@@ -15,8 +15,10 @@ import TimeTracker from './TimeTracker'
 import GitHubLink from './GitHubLink'
 import { Task, Sprint, TaskTemplate, TaskStatus, ReviewChecklistItem, TimeEntry, LinkedPR } from '@/types'
 import { User } from '@/types/user'
-import { Trash2, FileText, Save, ArrowLeft } from 'lucide-react'
+import { Trash2, FileText, Save, ArrowLeft, ListTodo, Link, Clock, GitPullRequest, Shield, MessageSquare, FileEdit } from 'lucide-react'
 import styles from './TaskModal.module.css'
+
+type ModalTab = 'general' | 'subtasks' | 'dependencies' | 'time' | 'github' | 'review' | 'activity'
 
 interface TaskModalProps {
   isOpen: boolean
@@ -29,7 +31,7 @@ interface TaskModalProps {
   onCreateSprint?: (data: any) => Promise<void>
   currentUser?: User | null
   projectMembers?: Array<{ uid: string; displayName: string }>
-  initialTab?: 'details' | 'activity'
+  initialTab?: 'general' | 'activity'
   projectId?: string
   initialFormData?: Record<string, any>
   onDraftSave?: (data: Record<string, any>) => void
@@ -52,6 +54,16 @@ interface TaskModalProps {
   onUpdatePRStatus?: (prId: string, status: LinkedPR['status']) => void
 }
 
+const EDIT_TABS: { id: ModalTab; label: string; icon: React.ReactNode }[] = [
+  { id: 'general', label: 'General', icon: <FileEdit size={14} /> },
+  { id: 'subtasks', label: 'Subtareas', icon: <ListTodo size={14} /> },
+  { id: 'dependencies', label: 'Deps', icon: <Link size={14} /> },
+  { id: 'time', label: 'Tiempo', icon: <Clock size={14} /> },
+  { id: 'github', label: 'GitHub', icon: <GitPullRequest size={14} /> },
+  { id: 'review', label: 'Review', icon: <Shield size={14} /> },
+  { id: 'activity', label: 'Actividad', icon: <MessageSquare size={14} /> },
+]
+
 export default function TaskModal({
   isOpen,
   onClose,
@@ -63,7 +75,7 @@ export default function TaskModal({
   onCreateSprint,
   currentUser,
   projectMembers = [],
-  initialTab = 'details',
+  initialTab = 'general',
   projectId,
   initialFormData,
   onDraftSave,
@@ -88,7 +100,7 @@ export default function TaskModal({
   const [isLoading, setIsLoading] = useState(false)
   const [isSprintModalOpen, setIsSprintModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState<'details' | 'activity'>(initialTab)
+  const [activeTab, setActiveTab] = useState<ModalTab>(initialTab)
   const [showTemplatePicker, setShowTemplatePicker] = useState(false)
   const [saveTemplateName, setSaveTemplateName] = useState('')
   const [showSaveTemplate, setShowSaveTemplate] = useState(false)
@@ -147,21 +159,27 @@ export default function TaskModal({
     }
   }
 
+  // Badge counts for tabs
+  const subtaskCount = subtasks.length
+  const depCount = (task?.blockedBy?.length || 0) + (task?.blocks?.length || 0)
+  const timeEntryCount = task?.timeEntries?.length || 0
+  const prCount = task?.linkedPRs?.length || 0
+  const reviewCount = task?.reviewChecklist?.length || 0
+
+  const getModalTitle = () => {
+    if (!task) return 'Crear Nueva Tarea'
+    return 'Editar Tarea'
+  }
+
   return (
     <>
       <Modal
         isOpen={isOpen}
         onClose={handleClose}
-        title={
-          task
-            ? activeTab === 'activity'
-              ? 'Actividad de la Tarea'
-              : 'Editar Tarea'
-            : 'Crear Nueva Tarea'
-        }
+        title={getModalTitle()}
         className={modalStyles.contentXl}
         headerActions={
-          activeTab === 'details' ? (
+          activeTab === 'general' ? (
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
               {task && onSaveAsTemplate && !showSaveTemplate && (
                 <button
@@ -221,63 +239,95 @@ export default function TaskModal({
       >
         {task ? (
           <>
-            {activeTab === 'details' && (
-              <>
-                {task.parentTaskId && parentTaskTitle && onGoToParent && (
-                  <button className={styles.parentBreadcrumb} onClick={onGoToParent}>
-                    <ArrowLeft size={14} />
-                    <span>{parentTaskTitle}</span>
+            {/* Tab bar for editing */}
+            <div className={styles.tabsBar}>
+              {EDIT_TABS.map(tab => {
+                let badge: number | null = null
+                if (tab.id === 'subtasks' && subtaskCount > 0) badge = subtaskCount
+                if (tab.id === 'dependencies' && depCount > 0) badge = depCount
+                if (tab.id === 'time' && timeEntryCount > 0) badge = timeEntryCount
+                if (tab.id === 'github' && prCount > 0) badge = prCount
+                if (tab.id === 'review' && reviewCount > 0) badge = reviewCount
+
+                return (
+                  <button
+                    key={tab.id}
+                    className={`${styles.tab} ${activeTab === tab.id ? styles.tabActive : ''}`}
+                    onClick={() => setActiveTab(tab.id)}
+                  >
+                    {tab.icon}
+                    <span className={styles.tabLabel}>{tab.label}</span>
+                    {badge !== null && <span className={styles.tabBadge}>{badge}</span>}
                   </button>
-                )}
-                <TaskForm
-                  task={task}
-                  sprints={sprints}
-                  developers={developers}
-                  onSubmit={handleSubmit}
-                  isLoading={isLoading}
-                  onCreateSprint={handleCreateSprint}
-                  projectId={projectId}
-                  currentUserId={currentUser?.uid}
-                />
-                {onCreateSubtask && onSubtaskStatusChange && onSubtaskClick && (
-                  <SubtaskList
-                    parentTask={task}
-                    subtasks={subtasks}
-                    onCreateSubtask={onCreateSubtask}
-                    onStatusChange={onSubtaskStatusChange}
-                    onSubtaskClick={onSubtaskClick}
-                  />
-                )}
-                {onDependencyUpdate && allTasks.length > 0 && (
-                  <DependencySelector
+                )
+              })}
+            </div>
+
+            <div className={styles.tabContent}>
+              {activeTab === 'general' && (
+                <>
+                  {task.parentTaskId && parentTaskTitle && onGoToParent && (
+                    <button className={styles.parentBreadcrumb} onClick={onGoToParent}>
+                      <ArrowLeft size={14} />
+                      <span>{parentTaskTitle}</span>
+                    </button>
+                  )}
+                  <TaskForm
                     task={task}
-                    allTasks={allTasks}
-                    onUpdate={onDependencyUpdate}
-                  />
-                )}
-                {onTimeEntrySave && currentUser && projectId && (
-                  <TimeTracker
-                    taskId={task.id}
-                    taskTitle={task.title}
+                    sprints={sprints}
+                    developers={developers}
+                    onSubmit={handleSubmit}
+                    isLoading={isLoading}
+                    onCreateSprint={handleCreateSprint}
                     projectId={projectId}
-                    userId={currentUser.uid}
-                    userName={currentUser.displayName || 'User'}
-                    timeEntries={task.timeEntries || []}
-                    onSaveEntry={onTimeEntrySave}
-                    onDeleteEntry={onTimeEntryDelete}
+                    currentUserId={currentUser?.uid}
                   />
-                )}
-                {onAddPR && onRemovePR && onUpdatePRStatus && currentUser && (
-                  <GitHubLink
-                    linkedPRs={task.linkedPRs || []}
-                    onAddPR={onAddPR}
-                    onRemovePR={onRemovePR}
-                    onUpdatePRStatus={onUpdatePRStatus}
-                    userId={currentUser.uid}
-                  />
-                )}
-                {onReviewChecklistChange && currentUser &&
-                  (task.status === 'to-validate' || task.status === 'validated' || task.status === 'done') && (
+                </>
+              )}
+
+              {activeTab === 'subtasks' && onCreateSubtask && onSubtaskStatusChange && onSubtaskClick && (
+                <SubtaskList
+                  parentTask={task}
+                  subtasks={subtasks}
+                  onCreateSubtask={onCreateSubtask}
+                  onStatusChange={onSubtaskStatusChange}
+                  onSubtaskClick={onSubtaskClick}
+                />
+              )}
+
+              {activeTab === 'dependencies' && onDependencyUpdate && (
+                <DependencySelector
+                  task={task}
+                  allTasks={allTasks}
+                  onUpdate={onDependencyUpdate}
+                />
+              )}
+
+              {activeTab === 'time' && onTimeEntrySave && currentUser && projectId && (
+                <TimeTracker
+                  taskId={task.id}
+                  taskTitle={task.title}
+                  projectId={projectId}
+                  userId={currentUser.uid}
+                  userName={currentUser.displayName || 'User'}
+                  timeEntries={task.timeEntries || []}
+                  onSaveEntry={onTimeEntrySave}
+                  onDeleteEntry={onTimeEntryDelete}
+                />
+              )}
+
+              {activeTab === 'github' && onAddPR && onRemovePR && onUpdatePRStatus && currentUser && (
+                <GitHubLink
+                  linkedPRs={task.linkedPRs || []}
+                  onAddPR={onAddPR}
+                  onRemovePR={onRemovePR}
+                  onUpdatePRStatus={onUpdatePRStatus}
+                  userId={currentUser.uid}
+                />
+              )}
+
+              {activeTab === 'review' && onReviewChecklistChange && currentUser && (
+                (task.status === 'to-validate' || task.status === 'validated' || task.status === 'done') ? (
                   <ReviewChecklist
                     checklist={task.reviewChecklist || []}
                     onChange={onReviewChecklistChange}
@@ -285,19 +335,24 @@ export default function TaskModal({
                     currentUserName={currentUser.displayName || 'User'}
                     readOnly={task.status === 'done'}
                   />
-                )}
-              </>
-            )}
+                ) : (
+                  <div className={styles.tabEmptyState}>
+                    <Shield size={32} />
+                    <p>El checklist de Code Review estara disponible cuando la tarea pase a estado <strong>To Validate</strong>.</p>
+                  </div>
+                )
+              )}
 
-            {activeTab === 'activity' && currentUser && (
-              <TaskActivityPanel
-                task={task}
-                currentUserId={currentUser.uid}
-                currentUserName={currentUser.displayName || 'Usuario'}
-                currentUserPhotoURL={currentUser.photoURL || undefined}
-                projectMembers={projectMembers}
-              />
-            )}
+              {activeTab === 'activity' && currentUser && (
+                <TaskActivityPanel
+                  task={task}
+                  currentUserId={currentUser.uid}
+                  currentUserName={currentUser.displayName || 'Usuario'}
+                  currentUserPhotoURL={currentUser.photoURL || undefined}
+                  projectMembers={projectMembers}
+                />
+              )}
+            </div>
           </>
         ) : (
           <>

@@ -6,27 +6,41 @@
 
 .tabsBar {
   display: flex;
-  gap: var(--spacing-2);
+  gap: 2px;
   border-bottom: 2px solid var(--color-neutral-200);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  margin-bottom: var(--spacing-4);
+}
+
+.tabsBar::-webkit-scrollbar {
+  display: none;
 }
 
 .tab {
-  padding: var(--spacing-3) var(--spacing-4);
+  padding: 8px 12px;
   border: none;
   background-color: transparent;
-  color: var(--color-neutral-600);
-  font-size: var(--text-sm);
-  font-weight: var(--font-semibold);
+  color: var(--color-neutral-500);
+  font-size: 12px;
+  font-weight: var(--font-medium);
   cursor: pointer;
   transition: all 0.2s ease;
-  border-bottom: 3px solid transparent;
+  border-bottom: 2px solid transparent;
   margin-bottom: -2px;
   position: relative;
   bottom: -2px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .tab:hover {
-  color: var(--color-neutral-900);
+  color: var(--color-neutral-800);
+  background: var(--color-neutral-50);
 }
 
 .tabActive {
@@ -34,10 +48,53 @@
   border-bottom-color: var(--color-primary-600);
 }
 
+.tabActive:hover {
+  color: var(--color-primary-600);
+  background: transparent;
+}
+
+.tabLabel {
+  display: inline;
+}
+
+.tabBadge {
+  font-size: 10px;
+  font-weight: var(--font-bold);
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
+  padding: 0 5px;
+  border-radius: var(--radius-full);
+  min-width: 16px;
+  text-align: center;
+  line-height: 16px;
+}
+
 .tabContent {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4);
+}
+
+.tabEmptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-8) var(--spacing-4);
+  color: var(--color-neutral-400);
+  text-align: center;
+}
+
+.tabEmptyState p {
+  font-size: var(--text-sm);
+  color: var(--color-neutral-500);
+  max-width: 300px;
+  line-height: 1.5;
+}
+
+.tabEmptyState strong {
+  color: var(--color-neutral-700);
 }
 
 .deleteIconButton {

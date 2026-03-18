@@ -53,7 +53,7 @@ export default function ProjectDetailsPage() {
   const { canCreateTask, canEditTask, canDeleteTask, canCreateSprint, canDeleteSprint, canCreateBug, canEditBug, canDeleteBug, canCreateProposal, canApproveProposal, canRejectProposal } = usePermissions(project)
   const [activeTab, setActiveTab] = useState<'tasks' | 'bugs' | 'proposals'>('tasks')
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [modalTab, setModalTab] = useState<'details' | 'activity'>('details')
+  const [modalTab, setModalTab] = useState<'general' | 'activity'>('general')
   const [isBugModalOpen, setIsBugModalOpen] = useState(false)
   const [isProposalModalOpen, setIsProposalModalOpen] = useState(false)
   const [isDeleteBugConfirmOpen, setIsDeleteBugConfirmOpen] = useState(false)
@@ -89,7 +89,7 @@ export default function ProjectDetailsPage() {
       const task = tasks.find(t => t.id === taskId)
       if (task) {
         setSelectedTask(task)
-        setModalTab('details')
+        setModalTab('general')
         setIsModalOpen(true)
         // Clean up the URL query param
         router.replace(`/projects/${projectId}`, { scroll: false })
@@ -158,6 +158,16 @@ export default function ProjectDetailsPage() {
     }
     fetchDevelopers()
   }, [project])
+
+  // Keep selectedTask in sync with latest data from Firebase
+  useEffect(() => {
+    if (selectedTask) {
+      const updated = tasks.find(t => t.id === selectedTask.id)
+      if (updated && updated.updatedAt !== selectedTask.updatedAt) {
+        setSelectedTask(updated)
+      }
+    }
+  }, [tasks, selectedTask])
 
   // Close chat when projectId changes
   useEffect(() => {
@@ -306,7 +316,7 @@ export default function ProjectDetailsPage() {
 
   const handleEditTask = (task: any) => {
     setSelectedTask(task)
-    setModalTab('details')
+    setModalTab('general')
     setIsModalOpen(true)
   }
 
@@ -502,7 +512,7 @@ export default function ProjectDetailsPage() {
 
   const handleSubtaskClick = (subtask: Task) => {
     setSelectedTask(subtask)
-    setModalTab('details')
+    setModalTab('general')
   }
 
   const handleGoToParent = () => {
@@ -510,7 +520,7 @@ export default function ProjectDetailsPage() {
     const parent = tasks.find(t => t.id === selectedTask.parentTaskId)
     if (parent) {
       setSelectedTask(parent)
-      setModalTab('details')
+      setModalTab('general')
     }
   }
 

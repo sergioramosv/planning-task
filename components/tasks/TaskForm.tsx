@@ -310,7 +310,7 @@ const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(function TaskForm({
                       title="Generar User Story, puntos y criterios con IA"
                     >
                       <Sparkles size={16} />
-                      {aiGenerating ? 'Generando...' : 'IA'}
+                      {aiGenerating ? 'Generando...' : 'Rellenar con IA'}
                     </Button>
                   )}
                 </div>
