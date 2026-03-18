@@ -38,6 +38,8 @@ import { useEpics } from '@/hooks/useEpics'
 import toast, { Toaster } from 'react-hot-toast'
 import { TASK_STATUS_LABELS, TASK_STATUS_COLORS } from '@/lib/constants/taskStates'
 import { UserService } from '@/lib/services/user.service'
+import { AchievementService } from '@/lib/services/achievement.service'
+import { BugService } from '@/lib/services/bug.service'
 import styles from './page.module.css'
 
 export default function ProjectDetailsPage() {
@@ -417,6 +419,31 @@ export default function ProjectDetailsPage() {
       if (task) {
         workflowEngine.fireTaskStatusChange(task, task.status, newStatus)
       }
+      // Evaluate achievements when task is marked as done
+      if (newStatus === 'done' && user) {
+        try {
+          const allProjectTasks = tasks.filter(t => t.status === 'done' || (t.id === taskId))
+          const userCompletedTasks = allProjectTasks.filter(t => t.developer === user.uid).length
+          const allBugs = await BugService.getAllBugs()
+          const userResolvedBugs = allBugs.filter(b => b.assignedTo === user.uid && b.status === 'closed').length
+          const unlocked = await AchievementService.evaluateAndUnlock({
+            userId: user.uid,
+            projectId,
+            tasksCompleted: userCompletedTasks,
+            bugsResolved: userResolvedBugs,
+          })
+          if (unlocked.length > 0) {
+            unlocked.forEach(id => {
+              const def = AchievementService.getDefinition(id)
+              if (def) {
+                toast.success(`${def.icon} ${def.title} desbloqueado!`, { duration: 4000 })
+              }
+            })
+          }
+        } catch {
+          // Silent fail on achievement evaluation
+        }
+      }
     } catch (error) {
       console.error('Error updating task status:', error)
       toast.error(t('projectDetail.statusChangeError'))
@@ -736,6 +763,30 @@ export default function ProjectDetailsPage() {
       toast.success(t('projectDetail.bugStatusUpdated'))
       if (bug) {
         workflowEngine.fireBugStatusChange(bug, bug.status, newStatus)
+      }
+      // Evaluate achievements when bug is closed
+      if (newStatus === 'closed' && user) {
+        try {
+          const userCompletedTasks = tasks.filter(t => t.developer === user.uid && t.status === 'done').length
+          const allBugs = await BugService.getAllBugs()
+          const userResolvedBugs = allBugs.filter(b => b.assignedTo === user.uid && b.status === 'closed').length
+          const unlocked = await AchievementService.evaluateAndUnlock({
+            userId: user.uid,
+            projectId,
+            tasksCompleted: userCompletedTasks,
+            bugsResolved: userResolvedBugs,
+          })
+          if (unlocked.length > 0) {
+            unlocked.forEach(id => {
+              const def = AchievementService.getDefinition(id)
+              if (def) {
+                toast.success(`${def.icon} ${def.title} desbloqueado!`, { duration: 4000 })
+              }
+            })
+          }
+        } catch {
+          // Silent fail on achievement evaluation
+        }
       }
     } catch (error) {
       console.error('Error updating bug status:', error)

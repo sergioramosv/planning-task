@@ -25,13 +25,19 @@ import SprintBurndown from '@/components/dashboard/SprintBurndown'
 import BugsSeverity from '@/components/dashboard/BugsSeverity'
 import ActivityHeatmap from '@/components/dashboard/ActivityHeatmap'
 import DeveloperPerformanceMetrics from '@/components/dashboard/DeveloperPerformanceMetrics'
+import AchievementBadges from '@/components/dashboard/AchievementBadges'
+import Leaderboard from '@/components/dashboard/Leaderboard'
 import { Project, Task, User, Sprint } from '@/types'
 import { Bug } from '@/types/bug'
+import { UserAchievement } from '@/types/achievement'
 import Link from 'next/link'
 import { formatDate } from '@/lib/utils/formatters'
 import Badge from '@/components/ui/Badge'
 import badgeStyles from '@/components/ui/Badge.module.css'
 import { TASK_STATUS_LABELS } from '@/lib/constants/taskStates'
+import { useAchievements } from '@/hooks/useAchievements'
+import { database } from '@/lib/firebase/config'
+import { ref, get } from 'firebase/database'
 
 export default function DashboardPage() {
   const { t } = useLanguage()
@@ -51,6 +57,8 @@ export default function DashboardPage() {
   const [allSprints, setAllSprints] = useState<Sprint[]>([])
   const [allBugs, setAllBugs] = useState<Bug[]>([])
   const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([])
+  const [allAchievements, setAllAchievements] = useState<Record<string, Record<string, UserAchievement>>>({})
+  const { achievements: myAchievements, loading: achievementsLoading } = useAchievements(user?.uid || null)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,6 +72,11 @@ export default function DashboardPage() {
           UserService.getAllUsers(),
           BugService.getAllBugs()
         ])
+
+        // Fetch all user achievements for leaderboard
+        const achievementsSnap = await get(ref(database, 'userAchievements'))
+        const achievementsData = achievementsSnap.val() || {}
+        setAllAchievements(achievementsData)
 
         // Filter projects for current user
         const userProjects = projects.filter(p => p.members && p.members[user.uid])
@@ -240,6 +253,22 @@ export default function DashboardPage() {
       />
 
       <DeveloperPerformance tasks={allTasks} users={allUsers} selectedProjectIds={selectedProjectIds} />
+
+      <div className={styles.gridTwo}>
+        <AchievementBadges
+          achievements={myAchievements}
+          loading={achievementsLoading}
+        />
+
+        <Leaderboard
+          tasks={allTasks}
+          bugs={allBugs}
+          users={allUsers}
+          selectedProjectIds={selectedProjectIds}
+          currentUserId={user?.uid}
+          allAchievements={allAchievements}
+        />
+      </div>
     </div>
   )
 }
