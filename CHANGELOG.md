@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.61.0] - 2026-03-18
+
+### Added
+- **Retrospectiva de sprint automatizada**: Nueva pagina /projects/[projectId]/sprints/[sprintId]/retro con metricas automaticas (velocidad, % completado, carry-over), comparativa con sprint anterior, breakdown por developer, seccion editable de notas del equipo (que salio bien / que mejorar) con persistencia en Firebase. Boton de acceso desde SprintCard. Soporte i18n en/es.
+
 ## [1.60.0] - 2026-03-18
 
 ### Added
