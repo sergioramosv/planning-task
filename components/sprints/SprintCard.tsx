@@ -1,7 +1,7 @@
 'use client'
 
 import { Sprint } from '@/types'
-import { Trash2, Edit2, Calendar, CheckCircle, Clock } from 'lucide-react'
+import { Trash2, Edit2, Calendar, CheckCircle, Clock, BarChart3 } from 'lucide-react'
 import styles from './SprintCard.module.css'
 import { getProjectColor } from '@/lib/utils/colors'
 
@@ -12,6 +12,7 @@ interface SprintCardProps {
   taskCount: number
   onEdit: (sprint: Sprint) => void
   onDelete: (sprint: Sprint) => void
+  onRetro?: (sprint: Sprint) => void
 }
 
 export default function SprintCard({
@@ -21,6 +22,7 @@ export default function SprintCard({
   taskCount,
   onEdit,
   onDelete,
+  onRetro,
 }: SprintCardProps) {
   const theme = getProjectColor(sprint.id)
 
@@ -57,6 +59,16 @@ export default function SprintCard({
           </span>
         </div>
         <div className={styles.actions}>
+          {onRetro && (
+            <button
+              onClick={() => onRetro(sprint)}
+              className={styles.actionBtn}
+              style={{ color: theme.icon }}
+              title="Retrospectiva"
+            >
+              <BarChart3 size={18} />
+            </button>
+          )}
           <button
             onClick={() => onEdit(sprint)}
             className={styles.actionBtn}

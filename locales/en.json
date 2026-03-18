@@ -192,6 +192,25 @@
     "noBlocks": "No blockers",
     "blockedBy": "Blocked by"
   },
+  "retro": {
+    "title": "Retrospective",
+    "velocity": "Velocity (Dev Pts)",
+    "completionRate": "% Completed",
+    "tasksCompleted": "Tasks Completed",
+    "bizPointsDelivered": "Biz Points Delivered",
+    "vsPrevSprint": "vs Previous Sprint",
+    "developerPerformance": "Developer Performance",
+    "tasks": "tasks",
+    "unassigned": "Unassigned",
+    "noCarryOver": "No carry-over tasks - great sprint!",
+    "teamNotes": "Team Notes",
+    "wentWell": "What went well",
+    "toImprove": "What to improve",
+    "wentWellPlaceholder": "Write what worked well this sprint...",
+    "toImprovePlaceholder": "Write what can be improved...",
+    "saveNotes": "Save notes",
+    "saving": "Saving..."
+  },
   "sprints": {
     "title": "Sprints",
     "newSprint": "New Sprint",

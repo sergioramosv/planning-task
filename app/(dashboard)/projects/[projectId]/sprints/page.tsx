@@ -163,6 +163,7 @@ export default function SprintsPage() {
               totalDevPoints={devPts}
               onEdit={handleEditSprint}
               onDelete={handleDeleteSprint}
+              onRetro={(s) => router.push(`/projects/${projectId}/sprints/${s.id}/retro`)}
             />
           )
         })}
