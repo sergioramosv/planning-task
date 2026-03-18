@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.66.0] - 2026-03-18
+
+### Added
+- **Epics - agrupacion por funcionalidad**: Sistema completo de Epics para agrupar tareas por funcionalidad. Pagina dedicada en /projects/[id]/epics con CRUD de epics (titulo, descripcion, color, fechas), barra de progreso visual por epic, chips de tareas con estado. Selector de epic integrado en el modal de tarea (tab General). Badge de epic con color en las TaskCards del Kanban. Filtro por epic en los filtros de tareas. Boton de acceso rapido "Epics" desde la pagina del proyecto.
+
 ## [1.65.0] - 2026-03-18
 
 ### Added
