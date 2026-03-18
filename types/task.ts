@@ -62,4 +62,6 @@ export interface Task {
   attachments?: TaskAttachment[]
   parentTaskId?: string
   subtaskIds?: string[]
+  blockedBy?: string[]
+  blocks?: string[]
 }

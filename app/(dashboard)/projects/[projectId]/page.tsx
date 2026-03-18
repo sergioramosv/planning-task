@@ -12,7 +12,7 @@ import { usePermissions } from '@/hooks/usePermissions'
 import { useLanguage } from '@/contexts/LanguageContext'
 import Spinner from '@/components/ui/Spinner'
 import Button from '@/components/ui/Button'
-import { ArrowLeft, Plus, Calendar, MessageSquare, Edit2, Trash2, ChevronDown, FolderOpen } from 'lucide-react'
+import { ArrowLeft, Plus, Calendar, MessageSquare, Edit2, Trash2, ChevronDown, FolderOpen, Users } from 'lucide-react'
 import TaskModal from '@/components/tasks/TaskModal'
 import DraftPickerModal from '@/components/tasks/DraftPickerModal'
 import TaskActivityPanel from '@/components/tasks/TaskActivityPanel'
@@ -726,6 +726,9 @@ export default function ProjectDetailsPage() {
               <div style={{ display: 'flex', gap: 'var(--spacing-2)' }}>
                 <Button size="sm" onClick={() => router.push(`/projects/${projectId}/sprints`)}>
                   <Calendar size={16} style={{ marginRight: '0.25rem' }} /> {t('projectDetail.viewSprints')}
+                </Button>
+                <Button size="sm" onClick={() => router.push(`/projects/${projectId}/standup`)}>
+                  <Users size={16} style={{ marginRight: '0.25rem' }} /> Daily Standup
                 </Button>
                 {canCreateTask && (
                   <Button size="sm" onClick={handleAddTaskClick}>

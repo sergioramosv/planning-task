@@ -181,6 +181,16 @@
     "deleteTaskTitle": "Delete Task",
     "deleteTaskMessage": "Are you sure you want to delete this task? This action cannot be undone."
   },
+  "standup": {
+    "title": "Daily Standup",
+    "yesterday": "Yesterday",
+    "today": "Today",
+    "blocked": "Blockers",
+    "noCompleted": "No completed tasks",
+    "noInProgress": "No tasks in progress",
+    "noBlocks": "No blockers",
+    "blockedBy": "Blocked by"
+  },
   "sprints": {
     "title": "Sprints",
     "newSprint": "New Sprint",

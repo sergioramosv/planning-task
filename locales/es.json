@@ -181,6 +181,16 @@
     "deleteTaskTitle": "Eliminar Tarea",
     "deleteTaskMessage": "¿Estás seguro de que deseas eliminar esta tarea? Esta acción no se puede deshacer."
   },
+  "standup": {
+    "title": "Daily Standup",
+    "yesterday": "Ayer",
+    "today": "Hoy",
+    "blocked": "Bloqueos",
+    "noCompleted": "Sin tareas completadas",
+    "noInProgress": "Sin tareas en progreso",
+    "noBlocks": "Sin bloqueos",
+    "blockedBy": "Bloqueado por"
+  },
   "sprints": {
     "title": "Sprints",
     "newSprint": "Nuevo Sprint",
