@@ -1,0 +1,259 @@
+.container {
+  padding: var(--spacing-6);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-6);
+}
+
+.header h1 {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: var(--spacing-2);
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-md);
+  transition: all 0.15s ease;
+}
+
+.backButton:hover {
+  background: var(--color-neutral-100);
+  color: var(--text-primary);
+}
+
+.epicsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.epicCard {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-4);
+  border-left: 4px solid;
+  transition: box-shadow 0.15s ease;
+}
+
+.epicCard:hover {
+  box-shadow: var(--shadow-card);
+}
+
+.epicHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-3);
+}
+
+.epicInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.epicTitle {
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+}
+
+.epicDescription {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.epicMeta {
+  display: flex;
+  gap: var(--spacing-3);
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.epicActions {
+  display: flex;
+  gap: var(--spacing-1);
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+}
+
+.iconButton:hover {
+  background: var(--color-neutral-100);
+  color: var(--text-primary);
+}
+
+.iconButtonDanger:hover {
+  background: var(--color-red-50);
+  color: var(--color-red-500);
+}
+
+.progressContainer {
+  margin-bottom: var(--spacing-2);
+}
+
+.progressBar {
+  height: 6px;
+  background: var(--color-neutral-200);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.progressLabel {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.taskChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.taskChip {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: var(--color-neutral-100);
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+}
+
+.taskChipDone {
+  background: var(--color-green-50, #f0fdf4);
+  color: var(--color-green-700, #15803d);
+  text-decoration: line-through;
+}
+
+.emptyState {
+  text-align: center;
+  padding: var(--spacing-12) var(--spacing-4);
+  color: var(--text-muted);
+}
+
+.emptyState p {
+  font-size: var(--text-sm);
+  margin-top: var(--spacing-2);
+}
+
+/* Editor Form */
+.editorForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.formLabel {
+  font-size: 12px;
+  font-weight: var(--font-semibold);
+  color: var(--text-secondary);
+}
+
+.formInput {
+  padding: 8px 12px;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.formInput:focus {
+  outline: none;
+  border-color: var(--color-primary-400);
+}
+
+.formTextarea {
+  padding: 8px 12px;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  resize: vertical;
+  min-height: 60px;
+}
+
+.formTextarea:focus {
+  outline: none;
+  border-color: var(--color-primary-400);
+}
+
+.colorPicker {
+  display: flex;
+  gap: 8px;
+}
+
+.colorSwatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.colorSwatch:hover {
+  transform: scale(1.1);
+}
+
+.colorSwatchActive {
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 2px var(--bg-elevated);
+}
+
+.formFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-2);
+  padding-top: var(--spacing-3);
+  border-top: 1px solid var(--border-primary);
+}
+
+.dateRow {
+  display: flex;
+  gap: var(--spacing-3);
+}
+
+.dateRow .formGroup {
+  flex: 1;
+}

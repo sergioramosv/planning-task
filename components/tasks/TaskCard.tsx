@@ -18,9 +18,11 @@ interface TaskCardProps {
   isBlocked?: boolean
   isTimerActive?: boolean
   totalTimeMs?: number
+  epicColor?: string
+  epicName?: string
 }
 
-export default function TaskCard({ task, onClick, onDelete, isDragging = false, developerName, coDeveloperName, sprintName, subtaskProgress, isBlocked, isTimerActive, totalTimeMs }: TaskCardProps) {
+export default function TaskCard({ task, onClick, onDelete, isDragging = false, developerName, coDeveloperName, sprintName, subtaskProgress, isBlocked, isTimerActive, totalTimeMs, epicColor, epicName }: TaskCardProps) {
   const priority = calculatePriority(task.bizPoints, task.devPoints)
 
   const handleDelete = (e: React.MouseEvent) => {
@@ -50,6 +52,12 @@ export default function TaskCard({ task, onClick, onDelete, isDragging = false, 
       </div>
 
       <div className={styles.meta}>
+        {epicName && (
+          <span className={styles.tagEpic} style={{ borderColor: epicColor }}>
+            <span className={styles.epicDot} style={{ background: epicColor }} />
+            {epicName}
+          </span>
+        )}
         {(developerName || task.developer) && (
           <span className={styles.tag}>{developerName || task.developer}</span>
         )}

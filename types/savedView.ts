@@ -3,6 +3,7 @@ export interface SavedViewFilters {
   selectedDeveloper: string
   selectedStatus: string
   selectedSprint: string
+  selectedEpic?: string
 }
 
 export interface SavedView {

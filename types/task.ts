@@ -87,6 +87,7 @@ export interface Task {
   reviewChecklist?: ReviewChecklistItem[]
   timeEntries?: TimeEntry[]
   linkedPRs?: LinkedPR[]
+  epicId?: string
 }
 
 export interface ReviewChecklistItem {

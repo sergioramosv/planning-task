@@ -12,7 +12,7 @@ import { usePermissions } from '@/hooks/usePermissions'
 import { useLanguage } from '@/contexts/LanguageContext'
 import Spinner from '@/components/ui/Spinner'
 import Button from '@/components/ui/Button'
-import { ArrowLeft, Plus, Calendar, MessageSquare, Edit2, Trash2, ChevronDown, FolderOpen, Users, Zap } from 'lucide-react'
+import { ArrowLeft, Plus, Calendar, MessageSquare, Edit2, Trash2, ChevronDown, FolderOpen, Users, Zap, Layers } from 'lucide-react'
 import TaskModal from '@/components/tasks/TaskModal'
 import DraftPickerModal from '@/components/tasks/DraftPickerModal'
 import TaskActivityPanel from '@/components/tasks/TaskActivityPanel'
@@ -34,6 +34,7 @@ import { useSavedViews } from '@/hooks/useSavedViews'
 import { useTaskTemplates } from '@/hooks/useTaskTemplates'
 import { useWorkflowRules } from '@/hooks/useWorkflowRules'
 import { useWorkflowEngine } from '@/hooks/useWorkflowEngine'
+import { useEpics } from '@/hooks/useEpics'
 import toast, { Toaster } from 'react-hot-toast'
 import { TASK_STATUS_LABELS, TASK_STATUS_COLORS } from '@/lib/constants/taskStates'
 import { UserService } from '@/lib/services/user.service'
@@ -78,6 +79,7 @@ export default function ProjectDetailsPage() {
   const { views: savedViews, saveView, deleteView: deleteSavedView } = useSavedViews(projectId, user?.uid)
   const { templates, createTemplate, deleteTemplate } = useTaskTemplates(projectId)
   const { rules: workflowRules } = useWorkflowRules(projectId)
+  const { epics, addTaskToEpic, removeTaskFromEpic } = useEpics(projectId)
   const projectOwnerIds = project ? Object.entries(project.members || {}).filter(([, m]) => (m as any).role === 'owner').map(([uid]) => uid) : []
   const workflowEngine = useWorkflowEngine(workflowRules, projectId, project?.name, projectOwnerIds)
   const [filters, setFilters] = useState({
@@ -85,6 +87,7 @@ export default function ProjectDetailsPage() {
     selectedDeveloper: '',
     selectedStatus: '',
     selectedSprint: '',
+    selectedEpic: '',
   })
 
   // Open task from URL query param (e.g. from Command Palette search)
@@ -136,6 +139,11 @@ export default function ProjectDetailsPage() {
     // Apply sprint filter
     if (filters.selectedSprint) {
       filtered = filtered.filter(t => t.sprintId === filters.selectedSprint)
+    }
+
+    // Apply epic filter
+    if (filters.selectedEpic) {
+      filtered = filtered.filter(t => t.epicId === filters.selectedEpic)
     }
 
     setFilteredTasks(filtered)
@@ -448,12 +456,17 @@ export default function ProjectDetailsPage() {
     setFilters({ ...filters, selectedSprint: value })
   }
 
+  const handleEpicFilterChange = (value: string) => {
+    setFilters({ ...filters, selectedEpic: value })
+  }
+
   const handleClearFilters = () => {
     setFilters({
       searchText: '',
       selectedDeveloper: '',
       selectedStatus: '',
       selectedSprint: '',
+      selectedEpic: '',
     })
   }
 
@@ -468,7 +481,7 @@ export default function ProjectDetailsPage() {
   }
 
   const handleLoadView = (viewFilters: SavedViewFilters) => {
-    setFilters(viewFilters)
+    setFilters({ ...viewFilters, selectedEpic: viewFilters.selectedEpic || '' })
   }
 
   const handleApplyTemplate = (template: TaskTemplate) => {
@@ -630,6 +643,24 @@ export default function ProjectDetailsPage() {
       await updateTask(selectedTask.id, { reviewChecklist: checklist })
     } catch (error) {
       console.error('Error updating review checklist:', error)
+    }
+  }
+
+  const handleEpicChange = async (epicId: string | undefined) => {
+    if (!selectedTask) return
+    try {
+      // Remove from old epic
+      if (selectedTask.epicId) {
+        await removeTaskFromEpic(selectedTask.epicId, selectedTask.id)
+      }
+      // Add to new epic
+      if (epicId) {
+        await addTaskToEpic(epicId, selectedTask.id)
+      }
+      // Update task epicId
+      await updateTask(selectedTask.id, { epicId: epicId || null } as any)
+    } catch (error) {
+      console.error('Error changing epic:', error)
     }
   }
 
@@ -873,6 +904,9 @@ export default function ProjectDetailsPage() {
                 <Button size="sm" onClick={() => router.push(`/projects/${projectId}/workflows`)}>
                   <Zap size={16} style={{ marginRight: '0.25rem' }} /> Workflows
                 </Button>
+                <Button size="sm" onClick={() => router.push(`/projects/${projectId}/epics`)}>
+                  <Layers size={16} style={{ marginRight: '0.25rem' }} /> Epics
+                </Button>
                 {canCreateTask && (
                   <Button size="sm" onClick={handleAddTaskClick}>
                     <Plus size={16} style={{ marginRight: '0.25rem' }} /> {t('projectDetail.addTask')}
@@ -891,11 +925,13 @@ export default function ProjectDetailsPage() {
               tasks={tasks}
               sprints={sprints}
               developers={developers}
+              epics={epics}
               filters={filters}
               onSearchChange={handleSearchChange}
               onDeveloperChange={handleDeveloperChange}
               onStatusChange={handleStatusFilterChange}
               onSprintChange={handleSprintChange}
+              onEpicChange={handleEpicFilterChange}
               onClearFilters={handleClearFilters}
               savedViews={savedViews}
               onSaveView={handleSaveView}
@@ -1020,6 +1056,7 @@ export default function ProjectDetailsPage() {
                 filteredTasks={filteredTasks}
                 sprints={sprints}
                 developers={developers}
+                epics={epics}
                 onEdit={handleEditTask}
                 onStatusChange={handleStatusChange}
                 onDelete={canDeleteTask ? handleDeleteTaskClick : undefined}
@@ -1097,6 +1134,8 @@ export default function ProjectDetailsPage() {
         onAddPR={handleAddPR}
         onRemovePR={handleRemovePR}
         onUpdatePRStatus={handleUpdatePRStatus}
+        epics={epics}
+        onEpicChange={handleEpicChange}
       />
 
       <DraftPickerModal

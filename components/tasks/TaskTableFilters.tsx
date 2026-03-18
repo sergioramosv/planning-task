@@ -1,6 +1,7 @@
 'use client'
 
 import { Task, Sprint, SavedView, SavedViewFilters } from '@/types'
+import { Epic } from '@/types/epic'
 import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select'
 import SavedViewsPicker from './SavedViewsPicker'
@@ -11,11 +12,13 @@ export default function TaskTableFilters({
   tasks,
   sprints,
   developers,
+  epics = [],
   filters,
   onSearchChange,
   onDeveloperChange,
   onStatusChange,
   onSprintChange,
+  onEpicChange,
   onClearFilters,
   savedViews = [],
   onSaveView,
@@ -25,16 +28,19 @@ export default function TaskTableFilters({
   tasks: Task[]
   sprints: Sprint[]
   developers: Array<{ id: string; name: string }>
+  epics?: Epic[]
   filters: {
     searchText: string
     selectedDeveloper: string
     selectedStatus: string
     selectedSprint: string
+    selectedEpic?: string
   }
   onSearchChange: (value: string) => void
   onDeveloperChange: (value: string) => void
   onStatusChange: (value: string) => void
   onSprintChange: (value: string) => void
+  onEpicChange?: (value: string) => void
   onClearFilters: () => void
   savedViews?: SavedView[]
   onSaveView?: (name: string, shared: boolean) => void
@@ -46,7 +52,7 @@ export default function TaskTableFilters({
     return null
   }
 
-  const hasActiveFilters = !!(filters.searchText || filters.selectedDeveloper || filters.selectedStatus || filters.selectedSprint)
+  const hasActiveFilters = !!(filters.searchText || filters.selectedDeveloper || filters.selectedStatus || filters.selectedSprint || filters.selectedEpic)
 
   return (
     <div className={styles.container}>
@@ -90,6 +96,17 @@ export default function TaskTableFilters({
               ...sprints.map(s => ({ value: s.id, label: s.name }))
             ]}
           />
+
+          {epics.length > 0 && onEpicChange && (
+            <Select
+              value={filters.selectedEpic || ''}
+              onChange={(e: any) => onEpicChange(e.target.value)}
+              options={[
+                { value: '', label: 'Todos los epics' },
+                ...epics.map(e => ({ value: e.id, label: e.title }))
+              ]}
+            />
+          )}
         </div>
 
         {onSaveView && onDeleteView && onLoadView && (

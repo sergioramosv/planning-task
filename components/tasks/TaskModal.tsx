@@ -14,7 +14,9 @@ import DependencySelector from './DependencySelector'
 import TimeTracker from './TimeTracker'
 import GitHubLink from './GitHubLink'
 import { Task, Sprint, TaskTemplate, TaskStatus, ReviewChecklistItem, TimeEntry, LinkedPR } from '@/types'
+import { Epic } from '@/types/epic'
 import { User } from '@/types/user'
+import EpicSelector from '@/components/epics/EpicSelector'
 import { Trash2, FileText, Save, ArrowLeft, ListTodo, Link, Clock, GitPullRequest, Shield, MessageSquare, FileEdit } from 'lucide-react'
 import styles from './TaskModal.module.css'
 
@@ -52,6 +54,8 @@ interface TaskModalProps {
   onAddPR?: (pr: Omit<LinkedPR, 'id'>) => void
   onRemovePR?: (prId: string) => void
   onUpdatePRStatus?: (prId: string, status: LinkedPR['status']) => void
+  epics?: Epic[]
+  onEpicChange?: (epicId: string | undefined) => void
 }
 
 const EDIT_TABS: { id: ModalTab; label: string; icon: React.ReactNode }[] = [
@@ -96,6 +100,8 @@ export default function TaskModal({
   onAddPR,
   onRemovePR,
   onUpdatePRStatus,
+  epics = [],
+  onEpicChange,
 }: TaskModalProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isSprintModalOpen, setIsSprintModalOpen] = useState(false)
@@ -271,6 +277,15 @@ export default function TaskModal({
                       <ArrowLeft size={14} />
                       <span>{parentTaskTitle}</span>
                     </button>
+                  )}
+                  {epics.length > 0 && onEpicChange && (
+                    <div style={{ marginBottom: 'var(--spacing-3)' }}>
+                      <EpicSelector
+                        epics={epics}
+                        selectedEpicId={task.epicId}
+                        onChange={onEpicChange}
+                      />
+                    </div>
                   )}
                   <TaskForm
                     task={task}

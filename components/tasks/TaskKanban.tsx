@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Task, TaskStatus } from '@/types'
+import { Epic } from '@/types/epic'
 import { useTimer } from '@/contexts/TimerContext'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import TaskCard from './TaskCard'
@@ -18,6 +19,7 @@ interface TaskKanbanProps {
   filteredTasks?: Task[]
   sprints?: any[]
   developers?: Array<{ id: string; name: string }>
+  epics?: Epic[]
 }
 
 const KANBAN_COLUMNS: TaskStatus[] = ['to-do', 'in-progress', 'to-validate', 'done']
@@ -31,6 +33,7 @@ export default function TaskKanban({
   filteredTasks,
   sprints = [],
   developers = [],
+  epics = [],
 }: TaskKanbanProps) {
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null)
   const { isTimerActive } = useTimer()
@@ -54,6 +57,11 @@ export default function TaskKanban({
     if (subtasks.length === 0) return undefined
     const completed = subtasks.filter(s => s.status === 'done' || s.status === 'validated').length
     return { completed, total: subtasks.length }
+  }
+
+  const getEpicForTask = (task: Task) => {
+    if (!task.epicId) return undefined
+    return epics.find(e => e.id === task.epicId)
   }
 
   const getTaskTotalTime = (task: Task) => {
@@ -148,6 +156,8 @@ export default function TaskKanban({
                   isBlocked={isTaskBlocked(task)}
                   isTimerActive={isTimerActive(task.id)}
                   totalTimeMs={getTaskTotalTime(task)}
+                  epicColor={getEpicForTask(task)?.color}
+                  epicName={getEpicForTask(task)?.title}
                 />
               </div>
             ))}
