@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.56.0] - 2026-03-18
+
+### Added
+- **Mi Trabajo (My Work page)**: Nueva pagina /my-work accesible desde el header que muestra tareas del developer agrupadas por proyecto, seccion "Hoy" con tareas in-progress y vencidas, bugs asignados, y stats de resumen.
+
 ## [1.55.0] - 2026-03-18
 
 ### Added
