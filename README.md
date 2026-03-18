@@ -2,7 +2,7 @@
 
 **Plataforma profesional de gestion de proyectos Scrum** con asistente de IA integrado, analiticas en tiempo real y soporte multi-idioma.
 
-![Version](https://img.shields.io/badge/version-1.53.0-blue)
+![Version](https://img.shields.io/badge/version-1.68.0-blue)
 ![Next.js](https://img.shields.io/badge/Next.js-14.2.35-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)
 ![Firebase](https://img.shields.io/badge/Firebase-12.9-orange)
@@ -58,11 +58,20 @@ La aplicacion incluye un **asistente de IA basado en Gemini** que puede crear ta
 - Comentarios con soporte de @menciones
 - Borradores automaticos para tareas en progreso
 
+### Epics (agrupacion por funcionalidad)
+- Crear, editar y eliminar epics con titulo, descripcion, color y fechas
+- Agrupar tareas por funcionalidad o feature
+- Barra de progreso visual por epic
+- Selector de epic integrado en el modal de tareas
+- Badge de epic con color en las TaskCards del Kanban
+- Filtro por epic en los filtros de tareas
+
 ### Gestion de sprints
 - Crear, editar y eliminar sprints con fechas de inicio y fin
 - Estados: Planned, Active, Completed
 - Asignar tareas a sprints
 - Metricas de sprint: tareas, puntos totales
+- Retrospectiva de sprint con notas y feedback del equipo
 
 ### Seguimiento de bugs
 - Reportar bugs con titulo, descripcion y severidad (Critical, High, Medium, Low)
@@ -82,7 +91,7 @@ La aplicacion incluye un **asistente de IA basado en Gemini** que puede crear ta
 - Filtro multi-proyecto
 - Soporte para idiomas ES/EN
 
-### Dashboard analitico (12+ graficos)
+### Dashboard analitico (15+ graficos y widgets)
 | Grafico | Descripcion |
 |---------|-------------|
 | **KPIs** | Tasa de completado, velocidad promedio, resolucion de bugs, sprints activos |
@@ -98,10 +107,52 @@ La aplicacion incluye un **asistente de IA basado en Gemini** que puede crear ta
 | **Activity Heatmap** | Mapa de calor de actividad por fecha |
 | **Sprint Timeline** | Linea temporal de sprints |
 | **Developer Performance Metrics** | Metricas avanzadas individuales por developer |
+| **Achievement Badges** | Grid de logros con filtro por categoria y barra de progreso |
+| **Leaderboard** | Ranking del equipo mensual/trimestral/total con puntuacion |
+
+### Gamificacion y logros
+- 14 logros en 4 categorias: Productividad, Calidad, Colaboracion, Constancia
+- Evaluacion automatica al completar tareas y cerrar bugs
+- Badges visuales con filtro por categoria y barra de progreso
+- Leaderboard mensual, trimestral y total del equipo
+- Puntuacion basada en devPoints + bugs resueltos + logros desbloqueados
+- Notificacion toast y persistente al desbloquear un logro
+- Datos almacenados en Firebase RTDB (`userAchievements/{userId}`)
+
+### Modo offline
+- Service Worker para cacheo de assets estaticos (network-first strategy)
+- Indicador visual "Offline" en el header con animacion de pulso
+- Firebase RTDB maneja cola de operaciones pendientes automaticamente
+- Notificacion toast al reconectarse con sincronizacion automatica
+
+### Workflows automatizados
+- Reglas de automatizacion configurables por proyecto
+- Disparadores por cambio de estado de tarea o bug
+- Acciones: notificar, cambiar estado, asignar developer
+- Editor visual de reglas con diagrama de flujo (@xyflow/react)
+
+### Templates de tareas
+- Guardar tareas como templates reutilizables
+- Aplicar templates al crear nuevas tareas
+- Incluye User Story, criterios, puntos y plan de implementacion
+
+### Vistas guardadas
+- Guardar combinaciones de filtros como vistas personalizadas
+- Restaurar filtros rapidamente desde un selector
+
+### Time tracking
+- Temporizador integrado por tarea
+- Widget de timer activo visible en todo el dashboard
+- Registro de tiempo dedicado por tarea
+
+### Daily standup
+- Pagina dedicada de standup por proyecto
+- Formato: que hice ayer, que hare hoy, bloqueos
+- Historial de standups anteriores
 
 ### Notificaciones
 - Notificaciones en tiempo real via Firebase
-- Tipos: asignacion de tareas, cambios de estado, comentarios, menciones, invitaciones
+- Tipos: asignacion de tareas, cambios de estado, comentarios, menciones, invitaciones, logros
 - Centro de notificaciones con marcar como leido
 - Push notifications con toast
 
@@ -180,13 +231,18 @@ planning-task/
 |-- app/                              # Next.js App Router
 |   |-- (dashboard)/                  # Layout protegido (requiere auth)
 |   |   |-- layout.tsx                # Header, Sidebar, AuthGuard
-|   |   |-- dashboard/page.tsx        # Dashboard con KPIs y graficos
+|   |   |-- dashboard/page.tsx        # Dashboard con KPIs, graficos, logros y leaderboard
 |   |   |-- calendar/page.tsx         # Calendario interactivo
+|   |   |-- my-work/page.tsx          # Vista personal de tareas asignadas
 |   |   |-- projects/
 |   |   |   |-- page.tsx              # Lista de proyectos
 |   |   |   |-- [projectId]/
 |   |   |       |-- page.tsx          # Detalle: tareas, bugs, propuestas
 |   |   |       |-- sprints/page.tsx  # Gestion de sprints
+|   |   |       |-- sprints/[sprintId]/retro/page.tsx  # Retrospectiva
+|   |   |       |-- standup/page.tsx  # Daily standup
+|   |   |       |-- workflows/page.tsx # Reglas de automatizacion
+|   |   |       |-- epics/page.tsx    # Gestion de epics
 |   |   |-- team/page.tsx             # Gestion del equipo
 |   |   |-- profile/page.tsx          # Perfil de usuario
 |   |-- api/
@@ -200,13 +256,15 @@ planning-task/
 |-- components/
 |   |-- auth/          # LoginForm, AuthGuard
 |   |-- chat/          # ChatPanel, ChatFab, ChatMessage, ChatInput, ChatHistory
-|   |-- dashboard/     # Header, KPIs, SprintChart, DeveloperPerformance, +10 graficos
-|   |-- tasks/         # TaskModal, TaskForm, TaskKanban, TaskCard, TaskTable, Filters
+|   |-- dashboard/     # Header, KPIs, SprintChart, DeveloperPerformance, +12 graficos,
+|   |                  # AchievementBadges, Leaderboard, AchievementToast, OfflineIndicator
+|   |-- tasks/         # TaskModal, TaskForm, TaskKanban, TaskCard, TaskTable, Filters,
+|   |                  # TimeTracker, SubtaskList, DependencySelector, EpicSelector
 |   |-- sprints/       # SprintForm, SprintCard
 |   |-- bugs/          # BugModal, BugForm, BugsList, BugCard
 |   |-- proposals/     # ProposalModal, ProposalForm, ProposalsList, ProposalCard
 |   |-- projects/      # MembersManager, ProjectEditModal
-|   |-- ui/            # Button, Card, Modal, Input, Select, Badge, Spinner, ConfirmationModal
+|   |-- ui/            # Button, Card, Modal, Input, Select, Badge, Spinner, CommandPalette
 |   |-- layout/        # Navbar, Sidebar, TabsBar
 |   |-- common/        # UpdateNotification, Providers
 |
@@ -222,6 +280,14 @@ planning-task/
 |   |-- useChat.ts                    # Chat con IA
 |   |-- usePermissions.ts             # RBAC por proyecto
 |   |-- useTaskDrafts.ts              # Borradores de tareas
+|   |-- useTaskTemplates.ts           # Templates reutilizables de tareas
+|   |-- useSavedViews.ts              # Vistas guardadas con filtros
+|   |-- useEpics.ts                   # CRUD epics (agrupacion por feature)
+|   |-- useAchievements.ts            # Logros y badges del usuario
+|   |-- useWorkflowRules.ts           # Reglas de automatizacion
+|   |-- useWorkflowEngine.ts          # Motor de ejecucion de workflows
+|   |-- useOnlineStatus.ts            # Deteccion offline/online
+|   |-- useServiceWorker.ts           # Gestion de Service Worker
 |   |-- useTheme.ts                   # Tema oscuro/claro
 |   |-- useLocalStorage.ts            # Persistencia local
 |   |-- useFilters.ts                 # Logica de filtros
@@ -233,7 +299,8 @@ planning-task/
 |-- lib/
 |   |-- firebase/      # config.ts (cliente), admin.ts (server)
 |   |-- services/      # task, project, sprint, bug, user, comment, notification,
-|   |                  # chat (Gemini), ai-tools, storage, model-pool, quota-tracker
+|   |                  # chat (Gemini), ai-tools, storage, model-pool, quota-tracker,
+|   |                  # achievement, workflow
 |   |-- auth/          # validateSession.ts, validateProjectAccess.ts
 |   |-- utils/         # calculations, formatters, validators, cn, colors, errorHandler
 |   |-- constants/     # appVersion, fibonacciPoints, taskStates
@@ -245,7 +312,7 @@ planning-task/
 |-- types/                            # Interfaces TypeScript
 |   |-- task.ts, project.ts, sprint.ts, user.ts, bug.ts,
 |   |-- proposal.ts, notification.ts, comment.ts, draft.ts,
-|   |-- filters.ts, invitation.ts, index.ts
+|   |-- filters.ts, invitation.ts, epic.ts, achievement.ts, index.ts
 |
 |-- locales/
 |   |-- en.json                       # Traducciones ingles
@@ -381,6 +448,18 @@ La aplicacion estara disponible en `http://localhost:3300`
 
 /tasks-drafts/{userId}/{draftId}
   |-- projectId, formData, updatedAt
+
+/epics/{epicId}
+  |-- title, description, color, projectId
+  |-- startDate, endDate, taskIds[]
+  |-- createdAt, updatedAt
+
+/userAchievements/{userId}/{achievementId}
+  |-- achievementId, unlockedAt, projectId
+
+/workflow-rules/{ruleId}
+  |-- projectId, name, trigger, conditions, actions
+  |-- enabled, createdAt
 ```
 
 ---

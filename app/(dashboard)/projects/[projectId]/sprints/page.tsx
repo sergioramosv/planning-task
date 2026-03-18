@@ -111,7 +111,7 @@ export default function SprintsPage() {
     <div className={styles.container}>
       <div className={styles.header}>
         <button
-          onClick={() => router.back()}
+          onClick={() => router.push(`/projects/${projectId}`)}
           className={styles.backBtn}
         >
           <ArrowLeft size={20} />

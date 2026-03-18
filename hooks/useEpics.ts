@@ -53,12 +53,14 @@ export function useEpics(projectId: string | null) {
         const newRef = push(ref(database, 'epics'))
         const epicId = newRef.key
 
-        await update(newRef, {
-          ...epicData,
-          projectId,
-          taskIds: epicData.taskIds || [],
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
+        await update(ref(database), {
+          [`epics/${epicId}`]: {
+            ...epicData,
+            projectId,
+            taskIds: epicData.taskIds || [],
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          },
         })
 
         return epicId!
