@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.62.0] - 2026-03-18
+
+### Added
+- **Dependencias entre tareas**: Componente DependencySelector en TaskModal para gestionar relaciones blockedBy/blocks entre tareas. Indicador visual de tarea bloqueada (AlertTriangle) en TaskCard y Kanban. Sincronizacion bidireccional de dependencias. Validacion que impide iniciar tareas bloqueadas. Soporte i18n en/es.
+
 ## [1.61.0] - 2026-03-18
 
 ### Added
