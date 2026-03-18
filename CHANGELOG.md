@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.64.0] - 2026-03-18
+
+### Added
+- **Integracion con GitHub PRs**: Componente GitHubLink en TaskModal para vincular Pull Requests por URL o formato owner/repo#123. Badge de PR en TaskCard con iconos diferenciados para Open (verde) y Merged (morado). Selector de estado (open/merged/closed) por PR. Enlace directo a GitHub. Soporte para titulo y branch opcionales. Tipo LinkedPR en modelo Task. Soporte i18n en/es.
+
 ## [1.63.0] - 2026-03-18
 
 ### Added
