@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.59.0] - 2026-03-18
+
+### Added
+- **Modo presentacion Daily Standup**: Nueva pagina /projects/[projectId]/standup con columnas por developer mostrando tareas de Ayer (completadas), Hoy (in-progress) y Bloqueos. Timer configurable de 15 min, navegacion entre developers con botones Anterior/Siguiente, deteccion automatica de tareas bloqueadas. Soporte i18n en/es.
+
 ## [1.58.0] - 2026-03-18
 
 ### Added
