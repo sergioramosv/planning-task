@@ -1,0 +1,55 @@
+.widget {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--color-green-50);
+  border: 1px solid var(--color-green-200);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+.icon {
+  color: var(--color-green-600);
+  flex-shrink: 0;
+}
+
+.time {
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--color-green-700);
+  letter-spacing: 0.5px;
+}
+
+.taskName {
+  color: var(--color-green-600);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stopBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: var(--color-red-500);
+  color: white;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+}
+
+.stopBtn:hover {
+  background: var(--color-red-600);
+}

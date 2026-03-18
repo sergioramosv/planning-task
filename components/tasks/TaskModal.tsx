@@ -11,7 +11,8 @@ import TaskActivityPanel from './TaskActivityPanel'
 import SubtaskList from './SubtaskList'
 import ReviewChecklist from './ReviewChecklist'
 import DependencySelector from './DependencySelector'
-import { Task, Sprint, TaskTemplate, TaskStatus, ReviewChecklistItem } from '@/types'
+import TimeTracker from './TimeTracker'
+import { Task, Sprint, TaskTemplate, TaskStatus, ReviewChecklistItem, TimeEntry } from '@/types'
 import { User } from '@/types/user'
 import { Trash2, FileText, Save, ArrowLeft } from 'lucide-react'
 import styles from './TaskModal.module.css'
@@ -43,6 +44,8 @@ interface TaskModalProps {
   onReviewChecklistChange?: (checklist: ReviewChecklistItem[]) => void
   allTasks?: Task[]
   onDependencyUpdate?: (blockedBy: string[], blocks: string[]) => void
+  onTimeEntrySave?: (entry: Omit<TimeEntry, 'id'>) => void
+  onTimeEntryDelete?: (entryId: string) => void
 }
 
 export default function TaskModal({
@@ -72,6 +75,8 @@ export default function TaskModal({
   onReviewChecklistChange,
   allTasks = [],
   onDependencyUpdate,
+  onTimeEntrySave,
+  onTimeEntryDelete,
 }: TaskModalProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isSprintModalOpen, setIsSprintModalOpen] = useState(false)
@@ -241,6 +246,18 @@ export default function TaskModal({
                     task={task}
                     allTasks={allTasks}
                     onUpdate={onDependencyUpdate}
+                  />
+                )}
+                {onTimeEntrySave && currentUser && projectId && (
+                  <TimeTracker
+                    taskId={task.id}
+                    taskTitle={task.title}
+                    projectId={projectId}
+                    userId={currentUser.uid}
+                    userName={currentUser.displayName || 'User'}
+                    timeEntries={task.timeEntries || []}
+                    onSaveEntry={onTimeEntrySave}
+                    onDeleteEntry={onTimeEntryDelete}
                   />
                 )}
                 {onReviewChecklistChange && currentUser &&

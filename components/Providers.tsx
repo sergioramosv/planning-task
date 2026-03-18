@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { LanguageProvider } from '@/contexts/LanguageContext';
+import { TimerProvider } from '@/contexts/TimerContext';
 import '@/lib/i18n/config';
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -11,7 +12,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <LanguageProvider>
-      {children}
+      <TimerProvider>
+        {children}
+      </TimerProvider>
     </LanguageProvider>
   );
 }

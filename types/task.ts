@@ -38,6 +38,14 @@ export interface TaskHistory {
   action: 'create' | 'update' | 'delete'
 }
 
+export interface TimeEntry {
+  id: string
+  startTime: number
+  endTime: number
+  userId: string
+  userName?: string
+}
+
 export interface Task {
   id: string
   title: string
@@ -65,6 +73,7 @@ export interface Task {
   blockedBy?: string[]
   blocks?: string[]
   reviewChecklist?: ReviewChecklistItem[]
+  timeEntries?: TimeEntry[]
 }
 
 export interface ReviewChecklistItem {

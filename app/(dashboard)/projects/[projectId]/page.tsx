@@ -548,6 +548,27 @@ export default function ProjectDetailsPage() {
     }
   }
 
+  const handleTimeEntrySave = async (entry: Omit<import('@/types').TimeEntry, 'id'>) => {
+    if (!selectedTask) return
+    try {
+      const entries = selectedTask.timeEntries || []
+      const newEntry = { ...entry, id: `te-${Date.now()}` }
+      await updateTask(selectedTask.id, { timeEntries: [...entries, newEntry] })
+    } catch (error) {
+      console.error('Error saving time entry:', error)
+    }
+  }
+
+  const handleTimeEntryDelete = async (entryId: string) => {
+    if (!selectedTask) return
+    try {
+      const entries = (selectedTask.timeEntries || []).filter(e => e.id !== entryId)
+      await updateTask(selectedTask.id, { timeEntries: entries })
+    } catch (error) {
+      console.error('Error deleting time entry:', error)
+    }
+  }
+
   const handleReviewChecklistChange = async (checklist: import('@/types').ReviewChecklistItem[]) => {
     if (!selectedTask) return
     try {
@@ -1006,6 +1027,8 @@ export default function ProjectDetailsPage() {
         onReviewChecklistChange={handleReviewChecklistChange}
         allTasks={tasks}
         onDependencyUpdate={handleDependencyUpdate}
+        onTimeEntrySave={handleTimeEntrySave}
+        onTimeEntryDelete={handleTimeEntryDelete}
       />
 
       <DraftPickerModal

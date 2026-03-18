@@ -476,5 +476,14 @@
     "open": "Abrir",
     "close": "Cerrar",
     "search": "Buscar"
+  },
+  "timeTracker": {
+    "title": "Time Tracking",
+    "start": "Iniciar timer",
+    "stop": "Detener timer",
+    "stopped": "Detenido",
+    "total": "Total",
+    "showEntries": "Ver registros",
+    "hideEntries": "Ocultar registros"
   }
 }

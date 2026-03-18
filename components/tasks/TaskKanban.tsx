@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Task, TaskStatus } from '@/types'
+import { useTimer } from '@/contexts/TimerContext'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import TaskCard from './TaskCard'
 import { TASK_STATUS_LABELS } from '@/lib/constants/taskStates'
@@ -32,6 +33,7 @@ export default function TaskKanban({
   developers = [],
 }: TaskKanbanProps) {
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null)
+  const { isTimerActive } = useTimer()
 
   const getSprintName = (sprintId?: string) => {
     if (!sprintId) return undefined
@@ -52,6 +54,11 @@ export default function TaskKanban({
     if (subtasks.length === 0) return undefined
     const completed = subtasks.filter(s => s.status === 'done' || s.status === 'validated').length
     return { completed, total: subtasks.length }
+  }
+
+  const getTaskTotalTime = (task: Task) => {
+    if (!task.timeEntries || task.timeEntries.length === 0) return 0
+    return task.timeEntries.reduce((sum, e) => sum + (e.endTime - e.startTime), 0)
   }
 
   const isTaskBlocked = (task: Task) => {
@@ -139,6 +146,8 @@ export default function TaskKanban({
                   sprintName={getSprintName(task.sprintId)}
                   subtaskProgress={getSubtaskProgress(task.id)}
                   isBlocked={isTaskBlocked(task)}
+                  isTimerActive={isTimerActive(task.id)}
+                  totalTimeMs={getTaskTotalTime(task)}
                 />
               </div>
             ))}

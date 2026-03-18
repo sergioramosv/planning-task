@@ -136,6 +136,24 @@
   color: var(--text-faint);
 }
 
+.timeTag {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.timeTagActive {
+  color: var(--color-green-600);
+  animation: blink 1.5s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
 .date {
   color: var(--text-faint);
   margin-left: auto;

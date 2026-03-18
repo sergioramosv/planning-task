@@ -10,6 +10,7 @@ import Button from '@/components/ui/Button'
 import NotificationModal from './NotificationModal'
 import ChangelogModal from './ChangelogModal'
 import InvitationsModal from './InvitationsModal'
+import ActiveTimerWidget from './ActiveTimerWidget'
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher'
 import Link from 'next/link'
 import { APP_VERSION } from '@/lib/constants/appVersion'
@@ -101,6 +102,8 @@ export default function Header() {
                   {t('nav.team')}
                 </Button>
               </div>
+
+              <ActiveTimerWidget />
 
               <button
                 onClick={() => window.dispatchEvent(new CustomEvent('open-command-palette'))}
