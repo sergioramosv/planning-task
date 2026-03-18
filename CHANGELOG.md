@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.54.3] - 2026-03-18
+
+### Fixed
+- **Dark mode del Command Palette**: Cambiado de tonos azulados (#1c1c27, #2e2e3e) a negros/grises neutros (#1a1a1a, #2a2a2a) que coinciden con el fondo real de la app en modo oscuro (#121212). Borders, hovers, badges, iconos y footer todos en escala de grises pura.
+
 ## [1.54.2] - 2026-03-18
 
 ### Fixed
