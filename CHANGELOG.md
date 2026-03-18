@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.60.0] - 2026-03-18
+
+### Added
+- **Code Review Checklist integrada**: Componente ReviewChecklist en TaskModal visible cuando tarea esta en to-validate. Templates predefinidos (Frontend, Backend, Fullstack) con items de revision. Cada item registra quien lo aprobo y cuando. Validacion que impide pasar a validated sin completar todos los items. Soporte i18n.
+
 ## [1.59.0] - 2026-03-18
 
 ### Added
