@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.67.0] - 2026-03-18
+
+### Added
+- **Modo offline con sincronizacion**: Service Worker para cacheo de assets estaticos (network-first strategy). Hook useOnlineStatus que monitorea .info/connected de Firebase para detectar estado de conexion. Indicador visual "Offline" en el header con animacion de pulso cuando se pierde conexion. Notificacion toast automatica al reconectarse ("Conexion restaurada. Cambios sincronizados."). Firebase RTDB maneja automaticamente la cola de operaciones pendientes y sincronizacion al reconectar. Las operaciones de lectura funcionan offline gracias al cache local del SDK.
+
 ## [1.66.0] - 2026-03-18
 
 ### Added
