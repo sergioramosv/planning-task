@@ -8,6 +8,7 @@ import Spinner from '@/components/ui/Spinner'
 import Header from '@/components/dashboard/Header'
 import NotificationPush from '@/components/dashboard/NotificationPush'
 import UpdateNotification from '@/components/common/UpdateNotification'
+import CommandPalette from '@/components/ui/CommandPalette'
 import { Providers } from '@/components/Providers'
 import styles from './layout.module.css'
 
@@ -43,6 +44,7 @@ export default function DashboardLayout({
       <div className={styles.wrapper}>
         <Header />
         <NotificationPush />
+        <CommandPalette />
         <main className={styles.main}>
           {children}
         </main>

@@ -433,5 +433,14 @@
     "updated": "Actualizado exitosamente",
     "deleted": "Eliminado exitosamente",
     "saved": "Guardado exitosamente"
+  },
+  "commandPalette": {
+    "placeholder": "Buscar proyectos, tareas, bugs...",
+    "hint": "Escribe para buscar en todos tus proyectos",
+    "noResults": "No se encontraron resultados",
+    "navigate": "Navegar",
+    "open": "Abrir",
+    "close": "Cerrar",
+    "search": "Buscar"
   }
 }

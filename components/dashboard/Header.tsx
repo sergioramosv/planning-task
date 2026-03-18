@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { useNotifications } from '@/hooks/useNotifications'
 import { useInvitations } from '@/hooks/useInvitations'
-import { LogOut, Bell, User as UserIcon, Mail, BarChart3, Users, Calendar, Sun, Moon } from 'lucide-react'
+import { LogOut, Bell, User as UserIcon, Mail, BarChart3, Users, Calendar, Sun, Moon, Search } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import NotificationModal from './NotificationModal'
 import ChangelogModal from './ChangelogModal'
@@ -90,6 +90,15 @@ export default function Header() {
                   {t('nav.team')}
                 </Button>
               </div>
+
+              <button
+                onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true }))}
+                className={styles.notificationButton}
+                aria-label={t('commandPalette.search')}
+                title={`${t('commandPalette.search')} (Ctrl+K)`}
+              >
+                <Search size={20} />
+              </button>
 
               <button
                 onClick={toggleTheme}

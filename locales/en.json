@@ -433,5 +433,14 @@
     "updated": "Updated successfully",
     "deleted": "Deleted successfully",
     "saved": "Saved successfully"
+  },
+  "commandPalette": {
+    "placeholder": "Search projects, tasks, bugs...",
+    "hint": "Type to search across all your projects",
+    "noResults": "No results found",
+    "navigate": "Navigate",
+    "open": "Open",
+    "close": "Close",
+    "search": "Search"
   }
 }
