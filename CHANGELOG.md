@@ -5,6 +5,12 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.53.1] - 2026-03-18
+
+### Documentation
+- **README.md**: Documentacion completa del proyecto con descripcion general, funcionalidades, stack tecnologico, arquitectura, modelo de datos, permisos, integracion IA, i18n, versionado, despliegue y testing.
+- **MEJORAS.md**: Documento con 20 propuestas de mejora priorizadas por impacto y esfuerzo, incluyendo subtareas, vistas guardadas, retrospectivas, dependencias, time tracking, busqueda global, epics, OKRs, gamificacion y mas.
+
 ## [1.53.0] - 2026-03-04
 
 ### Added
