@@ -354,6 +354,7 @@ export default function ProjectDetailsPage() {
 
   const handleStatusChange = async (taskId: string, newStatus: TaskStatus) => {
     try {
+      const task = tasks.find(t => t.id === taskId)
       // Prevent closing parent task if subtasks are not all done
       if (newStatus === 'done' || newStatus === 'validated') {
         const subtasks = getSubtasksForTask(taskId)
@@ -363,6 +364,14 @@ export default function ProjectDetailsPage() {
             toast.error(t('projectDetail.subtasksPendingError'))
             return
           }
+        }
+      }
+      // Prevent moving to validated if review checklist is incomplete
+      if (newStatus === 'validated' && task?.reviewChecklist && task.reviewChecklist.length > 0) {
+        const allChecked = task.reviewChecklist.every(item => item.checked)
+        if (!allChecked) {
+          toast.error(t('projectDetail.checklistIncompleteError'))
+          return
         }
       }
       await updateTask(taskId, { status: newStatus })
@@ -498,6 +507,15 @@ export default function ProjectDetailsPage() {
     if (!selectedTask?.parentTaskId) return undefined
     const parent = tasks.find(t => t.id === selectedTask.parentTaskId)
     return parent?.title
+  }
+
+  const handleReviewChecklistChange = async (checklist: import('@/types').ReviewChecklistItem[]) => {
+    if (!selectedTask) return
+    try {
+      await updateTask(selectedTask.id, { reviewChecklist: checklist })
+    } catch (error) {
+      console.error('Error updating review checklist:', error)
+    }
   }
 
   const handleSaveAsTemplate = async (name: string) => {
@@ -946,6 +964,7 @@ export default function ProjectDetailsPage() {
         onSubtaskClick={handleSubtaskClick}
         parentTaskTitle={getParentTaskTitle()}
         onGoToParent={handleGoToParent}
+        onReviewChecklistChange={handleReviewChecklistChange}
       />
 
       <DraftPickerModal

@@ -64,4 +64,51 @@ export interface Task {
   subtaskIds?: string[]
   blockedBy?: string[]
   blocks?: string[]
+  reviewChecklist?: ReviewChecklistItem[]
+}
+
+export interface ReviewChecklistItem {
+  id: string
+  label: string
+  checked: boolean
+  checkedBy?: string
+  checkedByName?: string
+  checkedAt?: number
+}
+
+export type ReviewChecklistTemplate = 'frontend' | 'backend' | 'fullstack' | 'custom'
+
+export const REVIEW_CHECKLIST_TEMPLATES: Record<Exclude<ReviewChecklistTemplate, 'custom'>, string[]> = {
+  frontend: [
+    'Code compiles without errors',
+    'No console.log or debug statements',
+    'Unit tests written and passing',
+    'UI matches design / acceptance criteria',
+    'Responsive design verified',
+    'Accessibility basics checked (aria, alt, keyboard)',
+    'No hardcoded strings (i18n ready)',
+    'Peer review completed',
+  ],
+  backend: [
+    'Code compiles without errors',
+    'No console.log or debug statements',
+    'Unit tests written and passing',
+    'API endpoints documented',
+    'Input validation implemented',
+    'Error handling covers edge cases',
+    'No security vulnerabilities (injection, auth)',
+    'Database queries optimized',
+    'Peer review completed',
+  ],
+  fullstack: [
+    'Code compiles without errors',
+    'No console.log or debug statements',
+    'Unit tests written and passing',
+    'UI matches acceptance criteria',
+    'API endpoints working correctly',
+    'Input validation on frontend and backend',
+    'Error handling covers edge cases',
+    'No security vulnerabilities',
+    'Peer review completed',
+  ],
 }

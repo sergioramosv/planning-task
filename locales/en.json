@@ -162,6 +162,7 @@
     "subtaskCreated": "Subtask created successfully",
     "subtaskCreateError": "Error creating subtask",
     "subtasksPendingError": "Cannot close: there are pending subtasks",
+    "checklistIncompleteError": "Cannot validate: review checklist is not complete",
     "taskDeletedSuccess": "Task deleted successfully",
     "taskDeleteError": "Error deleting task",
     "bugReportedSuccess": "Bug reported successfully",

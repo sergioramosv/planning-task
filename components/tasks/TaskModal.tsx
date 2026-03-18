@@ -9,7 +9,8 @@ import TaskForm, { TaskFormRef } from './TaskForm'
 import SprintForm from '../sprints/SprintForm'
 import TaskActivityPanel from './TaskActivityPanel'
 import SubtaskList from './SubtaskList'
-import { Task, Sprint, TaskTemplate, TaskStatus } from '@/types'
+import ReviewChecklist from './ReviewChecklist'
+import { Task, Sprint, TaskTemplate, TaskStatus, ReviewChecklistItem } from '@/types'
 import { User } from '@/types/user'
 import { Trash2, FileText, Save, ArrowLeft } from 'lucide-react'
 import styles from './TaskModal.module.css'
@@ -38,6 +39,7 @@ interface TaskModalProps {
   onSubtaskClick?: (task: Task) => void
   parentTaskTitle?: string
   onGoToParent?: () => void
+  onReviewChecklistChange?: (checklist: ReviewChecklistItem[]) => void
 }
 
 export default function TaskModal({
@@ -64,6 +66,7 @@ export default function TaskModal({
   onSubtaskClick,
   parentTaskTitle,
   onGoToParent,
+  onReviewChecklistChange,
 }: TaskModalProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isSprintModalOpen, setIsSprintModalOpen] = useState(false)
@@ -226,6 +229,16 @@ export default function TaskModal({
                     onCreateSubtask={onCreateSubtask}
                     onStatusChange={onSubtaskStatusChange}
                     onSubtaskClick={onSubtaskClick}
+                  />
+                )}
+                {onReviewChecklistChange && currentUser &&
+                  (task.status === 'to-validate' || task.status === 'validated' || task.status === 'done') && (
+                  <ReviewChecklist
+                    checklist={task.reviewChecklist || []}
+                    onChange={onReviewChecklistChange}
+                    currentUserId={currentUser.uid}
+                    currentUserName={currentUser.displayName || 'User'}
+                    readOnly={task.status === 'done'}
                   />
                 )}
               </>
