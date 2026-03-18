@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { useNotifications } from '@/hooks/useNotifications'
 import { useInvitations } from '@/hooks/useInvitations'
-import { LogOut, Bell, User as UserIcon, Mail, BarChart3, Users, Calendar, Sun, Moon, Search } from 'lucide-react'
+import { LogOut, Bell, User as UserIcon, Mail, BarChart3, Users, Calendar, Sun, Moon, Search, ClipboardList } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import NotificationModal from './NotificationModal'
 import ChangelogModal from './ChangelogModal'
@@ -66,6 +66,17 @@ export default function Header() {
                 >
                   <BarChart3 size={16} style={{ marginRight: '0.25rem' }} />
                   {t('nav.dashboard')}
+                </Button>
+              </div>
+
+              <div title="Mi Trabajo">
+                <Button
+                  variant="glass"
+                  size="sm"
+                  onClick={() => router.push('/my-work')}
+                >
+                  <ClipboardList size={16} style={{ marginRight: '0.25rem' }} />
+                  Mi Trabajo
                 </Button>
               </div>
 
