@@ -5,6 +5,13 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.64.1] - 2026-03-18
+
+### Fixed
+- **Task modal reorganizado en tabs**: Subtareas, Dependencias, Tiempo, GitHub y Code Review ahora son tabs independientes en el modal de tarea en lugar de secciones fijas al final. Cada tab muestra badge con conteo de elementos.
+- **Sincronizacion de selectedTask**: Corregido bug donde los datos de la tarea seleccionada quedaban desactualizados tras modificaciones (ej: aplicar template de Code Review no se reflejaba visualmente).
+- **Boton IA mas descriptivo**: El boton de auto-rellenado con IA en el formulario de creacion ahora muestra "Rellenar con IA" en lugar de solo "IA".
+
 ## [1.64.0] - 2026-03-18
 
 ### Added
