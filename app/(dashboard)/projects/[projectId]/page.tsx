@@ -12,7 +12,7 @@ import { usePermissions } from '@/hooks/usePermissions'
 import { useLanguage } from '@/contexts/LanguageContext'
 import Spinner from '@/components/ui/Spinner'
 import Button from '@/components/ui/Button'
-import { ArrowLeft, Plus, Calendar, MessageSquare, Edit2, Trash2, ChevronDown, FolderOpen, Users } from 'lucide-react'
+import { ArrowLeft, Plus, Calendar, MessageSquare, Edit2, Trash2, ChevronDown, FolderOpen, Users, Zap } from 'lucide-react'
 import TaskModal from '@/components/tasks/TaskModal'
 import DraftPickerModal from '@/components/tasks/DraftPickerModal'
 import TaskActivityPanel from '@/components/tasks/TaskActivityPanel'
@@ -32,6 +32,8 @@ import { useTaskDrafts } from '@/hooks/useTaskDrafts'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { useSavedViews } from '@/hooks/useSavedViews'
 import { useTaskTemplates } from '@/hooks/useTaskTemplates'
+import { useWorkflowRules } from '@/hooks/useWorkflowRules'
+import { useWorkflowEngine } from '@/hooks/useWorkflowEngine'
 import toast, { Toaster } from 'react-hot-toast'
 import { TASK_STATUS_LABELS, TASK_STATUS_COLORS } from '@/lib/constants/taskStates'
 import { UserService } from '@/lib/services/user.service'
@@ -75,6 +77,9 @@ export default function ProjectDetailsPage() {
   const projectDropdownRef = useRef<HTMLDivElement>(null)
   const { views: savedViews, saveView, deleteView: deleteSavedView } = useSavedViews(projectId, user?.uid)
   const { templates, createTemplate, deleteTemplate } = useTaskTemplates(projectId)
+  const { rules: workflowRules } = useWorkflowRules(projectId)
+  const projectOwnerIds = project ? Object.entries(project.members || {}).filter(([, m]) => (m as any).role === 'owner').map(([uid]) => uid) : []
+  const workflowEngine = useWorkflowEngine(workflowRules, projectId, project?.name, projectOwnerIds)
   const [filters, setFilters] = useState({
     searchText: '',
     selectedDeveloper: '',
@@ -284,6 +289,9 @@ export default function ProjectDetailsPage() {
           }
         )
         toast.success(t('projectDetail.taskCreatedSuccess'))
+        // Fire workflow event for new task (use data as pseudo-task)
+        const newTaskObj = { id: 'new', title: data.title, projectId, status: data.status, developer: data.developer, bizPoints: data.bizPoints, devPoints: data.devPoints } as any
+        workflowEngine.fireTaskCreated(newTaskObj)
       }
       if (!selectedTask && activeDraft) {
         deleteDraft(activeDraft.id)
@@ -397,6 +405,10 @@ export default function ProjectDetailsPage() {
       }
       await updateTask(taskId, { status: newStatus })
       toast.success(`${t('projectDetail.statusChangedTo')} ${TASK_STATUS_LABELS[newStatus]}`)
+      // Fire workflow event
+      if (task) {
+        workflowEngine.fireTaskStatusChange(task, task.status, newStatus)
+      }
     } catch (error) {
       console.error('Error updating task status:', error)
       toast.error(t('projectDetail.statusChangeError'))
@@ -658,6 +670,9 @@ export default function ProjectDetailsPage() {
       )
       setIsBugModalOpen(false)
       toast.success(t('projectDetail.bugReportedSuccess'))
+      // Fire workflow event for new bug
+      const bugObj = { id: 'new', title: data.title, description: data.description, severity: data.severity, status: 'open', projectId } as any
+      workflowEngine.fireBugCreated(bugObj)
     } catch (error) {
       console.error('Error saving bug:', error)
       toast.error(t('projectDetail.bugReportError'))
@@ -685,8 +700,12 @@ export default function ProjectDetailsPage() {
 
   const handleBugStatusChange = async (bugId: string, newStatus: any) => {
     try {
+      const bug = bugs.find(b => b.id === bugId)
       await updateBug(bugId, { status: newStatus })
       toast.success(t('projectDetail.bugStatusUpdated'))
+      if (bug) {
+        workflowEngine.fireBugStatusChange(bug, bug.status, newStatus)
+      }
     } catch (error) {
       console.error('Error updating bug status:', error)
       toast.error(t('projectDetail.bugStatusUpdateError'))
@@ -850,6 +869,9 @@ export default function ProjectDetailsPage() {
                 </Button>
                 <Button size="sm" onClick={() => router.push(`/projects/${projectId}/standup`)}>
                   <Users size={16} style={{ marginRight: '0.25rem' }} /> Daily Standup
+                </Button>
+                <Button size="sm" onClick={() => router.push(`/projects/${projectId}/workflows`)}>
+                  <Zap size={16} style={{ marginRight: '0.25rem' }} /> Workflows
                 </Button>
                 {canCreateTask && (
                   <Button size="sm" onClick={handleAddTaskClick}>
