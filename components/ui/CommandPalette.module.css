@@ -45,12 +45,12 @@
 
 /* ============ PALETTE (dark) ============ */
 [data-theme='dark'] .palette {
-  background: #1c1c27;
-  border-color: #2e2e3e;
+  background: #1a1a1a;
+  border-color: #2a2a2a;
   box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.3),
-    0 4px 16px rgba(0, 0, 0, 0.3),
-    0 12px 40px rgba(0, 0, 0, 0.4);
+    0 0 0 1px rgba(0, 0, 0, 0.4),
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    0 12px 40px rgba(0, 0, 0, 0.5);
 }
 
 /* ============ INPUT ============ */
@@ -63,7 +63,7 @@
 }
 
 [data-theme='dark'] .inputWrapper {
-  border-bottom-color: #2e2e3e;
+  border-bottom-color: #2a2a2a;
 }
 
 .searchIcon {
@@ -121,8 +121,8 @@
 }
 
 [data-theme='dark'] .kbd {
-  background: #2e2e3e;
-  border-color: #3e3e50;
+  background: #252525;
+  border-color: #333333;
   color: #9ca3af;
 }
 
@@ -147,7 +147,7 @@
 }
 
 [data-theme='dark'] .results::-webkit-scrollbar-thumb {
-  background: #3e3e50;
+  background: #333333;
 }
 
 /* ============ GROUPS ============ */
@@ -162,7 +162,7 @@
 }
 
 [data-theme='dark'] .group + .group {
-  border-top-color: #2e2e3e;
+  border-top-color: #2a2a2a;
 }
 
 .groupLabel {
@@ -195,10 +195,10 @@
   background: #f3f4f6;
 }
 
-/* Dark: hover/active = gris más claro que el fondo */
+/* Dark: hover/active = gris neutro más claro que el fondo */
 [data-theme='dark'] .item:hover,
 [data-theme='dark'] .itemActive {
-  background: #2a2a3a;
+  background: #252525;
 }
 
 /* ============ ITEM ICONS ============ */
@@ -228,19 +228,19 @@
   color: #dc2626;
 }
 
-/* Dark icons - fondos más oscuros, iconos brillantes */
+/* Dark icons - fondos grises neutros, iconos con color */
 [data-theme='dark'] .itemIconProject {
-  background: #2d2250;
+  background: #2a2a2a;
   color: #a78bfa;
 }
 
 [data-theme='dark'] .itemIconTask {
-  background: #1e2a4a;
+  background: #2a2a2a;
   color: #60a5fa;
 }
 
 [data-theme='dark'] .itemIconBug {
-  background: #3b1a1a;
+  background: #2a2a2a;
   color: #f87171;
 }
 
@@ -292,9 +292,9 @@
 }
 
 [data-theme='dark'] .itemBadge {
-  background: #2e2e3e;
+  background: #252525;
   color: #d1d5db;
-  border-color: #3e3e50;
+  border-color: #333333;
 }
 
 /* ============ EMPTY STATE ============ */
@@ -330,8 +330,8 @@
 }
 
 [data-theme='dark'] .footer {
-  border-top-color: #2e2e3e;
-  background: #18181f;
+  border-top-color: #2a2a2a;
+  background: #151515;
   color: #9ca3af;
 }
 
