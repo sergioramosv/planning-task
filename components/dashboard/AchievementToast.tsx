@@ -13,14 +13,13 @@ export default function AchievementToast({ achievement, onDone }: AchievementToa
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    if (achievement) {
-      setVisible(true)
-      const timer = setTimeout(() => {
-        setVisible(false)
-        onDone()
-      }, 3500)
-      return () => clearTimeout(timer)
-    }
+    if (!achievement) return
+    setVisible(true)
+    const timer = setTimeout(() => {
+      setVisible(false)
+      onDone()
+    }, 3500)
+    return () => clearTimeout(timer)
   }, [achievement, onDone])
 
   if (!visible || !achievement) return null
