@@ -5,6 +5,11 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.68.3] - 2026-03-19
+
+### Fixed
+- **Build error en AchievementToast**: Corregido error de TypeScript "Not all code paths return a value" en useEffect de AchievementToast. Early return cuando achievement es null.
+
 ## [1.68.2] - 2026-03-19
 
 ### Fixed
