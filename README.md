@@ -599,6 +599,12 @@ npm run test:coverage
 
 ---
 
+## Inspiracion
+
+Este proyecto esta inspirado en [pgamexp.com](https://pgamexp.com) de **manufosela**.
+
+---
+
 ## Autor
 
 **Sergio Ramos** - [GitHub](https://github.com/SergioRVDev)
