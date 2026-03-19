@@ -6,6 +6,7 @@ export function useOnlineStatus() {
   const [isOnline, setIsOnline] = useState(true)
   const [wasOffline, setWasOffline] = useState(false)
   const prevOnline = useRef(true)
+  const hasInitialized = useRef(false)
 
   useEffect(() => {
     // Listen to Firebase connection state
@@ -15,10 +16,14 @@ export function useOnlineStatus() {
       setIsOnline(connected)
 
       // Detect reconnection (was offline, now online)
-      if (connected && !prevOnline.current) {
+      // Skip the initial connection sequence to avoid false toast on page load
+      if (hasInitialized.current && connected && !prevOnline.current) {
         setWasOffline(true)
       }
       prevOnline.current = connected
+      if (connected) {
+        hasInitialized.current = true
+      }
     })
 
     // Also listen to browser online/offline events as fallback

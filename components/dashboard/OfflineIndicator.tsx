@@ -11,10 +11,20 @@ export default function OfflineIndicator() {
 
   useEffect(() => {
     if (wasOffline) {
-      toast.success('Conexion restaurada. Cambios sincronizados.', {
-        icon: '🔄',
-        duration: 4000,
-      })
+      toast.success(
+        (t) => (
+          <span
+            onClick={() => toast.dismiss(t.id)}
+            style={{ cursor: 'pointer' }}
+          >
+            Conexion restaurada. Cambios sincronizados.
+          </span>
+        ),
+        {
+          icon: '🔄',
+          duration: 4000,
+        }
+      )
       clearReconnected()
     }
   }, [wasOffline, clearReconnected])
