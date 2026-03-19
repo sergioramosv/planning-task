@@ -5,6 +5,12 @@ Todos los cambios importantes de este proyecto están documentados en este archi
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.68.2] - 2026-03-19
+
+### Fixed
+- **Toast de reconexion falso**: Corregido bug donde el toast "Conexion restaurada" aparecia en cada recarga de pagina (F5). Ahora solo se muestra cuando realmente hubo una desconexion previa.
+- **Toast dismissible**: El toast de reconexion ahora se puede cerrar haciendo click en el.
+
 ## [1.68.1] - 2026-03-18
 
 ### Fixed
